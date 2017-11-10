@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="cf.paradoxie.dizzypassword.activity.MainActivity">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_layout"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <include layout="@layout/content_main"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimaryDark" />
 
-    <TextView
-        android:id="@+id/tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:text="您还没有登录哟~\n点击右下角注册登录吧\n或者点击右上角修改当前ID后再注册登录\n【注意:注册登录后进行修改ID操作，需要重新进行注册】"
-        android:visibility="gone"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/add"/>
+    </LinearLayout>
+    <!--侧滑菜单-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/white"
+        android:dividerHeight="1dp"
+        android:drawSelectorOnTop="false">
 
-</android.support.design.widget.CoordinatorLayout>
+        <ListView
+            android:id="@+id/lv_left_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:text="DrawerLayout" />
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>
