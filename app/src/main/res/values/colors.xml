@@ -15,7 +15,7 @@
 
     <color name="windowBackgroundColor">#333333</color>
     <color name="black_translucent">#80000000</color>
-
+<color name="textcolor">#333333</color>
 
     <color name="transparent">#00000000</color>
     <color name="grey_b2b2b2">#B2B2B2</color>

@@ -46,7 +46,8 @@
                 android:background="@null"
                 android:gravity="bottom"
                 android:hint="请输入用户名"
-
+                android:textColor="@color/textcolor"
+                android:textColorHint="#333333"
                 android:paddingBottom="6dp"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
@@ -89,12 +90,13 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="bottom"
+                android:textColorHint="#333333"
+                android:textColor="@color/textcolor"
                 android:hint="请输入最少6字符密码"
                 android:inputType="textPassword"
                 android:paddingBottom="6dp"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
-                android:textColor="#aaaaaa"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -123,15 +125,51 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="bottom"
+                android:textColorHint="#333333"
                 android:hint="再次输入你的密码"
                 android:inputType="textPassword"
+                android:textColor="@color/textcolor"
                 android:paddingBottom="6dp"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
-                android:textColor="#aaaaaa"
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:background="#999999" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:src="@mipmap/samepasswore" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="bottom"
+                android:textColorHint="#333333"
+                android:hint="请输入邮箱"
+                android:inputType="textPassword"
+                android:textColor="@color/textcolor"
+                android:paddingBottom="6dp"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="0.3dp"
