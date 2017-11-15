@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,9 +20,10 @@ import java.util.TimerTask;
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.fragment.Homefragment;
-import cf.paradoxie.dizzypassword.fragment.Twofragment;
+import cf.paradoxie.dizzypassword.fragment.Myfragment;
 import cf.paradoxie.dizzypassword.tabhost.Tab;
 import cf.paradoxie.dizzypassword.tabhost.TabFragmentHost;
+import cf.paradoxie.dizzypassword.widget.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -32,17 +34,18 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     Homefragment homefragment = new Homefragment();
-    Twofragment twofragment = new Twofragment();
+    Myfragment twofragment = new Myfragment();
     private String mTextviewArray[] = {"密码列表", "我的"};
-    private int mImageViewArray[] = {R.drawable.productclassification_bg, R.drawable.productclassification_bg
+    private int mImageViewArray[] = {R.drawable.productclassification_bg, R.drawable.my_bg
     };
-
+    CircleImageView loginimag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        loginimag= (CircleImageView) findViewById(R.id.personalimg);
         layoutInflater = LayoutInflater.from(this);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -56,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
         mTabHost = (TabFragmentHost) findViewById(R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initView();
+        loginimag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,Login.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView() {

@@ -39,7 +39,7 @@
 
     </LinearLayout>
     <!--侧滑菜单-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -49,12 +49,16 @@
         android:divider="@android:color/white"
         android:dividerHeight="1dp"
         android:drawSelectorOnTop="false">
+        <cf.paradoxie.dizzypassword.widget.CircleImageView
+            android:id="@+id/personalimg"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
 
-        <ListView
-            android:id="@+id/lv_left_menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:text="DrawerLayout" />
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+
+            android:src="@mipmap/userimg" />
+
+
+    </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

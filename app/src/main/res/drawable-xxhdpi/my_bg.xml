@@ -3,8 +3,8 @@
 
 
     <!-- 选中时效果 -->
-    <item android:drawable="@drawable/clickordermanagement" android:state_selected="true"/>
+    <item android:drawable="@drawable/clikepersonalcenter" android:state_selected="true"/>
     <!-- 未选中时效果 -->
-    <item android:drawable="@drawable/noclickordermanagement"/>
+    <item android:drawable="@drawable/noclikepersonalcenter"/>
 
 </selector>
