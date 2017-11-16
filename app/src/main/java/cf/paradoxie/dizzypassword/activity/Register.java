@@ -12,11 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.Callback;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,62 +113,46 @@ public class Register extends Activity {
     }
 
     private void register() {
-        HttpParams params = new HttpParams();
+
+        HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", photoNumber.getText().toString().trim());
         params.put("password", password.getText().toString().trim());
-        if(!StringUtils.isEmpty(email.getText().toString().trim())){
-            params.put("email", email.getText().toString().trim());
-        }
-
+        params.put("email", email.getText().toString().trim());
+        JSONObject jsonObject = new JSONObject(params);
         OkGo.<String>post(AllApi.register).tag(this)
-                .params(params)
-                .execute(new Callback<String>() {
-                    @Override
-                    public void onStart(Request<String, ? extends Request> request) {
 
-                    }
-
+                .upJson(jsonObject.toString())
+                .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.e("backinfo","注册返回的消息response.body()："+response.body());
-                        Log.e("backinfo","注册返回的消息response.message()："+response.message());
-                        Log.e("backinfo","注册返回的消息response.code()："+response.code());
-                        if(response.code()==200){
+                        Log.e("backinfo", "注册返回的消息response.body()：" + response.body());
+                        Log.e("backinfo", "注册返回的消息response.message()：" + response.message());
+                        Log.e("backinfo", "注册返回的消息response.toString()：" + response.toString());
+
+                        Log.e("backinfo", "注册返回的消息response.code()：" + response.code());
+                        if (response.code() == 200) {
                             Toast.makeText(Register.this, "恭喜你注册成功", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
-                    public void onCacheSuccess(Response<String> response) {
-
+                    public void onFinish() {
+                        super.onFinish();
                     }
 
                     @Override
                     public void onError(Response<String> response) {
-                        Log.e("backinfo","注册返回错误的消息response.code()："+response.code());
-                        Log.e("backinfo","注册返回错误的消息response.message()："+response.message());
-                        // handleError(response);
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void uploadProgress(Progress progress) {
-
-                    }
-
-                    @Override
-                    public void downloadProgress(Progress progress) {
-
-                    }
-
-                    @Override
-                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                        return null;
+                        Log.e("backinfo", "注册返回错误的消息response.code()：" + response.code());
+                        Log.e("backinfo", "注册返回错误的消息response.message()：" + response.message());
+                        super.onError(response);
                     }
                 });
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Activity销毁时，取消网络请求
+        OkGo.getInstance().cancelTag(this);
     }
 }

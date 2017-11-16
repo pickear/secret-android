@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private LayoutInflater layoutInflater;
     private TabFragmentHost mTabHost;
     boolean isExit = false;
-    private List<Tab> mTabs = new ArrayList<>(2);
+    private List<Tab> mTabs = new ArrayList<Tab>(2);
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     Homefragment homefragment = new Homefragment();

@@ -3,7 +3,8 @@ package cf.paradoxie.dizzypassword.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,18 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.Callback;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Progress;
-import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Login extends Activity {
@@ -55,7 +48,11 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+       // new ArrayList<String>().stream().forEach(name -> System.out.println(name));
         ButterKnife.bind(this);
+        userName.addTextChangedListener(new TextChangeWatcher());
+        password.addTextChangedListener(new TextChangeWatcher());
+
     }
 
     @OnClick({R.id.back, R.id.login, R.id.go_register})
@@ -78,6 +75,34 @@ public class Login extends Activity {
                 break;
         }
     }
+    class TextChangeWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (isclick() == true) {
+                login.setBackgroundResource(R.drawable.click_bg);
+            } else {
+                login.setBackgroundResource(R.drawable.no_click_bg);
+            }
+
+        }
+    }
+    private boolean isclick() {
+        if (userName.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() >= 6) {
+            return true;
+        }
+        return false;
+    }
     private String LoginError() {
         if (StringUtils.isEmpty(userName.getText().toString().trim())) {
             return "请输入用户名";
@@ -87,10 +112,17 @@ public class Login extends Activity {
         return "";
     }
     private void login(){
-        HttpParams httpParams=new HttpParams();
-        httpParams.put("username",userName.getText().toString().trim());
-        httpParams.put("password",password.getText().toString().trim());
-        OkGo.<String>post(AllApi.login).tag(this).params(httpParams).execute(new Callback<String>() {
+       /* User user=new User();
+        user.setUsername(userName.getText().toString().trim());
+        user.setPassword(password.getText().toString().trim());*/
+       // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
+     /*   HashMap<String, String> params = new HashMap<>();
+        params.put("username", userName.getText().toString().trim());
+        params.put("password", password.getText().toString().trim());
+*/
+
+/*
+        OkGo.<String>post(AllApi.login).tag(this).upJson(jsonObject.toString()).execute(new Callback<String>() {
             @Override
             public void onStart(Request<String, ? extends Request> request) {
 
@@ -98,9 +130,9 @@ public class Login extends Activity {
 
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("backinfo", "注册返回的消息response.body()：" + response.body());
-                Log.e("backinfo","注册返回的消息response.message()："+response.message());
-                Log.e("backinfo","注册返回的消息response.code()："+response.code());
+                Log.e("backinfo", "登录返回的消息response.body()：" + response.body());
+                Log.e("backinfo","登录返回的消息response.message()："+response.message());
+                Log.e("backinfo","登录返回的消息response.code()："+response.code());
                 if(response.code()==200){
                     Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
                 }
@@ -113,8 +145,8 @@ public class Login extends Activity {
 
             @Override
             public void onError(Response<String> response) {
-                Log.e("backinfo","注册返回错误的消息response.message()："+response.message());
-                Log.e("backinfo","注册返回错误的消息response.code()："+response.code());
+                Log.e("backinfo","登录返回错误的消息response.message()："+response.message());
+                Log.e("backinfo","登录返回错误的消息response.code()："+response.code());
             }
 
             @Override
@@ -136,7 +168,7 @@ public class Login extends Activity {
             public String convertResponse(okhttp3.Response response) throws Throwable {
                 return null;
             }
-        });
+        });*/
 
     }
 }
