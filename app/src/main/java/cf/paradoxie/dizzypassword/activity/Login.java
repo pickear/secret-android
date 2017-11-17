@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,10 +14,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.Callback;
+import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.weasel.secret.common.domain.User;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.api.AllApi;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Login extends Activity {
@@ -112,17 +122,17 @@ public class Login extends Activity {
         return "";
     }
     private void login(){
-       /* User user=new User();
+        User user=new User();
         user.setUsername(userName.getText().toString().trim());
-        user.setPassword(password.getText().toString().trim());*/
+        user.setPassword(password.getText().toString().trim());
        // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
      /*   HashMap<String, String> params = new HashMap<>();
         params.put("username", userName.getText().toString().trim());
         params.put("password", password.getText().toString().trim());
 */
 
-/*
-        OkGo.<String>post(AllApi.login).tag(this).upJson(jsonObject.toString()).execute(new Callback<String>() {
+
+        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new Callback<String>() {
             @Override
             public void onStart(Request<String, ? extends Request> request) {
 
@@ -168,7 +178,7 @@ public class Login extends Activity {
             public String convertResponse(okhttp3.Response response) throws Throwable {
                 return null;
             }
-        });*/
+        });
 
     }
 }

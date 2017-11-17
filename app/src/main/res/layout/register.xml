@@ -163,7 +163,7 @@
                 android:gravity="bottom"
                 android:textColorHint="#333333"
                 android:hint="请输入邮箱"
-                android:inputType="textPassword"
+
                 android:textColor="@color/textcolor"
                 android:paddingBottom="6dp"
                 android:paddingLeft="10dp"

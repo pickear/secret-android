@@ -14,16 +14,14 @@ import android.widget.Toast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import com.weasel.secret.common.domain.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.api.AllApi;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Register extends Activity {
@@ -113,15 +111,18 @@ public class Register extends Activity {
     }
 
     private void register() {
-
-        HashMap<String, String> params = new HashMap<String, String>();
+        User user=new User();
+        user.setUsername(photoNumber.getText().toString().trim());
+        user.setPassword(password.getText().toString().trim());
+        user.setEmail(email.getText().toString().trim());
+      /*  HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", photoNumber.getText().toString().trim());
         params.put("password", password.getText().toString().trim());
         params.put("email", email.getText().toString().trim());
-        JSONObject jsonObject = new JSONObject(params);
+        JSONObject jsonObject = new JSONObject(params);*/
         OkGo.<String>post(AllApi.register).tag(this)
 
-                .upJson(jsonObject.toString())
+                .upJson(GsonUtil.getGsonInstance().toJson(user))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
