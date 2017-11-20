@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.help.Constant;
 import cf.paradoxie.dizzypassword.util.ACache;
 import cf.paradoxie.dizzypassword.util.LockPatternUtil;
+import cf.paradoxie.dizzypassword.util.StringUtils;
 import cf.paradoxie.dizzypassword.widget.LockPatternIndicator;
 import cf.paradoxie.dizzypassword.widget.LockPatternView;
 
@@ -138,7 +140,9 @@ public class CreateGestureActivity extends Activity {
      */
     private void saveChosenPattern(List<LockPatternView.Cell> cells) {
         byte[] bytes = LockPatternUtil.patternToHash(cells);
-        aCache.put(Constant.GESTURE_PASSWORD, bytes);
+        aCache.put(Constant.GESTURE_PASSWORD, StringUtils.getBinaryStrFromByteArr(bytes));
+        Log.e("backinfo","手势密码："+StringUtils.getBinaryStrFromByteArr(bytes));
+        //aCache.put(Constant.GESTURE_PASSWORD, bytes);
     }
 
     private enum Status {

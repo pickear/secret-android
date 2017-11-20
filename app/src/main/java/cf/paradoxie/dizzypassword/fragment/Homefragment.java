@@ -43,6 +43,7 @@ public class Homefragment extends Fragment {
         for(int i=0;i<20;i++){
             data.add("item"+i);
         }
+       // aCache.clear();
        adapter = new SwipeAdapter(getActivity(), swipelistview.getRightViewWidth(),data,
                 new SwipeAdapter.IOnItemRightClickListener() {
                     @Override

@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.help.Constant;
 import cf.paradoxie.dizzypassword.util.ACache;
 import cf.paradoxie.dizzypassword.util.LockPatternUtil;
+import cf.paradoxie.dizzypassword.util.StringUtils;
 import cf.paradoxie.dizzypassword.widget.LockPatternView;
 
 public class GesturePasswordActivity extends Activity {
@@ -23,7 +25,7 @@ public class GesturePasswordActivity extends Activity {
     LockPatternView lockPatternView;
     private ACache aCache;
     private static final long DELAYTIME = 600l;
-    private byte[] gesturePassword;
+    private String gesturePassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,7 @@ public class GesturePasswordActivity extends Activity {
     private void init() {
         aCache = ACache.get(GesturePasswordActivity.this);
         //得到当前用户的手势密码
-        gesturePassword = aCache.getAsBinary(Constant.GESTURE_PASSWORD);
+        gesturePassword = aCache.getAsString(Constant.GESTURE_PASSWORD);
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
     }
@@ -48,11 +50,18 @@ public class GesturePasswordActivity extends Activity {
         @Override
         public void onPatternComplete(List<LockPatternView.Cell> pattern) {
             if(pattern != null){
-                if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
+                byte[] bytes = LockPatternUtil.patternToHash(pattern);
+                Log.e("backinfo","登录输入的手势密码："+StringUtils.getBinaryStrFromByteArr(bytes)+"原来的密码："+gesturePassword);
+                if(StringUtils.getBinaryStrFromByteArr(bytes).equals(gesturePassword)){
+                    updateStatus(Status.CORRECT);
+                }else{
+                    updateStatus(Status.ERROR);
+                }
+              /*  if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
                 } else {
                     updateStatus(Status.ERROR);
-                }
+                }*/
             }
         }
     };
