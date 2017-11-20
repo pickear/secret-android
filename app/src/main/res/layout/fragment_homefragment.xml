@@ -2,11 +2,21 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    android:orientation="vertical"
-    >
 
+    android:orientation="vertical">
 
+    <cf.paradoxie.dizzypassword.widget.SwipeListView
+        android:id="@+id/swipelistview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/textcolor"></cf.paradoxie.dizzypassword.widget.SwipeListView>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/click_bg"
+        android:text="添加"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

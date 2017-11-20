@@ -23,6 +23,10 @@
     <color name="blue_01aaee">#01AAEE</color>
     <color name="blue_00aaee">#00AAEE</color>
     <color name="red_f3323b">#F3323B</color>
+    <color name="grey_f6f6f6">#f6f6f6</color>
+    <color name="grey_a5a5a5">#A5A5A5</color>
+    <color name="grey_dde1e7">#DDE1E7</color>
+    <color name="red_f4333c">#F4333C</color>
 
 
 </resources>

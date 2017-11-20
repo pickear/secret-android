@@ -134,21 +134,20 @@
             android:textColor="#ffffff" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/Forget_password"
+    <CheckBox
+        android:id="@+id/CloudSynchronization"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:checked="true"
+      android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="\t是否云同步"
+        android:button="@drawable/selector_checkbox"
+        android:textColor="@color/textcolor"
         android:layout_alignLeft="@id/ly"
         android:layout_below="@id/ly"
-        android:paddingBottom="10dp"
-        android:paddingTop="2dp"
-        android:visibility="gone"
-        android:layout_marginLeft="8dp"
-        android:text="忘记密码？"
-        android:layout_marginTop="8dp"
-        android:textColor="#666666"
-        android:textSize="15sp" />
+        android:layout_height="wrap_content" />
+
+
 
     <LinearLayout
         android:id="@+id/lys"

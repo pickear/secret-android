@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +29,7 @@ import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
+import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Login extends Activity {
@@ -47,21 +50,30 @@ public class Login extends Activity {
     Button login;
     @BindView(R.id.ly)
     LinearLayout ly;
-    @BindView(R.id.Forget_password)
-    TextView ForgetPassword;
+
     @BindView(R.id.go_register)
     TextView goRegister;
     @BindView(R.id.lys)
     LinearLayout lys;
+    @BindView(R.id.CloudSynchronization)
+    CheckBox CloudSynchronization;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-       // new ArrayList<String>().stream().forEach(name -> System.out.println(name));
+        // new ArrayList<String>().stream().forEach(name -> System.out.println(name));
         ButterKnife.bind(this);
         userName.addTextChangedListener(new TextChangeWatcher());
         password.addTextChangedListener(new TextChangeWatcher());
+        SPUtils.getInstance().put("cloud", true);
+        CloudSynchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.getInstance().put("cloud",isChecked);
+                Log.e("backinfo","cloud:"+   SPUtils.getInstance().getBoolean("cloud"));
+            }
+        });
 
     }
 
@@ -72,19 +84,20 @@ public class Login extends Activity {
                 finish();
                 break;
             case R.id.login:
-                if(!StringUtils.isEmpty(LoginError())){
-                    Toast.makeText(Login.this,LoginError(),Toast.LENGTH_LONG).show();
-                }else{
+                if (!StringUtils.isEmpty(LoginError())) {
+                    Toast.makeText(Login.this, LoginError(), Toast.LENGTH_LONG).show();
+                } else {
                     login();
                 }
                 break;
             case R.id.go_register:
-                Intent intent=new Intent(Login.this,Register.class);
+                Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
 
                 break;
         }
     }
+
     class TextChangeWatcher implements TextWatcher {
 
         @Override
@@ -107,12 +120,14 @@ public class Login extends Activity {
 
         }
     }
+
     private boolean isclick() {
         if (userName.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() >= 6) {
             return true;
         }
         return false;
     }
+
     private String LoginError() {
         if (StringUtils.isEmpty(userName.getText().toString().trim())) {
             return "请输入用户名";
@@ -121,11 +136,12 @@ public class Login extends Activity {
         }
         return "";
     }
-    private void login(){
-        User user=new User();
+
+    private void login() {
+        User user = new User();
         user.setUsername(userName.getText().toString().trim());
         user.setPassword(password.getText().toString().trim());
-       // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
+        // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
      /*   HashMap<String, String> params = new HashMap<>();
         params.put("username", userName.getText().toString().trim());
         params.put("password", password.getText().toString().trim());
@@ -141,9 +157,9 @@ public class Login extends Activity {
             @Override
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "登录返回的消息response.body()：" + response.body());
-                Log.e("backinfo","登录返回的消息response.message()："+response.message());
-                Log.e("backinfo","登录返回的消息response.code()："+response.code());
-                if(response.code()==200){
+                Log.e("backinfo", "登录返回的消息response.message()：" + response.message());
+                Log.e("backinfo", "登录返回的消息response.code()：" + response.code());
+                if (response.code() == 200) {
                     Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -155,8 +171,8 @@ public class Login extends Activity {
 
             @Override
             public void onError(Response<String> response) {
-                Log.e("backinfo","登录返回错误的消息response.message()："+response.message());
-                Log.e("backinfo","登录返回错误的消息response.code()："+response.code());
+                Log.e("backinfo", "登录返回错误的消息response.message()：" + response.message());
+                Log.e("backinfo", "登录返回错误的消息response.code()：" + response.code());
             }
 
             @Override
