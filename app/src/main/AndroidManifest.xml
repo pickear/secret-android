@@ -27,7 +27,11 @@
         <activity
             android:name=".activity.CreateGestureActivity"
             android:label="@string/title_activity_create_gesture" />
-        <activity android:name=".activity.GesturePasswordActivity"></activity>
+        <activity android:name=".activity.GesturePasswordActivity" />
+        <activity android:name=".activity.LookPassWord" />
+        <activity android:name=".activity.ConfirmPassword" />
+        <activity android:name=".activity.AddSubject"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

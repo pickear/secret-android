@@ -7,4 +7,6 @@ public class AllApi {
     private static String Home="https://secret.kisme.org/";
     public static String register=Home+"user/register";
     public static String login=Home+"user/login";
+    public static String save=Home+"/subject/save";
+    public static String list=Home+"/subject/list";
 }

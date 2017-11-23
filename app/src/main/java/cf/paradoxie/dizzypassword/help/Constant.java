@@ -5,4 +5,5 @@ package cf.paradoxie.dizzypassword.help;
  */
 public class Constant {
     public static final String GESTURE_PASSWORD = "GesturePassword";
+    public static final String PD = "12345678";
 }

@@ -46,5 +46,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.weasel.secret.common:secret-common:1.0-SNAPSHOT'
     compile 'com.android.support:multidex:1.0.0'
-
+    compile 'com.dou361.dialogui:jjdxm-dialogui:1.0.3'
 }

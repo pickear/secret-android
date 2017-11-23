@@ -1,5 +1,7 @@
 package cf.paradoxie.dizzypassword.util;
 
+import android.widget.EditText;
+
 /**
  * Created by a1 on 2017/11/15.
  */
@@ -17,7 +19,13 @@ public class StringUtils {
     public static boolean isEmpty(final CharSequence s) {
         return s == null || s.length() == 0;
     }
-
+    public static String Utlishint(EditText text,String msg, String hint){
+        if(isEmpty(msg)){
+            return hint;
+        }else{
+            return msg;
+        }
+    }
     /**
      * 判断字符串是否为null或全为空格
      *
