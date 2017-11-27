@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -12,6 +14,7 @@ import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 
+import java.net.URISyntaxException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
@@ -21,8 +24,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import cf.paradoxie.dizzypassword.api.AllApi;
 import okhttp3.OkHttpClient;
-
 
 public class MyApplication extends Application {
     public static MyApplication mInstance;
@@ -38,6 +41,9 @@ public class MyApplication extends Application {
         mContext = getApplicationContext();
         initOkGo();
     }
+
+
+
     private void initOkGo() {
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//
        // HttpHeaders headers = new HttpHeaders();
@@ -172,6 +178,17 @@ public class MyApplication extends Application {
     }
 
 
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket(AllApi.beat);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public Socket getSocket() {
+        return mSocket;
+    }
 
 }

@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +21,10 @@ import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddSubject;
 import cf.paradoxie.dizzypassword.activity.LookPassWord;
 import cf.paradoxie.dizzypassword.adapter.SwipeAdapter;
+import cf.paradoxie.dizzypassword.api.AllApi;
+import cf.paradoxie.dizzypassword.domian.SecretList;
 import cf.paradoxie.dizzypassword.help.Constant;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.password.PassValitationPopwindow;
 import cf.paradoxie.dizzypassword.util.ACache;
 import cf.paradoxie.dizzypassword.util.StringUtils;
@@ -33,7 +37,7 @@ public class Homefragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.swipelistview)
     SwipeListView swipelistview;
-    List<String> data=new ArrayList<>();
+
     SwipeAdapter adapter;
     private ACache aCache;
     private byte[] gesturePassword;
@@ -51,29 +55,13 @@ public class Homefragment extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), AddSubject.class);
+                Intent intent = new Intent(getActivity(), AddSubject.class);
                 startActivity(intent);
             }
         });
         aCache = ACache.get(getActivity());
-        for(int i=0;i<20;i++){
-            data.add("item"+i);
-        }
-       // aCache.clear();
-       adapter = new SwipeAdapter(getActivity(), swipelistview.getRightViewWidth(),data,
-                new SwipeAdapter.IOnItemRightClickListener() {
-                    @Override
-                    public void onRightClick(View v, int position) {
+       init();
 
-
-                       /* Toast.makeText(getActivity(), "right onclick " + position,
-                                Toast.LENGTH_SHORT).show();*/
-                        adapter.delete(position);
-                        swipelistview.hideRight();
-                    }
-                });
-
-        swipelistview.setAdapter(adapter);
         swipelistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -106,6 +94,28 @@ public class Homefragment extends Fragment {
 
         swipelistview.addFooterView(footerview);
         return view;
+    }
+
+    private void init() {
+        OkGo.<String>get(AllApi.query).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("backinfo", response.body());
+
+                Log.e("backinfo", response.toString());
+                SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
+                adapter = new SwipeAdapter(getActivity(), swipelistview.getRightViewWidth(),serverSecret.getSubjects(),
+                        new SwipeAdapter.IOnItemRightClickListener() {
+                            @Override
+                            public void onRightClick(View v, int position) {
+                                adapter.delete(position);
+                                swipelistview.hideRight();
+                            }
+                        });
+
+                swipelistview.setAdapter(adapter);
+            }
+        });
     }
 
 

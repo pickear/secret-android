@@ -6,11 +6,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private int mImageViewArray[] = {R.drawable.productclassification_bg, R.drawable.my_bg
     };
     CircleImageView loginimag;
+    private Socket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         mTabHost = (TabFragmentHost) findViewById(R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initView();
+        MyApplication app = (MyApplication) getApplication();
+        mSocket = app.getSocket();
+        init();
         loginimag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +77,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+   private void init(){
+       mSocket.on(Socket.EVENT_CONNECT,onConnect);
+       mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
+       mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
+       mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+       mSocket.on("new message", onNewMessage);
+       mSocket.on("user joined", onUserJoined);
+       mSocket.on("user left", onUserLeft);
+       mSocket.on("typing", onTyping);
+       mSocket.on("stop typing", onStopTyping);
+       mSocket.connect();
+
+   }
     private void initView() {
         Tab tab_home = new Tab(homefragment.getClass(), R.string.home, mImageViewArray[0]);
         Tab tws = new Tab(twofragment.getClass(), R.string.My, mImageViewArray[1]);
@@ -101,6 +122,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+
+
+        mSocket.disconnect();
+
+        mSocket.off(Socket.EVENT_CONNECT, onConnect);
+        mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        mSocket.off("new message", onNewMessage);
+        mSocket.off("user joined", onUserJoined);
+        mSocket.off("user left", onUserLeft);
+        mSocket.off("typing", onTyping);
+        mSocket.off("stop typing", onStopTyping);
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         exitBy2Click();
     }
@@ -123,5 +162,61 @@ public class MainActivity extends AppCompatActivity {
             System.exit(0);
         }
     }
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e("backinfo","onConnect");
+        }
+    };
+
+    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e("backinfo","onDisconnect");
+        }
+    };
+
+    private Emitter.Listener onConnectError = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e("backinfo","onConnectError");
+        }
+    };
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.e("backinfo","onNewMessage");
+        }
+    };
+
+    private Emitter.Listener onUserJoined = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.e("backinfo","onUserJoined");
+        }
+    };
+
+    private Emitter.Listener onUserLeft = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.e("backinfo","onUserLeft");
+        }
+    };
+
+    private Emitter.Listener onTyping = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.e("backinfo","onTyping");
+        }
+    };
+
+    private Emitter.Listener onStopTyping = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.e("backinfo","onStopTyping");
+        }
+    };
+
 
 }

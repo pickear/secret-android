@@ -17,10 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.Callback;
-import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.weasel.secret.common.domain.User;
 
 import butterknife.BindView;
@@ -28,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.api.AllApi;
+import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
@@ -70,8 +69,8 @@ public class Login extends Activity {
         CloudSynchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.getInstance().put("cloud",isChecked);
-                Log.e("backinfo","cloud:"+   SPUtils.getInstance().getBoolean("cloud"));
+                SPUtils.getInstance().put("cloud", isChecked);
+                Log.e("backinfo", "cloud:" + SPUtils.getInstance().getBoolean("cloud"));
             }
         });
 
@@ -137,8 +136,10 @@ public class Login extends Activity {
         return "";
     }
 
+    User user = new User();
+
     private void login() {
-        User user = new User();
+
         user.setUsername(userName.getText().toString().trim());
         user.setPassword(password.getText().toString().trim());
         // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
@@ -148,53 +149,33 @@ public class Login extends Activity {
 */
 
 
-        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new Callback<String>() {
-            @Override
-            public void onStart(Request<String, ? extends Request> request) {
-
-            }
-
+        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "登录返回的消息response.body()：" + response.body());
                 Log.e("backinfo", "登录返回的消息response.message()：" + response.message());
-                Log.e("backinfo", "登录返回的消息response.code()：" + response.code());
-                if (response.code() == 200) {
-                    Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
+                Log.e("backinfo", "登录返回的消息response.toString()：" + response.toString());
+                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
+                if (loginBean.getCode().equals("0000")) {
+                    Toast.makeText(Login.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(Login.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-
-            @Override
-            public void onCacheSuccess(Response<String> response) {
 
             }
 
             @Override
             public void onError(Response<String> response) {
-                Log.e("backinfo", "登录返回错误的消息response.message()：" + response.message());
-                Log.e("backinfo", "登录返回错误的消息response.code()：" + response.code());
+                Toast.makeText(Login.this, "登录失败", Toast.LENGTH_LONG).show();
+                super.onError(response);
             }
 
             @Override
             public void onFinish() {
-
-            }
-
-            @Override
-            public void uploadProgress(Progress progress) {
-
-            }
-
-            @Override
-            public void downloadProgress(Progress progress) {
-
-            }
-
-            @Override
-            public String convertResponse(okhttp3.Response response) throws Throwable {
-                return null;
+                super.onFinish();
             }
         });
+
 
     }
 }

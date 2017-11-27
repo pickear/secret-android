@@ -13,10 +13,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.domian.SecretList;
 
 
 public class SwipeAdapter extends BaseAdapter {
-    List<String> data;
+    List<SecretList.SubjectsBean> data;
     /**
      * 上下文对象
      */
@@ -39,7 +40,7 @@ public class SwipeAdapter extends BaseAdapter {
     /**
      * @param
      */
-    public SwipeAdapter(Context ctx, int rightWidth, List<String> mdata,IOnItemRightClickListener l) {
+    public SwipeAdapter(Context ctx, int rightWidth, List<SecretList.SubjectsBean> mdata,IOnItemRightClickListener l) {
         mContext = ctx;
         mRightWidth = rightWidth;
         mListener = l;
@@ -83,8 +84,8 @@ public class SwipeAdapter extends BaseAdapter {
 
         LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
         item.item_right.setLayoutParams(lp2);
-        item.item_left_txt.setText(data.get(position));
-        item.item_right_txt.setText("delete " + thisPosition);
+        item.item_left_txt.setText(data.get(position).getTitle());
+        item.item_right_txt.setText("删除");
         item.item_right.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

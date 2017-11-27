@@ -7,9 +7,9 @@
     <cf.paradoxie.dizzypassword.widget.SwipeListView
         android:id="@+id/swipelistview"
         android:layout_width="match_parent"
-
+        android:dividerHeight="0.8dp"
         android:layout_height="wrap_content"
-        android:divider="@null">
+        android:divider="@color/view">
 
     </cf.paradoxie.dizzypassword.widget.SwipeListView>
 
