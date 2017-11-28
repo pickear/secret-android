@@ -1,6 +1,7 @@
 package cf.paradoxie.dizzypassword.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.domian.SecretList;
+import me.drakeet.materialdialog.MaterialDialog;
 
 
 public class SwipeAdapter extends BaseAdapter {
@@ -50,6 +52,7 @@ public class SwipeAdapter extends BaseAdapter {
         data.remove(position);
         notifyDataSetChanged();
     }
+    MaterialDialog mMaterialDialog;
     @Override
     public int getCount() {
         return data.size();
@@ -84,16 +87,48 @@ public class SwipeAdapter extends BaseAdapter {
 
         LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
         item.item_right.setLayoutParams(lp2);
+        item.item_right.setBackgroundColor(Color.parseColor("#333333"));
         item.item_left_txt.setText(data.get(position).getTitle());
         item.item_right_txt.setText("删除");
         item.item_right.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onRightClick(v, thisPosition);
+            public void onClick(final View v) {
+                mMaterialDialog = new MaterialDialog(mContext)
+                        .setTitle("删除")
+                        .setMessage("你是否确定删除该密码数据")
+                        .setPositiveButton("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                               /* mMaterialDialog.dismiss();
+                                mListener.onRightClick(v, thisPosition);*/
+                            }
+                        })
+                        .setNegativeButton("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mMaterialDialog.dismiss();
+                            }
+                        });
+
+                mMaterialDialog.show();
+
+               /* DialogUIUtils.showMdAlert(mContext, "标题", "文本内容", new DialogUIListener() {
+                    @Override
+                    public void onPositive() {
+                        if (mListener != null) {
+                            mListener.onRightClick(v, thisPosition);
 
 
-                }
+                        }
+                    }
+
+                    @Override
+                    public void onNegative() {
+
+                    }
+
+                }).show();*/
+
             }
         });
         return convertView;

@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import com.github.nkzawa.socketio.client.IO;
@@ -25,6 +26,11 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
 import cf.paradoxie.dizzypassword.api.AllApi;
+import cf.paradoxie.dizzypassword.db.help.DBName;
+import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
+import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
+import cf.paradoxie.dizzypassword.gen.DaoMaster;
+import cf.paradoxie.dizzypassword.gen.DaoSession;
 import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
@@ -32,7 +38,14 @@ public class MyApplication extends Application {
     public static Context mContext;
     public static boolean isShow = true;
     private static Toast mToast;
+    //创建数据库的名字
+    private static final String DB_NAME = DBName.DBNAME;
 
+    //   private DaoMaster.DevOpenHelper mHelper;
+    private SQLiteDatabase db;
+    private DaoMaster mDaoMaster;
+    private DaoSession mDaoSession;
+    private static MySqlLiteOpenHelper mHelper;
     @Override
     public void onCreate() {
 
@@ -40,9 +53,42 @@ public class MyApplication extends Application {
         mInstance = this;
         mContext = getApplicationContext();
         initOkGo();
+        setDatabase();
+        DaoManager.getInstance().init(this);
     }
 
+    public static MyApplication getInstances(){
+        return mInstance;
+    }
 
+    /**
+     * 设置greenDao
+     */
+    private void setDatabase() {
+        // 通过 DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的 SQLiteOpenHelper 对象。
+        // 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。
+        // 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
+        // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
+        mHelper = new MySqlLiteOpenHelper(this, DB_NAME, null);
+        db = mHelper.getWritableDatabase();
+        // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
+        mDaoMaster = new DaoMaster(db);
+        mDaoSession = mDaoMaster.newSession();
+    }
+    public DaoSession getDaoSession() {
+        return mDaoSession;
+    }
+    public SQLiteDatabase getDb() {
+        return db;
+    }
+    public void closeHelper()
+    {
+        if(mHelper != null)
+        {
+            mHelper.close();
+            mHelper = null;
+        }
+    }
 
     private void initOkGo() {
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//
