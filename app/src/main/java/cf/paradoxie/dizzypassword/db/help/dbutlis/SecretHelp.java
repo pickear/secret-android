@@ -35,7 +35,14 @@ public class SecretHelp {
      */
     public static void delete(long id) {
         DaoManager.getInstance().getDaoSession().getSecretDao().deleteByKey(id);
+        DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(id)).buildDelete();
     }
+    /**
+     * 删除数据
+     *
+     * @param id
+     */
+
     /**
      * 删除数据
      *
@@ -76,6 +83,13 @@ public class SecretHelp {
      */
     public static List<Secret> query(Long id) {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretListDao.Properties.Id.eq(id)).list();
+        for(int i=0;i<secrets.size();i++){
+            secrets.get(i).setSecretLists(SecretListHelp.query(secrets.get(i).getId()));
+        }
+        return secrets;
+    }
+    public static List<Secret> queryall() {
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
         for(int i=0;i<secrets.size();i++){
             secrets.get(i).setSecretLists(SecretListHelp.query(secrets.get(i).getId()));
         }

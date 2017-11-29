@@ -22,7 +22,6 @@ import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.AddSubject;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.pickerview.Util;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
@@ -68,52 +67,52 @@ public class AddTypeAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-    ViewHolder item;
+    ViewHolder holder;
     @Override
-    public View getView(final int mposition, View convertView, ViewGroup parent) {
+    public View getView( final int mposition, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.typeinfo_item, parent, false);
-            item = new ViewHolder();
-            item.add= (TextView) convertView.findViewById(R.id.add);
-            item.type= (TextView) convertView.findViewById(R.id.type);
+            holder = new ViewHolder();
+            holder.add= (TextView) convertView.findViewById(R.id.add);
+            holder.type= (TextView) convertView.findViewById(R.id.type);
+            holder.deletetype= (TextView) convertView.findViewById(R.id.deletetype);
+            holder.valuse= (EditText) convertView.findViewById(R.id.valuse);
+          //  holder.valuse.addTextChangedListener(new PASTextChanged(holder));
+           // holder.valuse.setTag(mposition);
+            convertView.setTag(holder);
 
-            item.deletetype= (TextView) convertView.findViewById(R.id.deletetype);
-            item.valuse= (EditText) convertView.findViewById(R.id.valuse);
-            item.valuse.addTextChangedListener(new PASTextChanged(item));
-            convertView.setTag(item);
-            item.valuse.setTag(mposition);
         } else {// 有直接获得ViewHolder
-            item = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder)convertView.getTag();
         }
+        final Secret itemObj = data.get(mposition);
         if(mposition==0){
-            item.add.setVisibility(View.VISIBLE);
-            item.deletetype.setVisibility(View.GONE);
+            holder.add.setVisibility(View.VISIBLE);
+            holder.deletetype.setVisibility(View.GONE);
         }else{
-            item.add.setVisibility(View.GONE);
-            item.deletetype.setVisibility(View.VISIBLE);
+            holder.add.setVisibility(View.GONE);
+            holder.deletetype.setVisibility(View.VISIBLE);
         }
-
         if(data.get(mposition).getName()==null||data.get(mposition).getName().equals("")){
-            item.type.setText("");
+            holder.type.setText("");
 
         }else{
-            item.type.setText(data.get(mposition).getName());
+            holder.type.setText(data.get(mposition).getName());
 
         }
-        item.add.setOnClickListener(new View.OnClickListener() {
+        holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addType();
             }
         });
-        item.deletetype.setOnClickListener(new View.OnClickListener() {
+        holder.deletetype.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteType(mposition);
             }
         });
-        item.type.setOnClickListener(new View.OnClickListener() {
+        holder.type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Util.alertBottomWheelOption(v, mContext, typedata, new Util.OnWheelViewClick() {
@@ -126,14 +125,35 @@ public class AddTypeAdapter extends BaseAdapter {
                             data.get(mposition).setName(typedata.get(postion));
                             notifyDataSetChanged();
                         }
-                        Log.e("backinfo", GsonUtil.getGsonInstance().toJson(data));
-
                     }
                 });
             }
         });
+        if (holder.valuse.getTag() instanceof TextWatcher) {
+            holder.valuse.removeTextChangedListener((TextWatcher) holder.valuse.getTag());
+        }
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && !"".equals(s.toString())) {
+                   /* int position = (Integer) holder.valuse.getTag();
+                    Log.e("backinfo","position:"+position);
+                    data.get(position).setValue(s.toString());*/
+                    itemObj.setValue(s.toString());
+                }
+            }
+        };
+
+        holder.valuse.addTextChangedListener(watcher);
+        holder.valuse.setTag(watcher);
 
         return convertView;
     }
@@ -204,6 +224,7 @@ public class AddTypeAdapter extends BaseAdapter {
         public void afterTextChanged(Editable s) {
             if (s != null && !"".equals(s.toString())) {
                 int position = (Integer) mHolder.valuse.getTag();
+                Log.e("backinfo","position:"+position);
                 data.get(position).setValue(s.toString());
             }
 

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -17,12 +16,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.domian.SecretList;
+import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
+import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import io.reactivex.annotations.NonNull;
 
 
-public class SwipeAdapter extends BaseAdapter {
-    List<SecretList.SubjectsBean> data;
+public class LSwipeAdapter extends BaseAdapter {
+    List<Secret> data;
     /**
      * 上下文对象
      */
@@ -45,7 +45,7 @@ public class SwipeAdapter extends BaseAdapter {
     /**
      * @param
      */
-    public SwipeAdapter(Activity ctx, int rightWidth, List<SecretList.SubjectsBean> mdata,IOnItemRightClickListener l) {
+    public LSwipeAdapter(Activity ctx, int rightWidth, List<Secret> mdata, IOnItemRightClickListener l) {
         mContext = ctx;
         mRightWidth = rightWidth;
         mListener = l;
@@ -88,7 +88,7 @@ public class SwipeAdapter extends BaseAdapter {
         }
 
 
-        LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
+        LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
         item.item_right.setLayoutParams(lp2);
         item.item_right.setBackgroundColor(Color.parseColor("#333333"));
         item.item_left_txt.setText(data.get(position).getTitle());
@@ -96,6 +96,7 @@ public class SwipeAdapter extends BaseAdapter {
         item.item_right.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
+
                 new MaterialDialog.Builder(mContext)
                         .title("删除")
                         .content("你确定要删除该条记录吗？")
@@ -104,6 +105,7 @@ public class SwipeAdapter extends BaseAdapter {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                SecretHelp.delete(data.get(position).getId());
                                 data.remove(position);
                                 notifyDataSetChanged();
                                 dialog.dismiss();
@@ -115,9 +117,6 @@ public class SwipeAdapter extends BaseAdapter {
                                 dialog.dismiss();
                             }
                         }).show();
-
-
-
 
             }
         });

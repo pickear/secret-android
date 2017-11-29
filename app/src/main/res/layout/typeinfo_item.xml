@@ -24,42 +24,7 @@
 
             android:drawableRight="@drawable/ic_keyboard_arrow_down"/>
 
-     <!--   <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/padd"
-            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-
-                <EditText
-                    android:id="@+id/type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="请选择密码类型"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:singleLine="true"
-                    android:textColor="@color/textcolor"
-                    android:textColorHint="@color/textcolor"
-                    android:textSize="16sp" />
-            </RelativeLayout>
-
-            <ImageButton
-                android:id="@+id/showtype"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:src="@drawable/ic_keyboard_arrow_down" />
-        </LinearLayout>-->
 
 
         <EditText

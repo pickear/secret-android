@@ -16,7 +16,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.weasel.secret.common.domain.User;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
@@ -26,20 +26,21 @@ import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Register extends Activity {
 
-    @BindView(R.id.back)
+
+    @Bind(R.id.back)
     TextView back;
-    @BindView(R.id.title)
+    @Bind(R.id.title)
     TextView title;
-    @BindView(R.id.photo_number)
+    @Bind(R.id.photo_number)
     EditText photoNumber;
-    @BindView(R.id.password)
+    @Bind(R.id.password)
     EditText password;
-    @BindView(R.id.re_password)
+    @Bind(R.id.re_password)
     EditText rePassword;
-    @BindView(R.id.next)
-    Button next;
-    @BindView(R.id.email)
+    @Bind(R.id.email)
     EditText email;
+    @Bind(R.id.next)
+    Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class Register extends Activity {
     }
 
     private void register() {
-        User user=new User();
+        User user = new User();
         user.setUsername(photoNumber.getText().toString().trim());
         user.setPassword(password.getText().toString().trim());
         user.setEmail(email.getText().toString().trim());
@@ -150,6 +151,7 @@ public class Register extends Activity {
                 });
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

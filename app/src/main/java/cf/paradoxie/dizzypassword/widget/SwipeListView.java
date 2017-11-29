@@ -20,7 +20,7 @@ public class SwipeListView extends ListView {
 
     private float mFirstY;
 
-    private int mRightViewWidth = 200;
+    private int mRightViewWidth = 240;
 
     // private boolean mIsInAnimation = false;
     private final int mDuration = 100;

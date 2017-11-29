@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.help.Constant;
@@ -19,13 +19,15 @@ import cf.paradoxie.dizzypassword.widget.LockPatternView;
 
 public class GesturePasswordActivity extends Activity {
 
-    @BindView(R.id.messageTv)
+
+    @Bind(R.id.messageTv)
     TextView messageTv;
-    @BindView(R.id.lockPatternView)
+    @Bind(R.id.lockPatternView)
     LockPatternView lockPatternView;
     private ACache aCache;
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,7 @@ public class GesturePasswordActivity extends Activity {
         ButterKnife.bind(this);
         this.init();
     }
+
     private void init() {
         aCache = ACache.get(GesturePasswordActivity.this);
         //得到当前用户的手势密码
@@ -40,6 +43,7 @@ public class GesturePasswordActivity extends Activity {
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
     }
+
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
 
         @Override
@@ -49,12 +53,12 @@ public class GesturePasswordActivity extends Activity {
 
         @Override
         public void onPatternComplete(List<LockPatternView.Cell> pattern) {
-            if(pattern != null){
+            if (pattern != null) {
                 byte[] bytes = LockPatternUtil.patternToHash(pattern);
-                Log.e("backinfo","登录输入的手势密码："+StringUtils.getBinaryStrFromByteArr(bytes)+"原来的密码："+gesturePassword);
-                if(StringUtils.getBinaryStrFromByteArr(bytes).equals(gesturePassword)){
+                Log.e("backinfo", "登录输入的手势密码：" + StringUtils.getBinaryStrFromByteArr(bytes) + "原来的密码：" + gesturePassword);
+                if (StringUtils.getBinaryStrFromByteArr(bytes).equals(gesturePassword)) {
                     updateStatus(Status.CORRECT);
-                }else{
+                } else {
                     updateStatus(Status.ERROR);
                 }
               /*  if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
@@ -68,6 +72,7 @@ public class GesturePasswordActivity extends Activity {
 
     /**
      * 更新状态
+     *
      * @param status
      */
     private void updateStatus(Status status) {
@@ -108,6 +113,7 @@ public class GesturePasswordActivity extends Activity {
             this.strId = strId;
             this.colorId = colorId;
         }
+
         private int strId;
         private int colorId;
     }

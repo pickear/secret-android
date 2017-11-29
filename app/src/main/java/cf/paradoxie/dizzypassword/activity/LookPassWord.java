@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
@@ -16,13 +16,14 @@ import cf.paradoxie.dizzypassword.password.PswInputView;
 
 public class LookPassWord extends Activity {
 
-    @BindView(R.id.back)
+
+    @Bind(R.id.back)
     TextView back;
-    @BindView(R.id.title)
+    @Bind(R.id.title)
     TextView title;
-    @BindView(R.id.psw_input)
+    @Bind(R.id.psw_input)
     PswInputView pswInput;
-    @BindView(R.id.next)
+    @Bind(R.id.next)
     Button next;
 
     @Override
@@ -33,11 +34,12 @@ public class LookPassWord extends Activity {
         pswInput.setInputCallBack(new PswInputView.InputCallBack() {
             @Override
             public void onInputFinish(String result) {
-               // Toast.makeText(LookPassWord.this, result, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(LookPassWord.this, result, Toast.LENGTH_SHORT).show();
 
             }
         });
     }
+
     @OnClick({R.id.back, R.id.next})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -45,12 +47,12 @@ public class LookPassWord extends Activity {
                 finish();
                 break;
             case R.id.next:
-                if(pswInput.isFinishInput()==true){
-                    Intent intent=new Intent(LookPassWord.this,ConfirmPassword.class);
-                    intent.putExtra("pd",pswInput.Inputresult());
+                if (pswInput.isFinishInput() == true) {
+                    Intent intent = new Intent(LookPassWord.this, ConfirmPassword.class);
+                    intent.putExtra("pd", pswInput.Inputresult());
                     startActivity(intent);
                     finish();
-                }else{
+                } else {
                     Toast.makeText(LookPassWord.this, "请输入完整的8位密码", Toast.LENGTH_SHORT).show();
                 }
                 break;

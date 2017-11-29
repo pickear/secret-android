@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
@@ -24,18 +24,20 @@ import cf.paradoxie.dizzypassword.widget.LockPatternView;
 
 public class CreateGestureActivity extends Activity {
 
-    @BindView(R.id.lockPatterIndicator)
+
+    @Bind(R.id.lockPatterIndicator)
     LockPatternIndicator lockPatternIndicator;
-    @BindView(R.id.messageTv)
+    @Bind(R.id.messageTv)
     TextView messageTv;
-    @BindView(R.id.lockPatternView)
+    @Bind(R.id.lockPatternView)
     LockPatternView lockPatternView;
-    @BindView(R.id.resetBtn)
+    @Bind(R.id.resetBtn)
     Button resetBtn;
     private List<LockPatternView.Cell> mChosenPattern = null;
     private ACache aCache;
     private static final long DELAYTIME = 600L;
     private static final String TAG = "CreateGestureActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +45,13 @@ public class CreateGestureActivity extends Activity {
         ButterKnife.bind(this);
         init();
     }
+
     private void init() {
         aCache = ACache.get(CreateGestureActivity.this);
         lockPatternView.setOnPatternListener(patternListener);
     }
-    @OnClick({ R.id.resetBtn})
+
+    @OnClick({R.id.resetBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 
@@ -59,6 +63,7 @@ public class CreateGestureActivity extends Activity {
                 break;
         }
     }
+
     /**
      * 手势监听
      */
@@ -74,7 +79,7 @@ public class CreateGestureActivity extends Activity {
         @Override
         public void onPatternComplete(List<LockPatternView.Cell> pattern) {
             //Log.e(TAG, "--onPatternDetected--");
-            if(mChosenPattern == null && pattern.size() >= 4) {
+            if (mChosenPattern == null && pattern.size() >= 4) {
                 mChosenPattern = new ArrayList<LockPatternView.Cell>(pattern);
                 updateStatus(Status.CORRECT, pattern);
             } else if (mChosenPattern == null && pattern.size() < 4) {
@@ -91,6 +96,7 @@ public class CreateGestureActivity extends Activity {
 
     /**
      * 更新状态
+     *
      * @param status
      * @param pattern
      */
@@ -128,6 +134,7 @@ public class CreateGestureActivity extends Activity {
             return;
         lockPatternIndicator.setIndicator(mChosenPattern);
     }
+
     /**
      * 成功设置了手势密码(跳到首页)
      */
@@ -141,7 +148,7 @@ public class CreateGestureActivity extends Activity {
     private void saveChosenPattern(List<LockPatternView.Cell> cells) {
         byte[] bytes = LockPatternUtil.patternToHash(cells);
         aCache.put(Constant.GESTURE_PASSWORD, StringUtils.getBinaryStrFromByteArr(bytes));
-        Log.e("backinfo","手势密码："+StringUtils.getBinaryStrFromByteArr(bytes));
+        Log.e("backinfo", "手势密码：" + StringUtils.getBinaryStrFromByteArr(bytes));
         //aCache.put(Constant.GESTURE_PASSWORD, bytes);
     }
 
@@ -161,6 +168,7 @@ public class CreateGestureActivity extends Activity {
             this.strId = strId;
             this.colorId = colorId;
         }
+
         private int strId;
         private int colorId;
     }

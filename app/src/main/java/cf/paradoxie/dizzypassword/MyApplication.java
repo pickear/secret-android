@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -15,7 +13,6 @@ import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 
-import java.net.URISyntaxException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +22,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.DBName;
 import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
@@ -224,17 +220,8 @@ public class MyApplication extends Application {
     }
 
 
-    private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket(AllApi.beat);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public Socket getSocket() {
-        return mSocket;
-    }
+
+
 
 }

@@ -3,10 +3,19 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:text="密码列表"
+        android:background="@color/appcolor"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="40dp" />
 
     <cf.paradoxie.dizzypassword.widget.SwipeListView
         android:id="@+id/swipelistview"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:dividerHeight="0.8dp"
         android:layout_height="wrap_content"
         android:divider="@color/view">

@@ -1,6 +1,7 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,12 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dou361.dialogui.DialogUIUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.weasel.secret.common.domain.User;
+import com.weasel.secret.common.helper.EntryptionHelper;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
@@ -33,29 +37,29 @@ import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class Login extends Activity {
 
-    @BindView(R.id.back)
-    TextView back;
-    @BindView(R.id.title)
-    TextView title;
-    @BindView(R.id.view)
-    RelativeLayout view;
-    @BindView(R.id.user_name)
-    EditText userName;
-    @BindView(R.id.password)
-    EditText password;
-    @BindView(R.id.user_info)
-    LinearLayout userInfo;
-    @BindView(R.id.login)
-    Button login;
-    @BindView(R.id.ly)
-    LinearLayout ly;
 
-    @BindView(R.id.go_register)
-    TextView goRegister;
-    @BindView(R.id.lys)
-    LinearLayout lys;
-    @BindView(R.id.CloudSynchronization)
+    @Bind(R.id.back)
+    TextView back;
+    @Bind(R.id.title)
+    TextView title;
+    @Bind(R.id.view)
+    RelativeLayout view;
+    @Bind(R.id.user_name)
+    EditText userName;
+    @Bind(R.id.password)
+    EditText password;
+    @Bind(R.id.user_info)
+    LinearLayout userInfo;
+    @Bind(R.id.login)
+    Button login;
+    @Bind(R.id.ly)
+    LinearLayout ly;
+    @Bind(R.id.CloudSynchronization)
     CheckBox CloudSynchronization;
+    @Bind(R.id.go_register)
+    TextView goRegister;
+    @Bind(R.id.lys)
+    LinearLayout lys;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +141,7 @@ public class Login extends Activity {
     }
 
     User user = new User();
+    Dialog dialog;
 
     private void login() {
 
@@ -158,6 +163,14 @@ public class Login extends Activity {
                 LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
                 if (loginBean.getCode().equals("0000")) {
                     Toast.makeText(Login.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
+                    try {
+                        SPUtils.getInstance().put("username", user.getUsername());
+                        SPUtils.getInstance().put("password", EntryptionHelper.encrypt("password", user.getPassword()));
+                    } catch (Exception e) {
+                        Log.e("backinfo", "加密出错");
+                        e.printStackTrace();
+                    }
+                    finish();
                 } else {
                     Toast.makeText(Login.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -171,7 +184,16 @@ public class Login extends Activity {
             }
 
             @Override
+            public void onStart(Request<String, ? extends Request> request) {
+                dialog = DialogUIUtils.showLoading(Login.this, "登录中...", true, false, false, true).show();
+                super.onStart(request);
+            }
+
+            @Override
             public void onFinish() {
+                if (dialog != null && dialog.isShowing()) {
+                    DialogUIUtils.dismiss(dialog);
+                }
                 super.onFinish();
             }
         });
