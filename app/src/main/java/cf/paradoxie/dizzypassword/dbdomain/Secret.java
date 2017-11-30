@@ -23,6 +23,7 @@ public class Secret {
     private Long id;
     private String title;
     private String url;
+    private boolean cloud;
     @ToMany(referencedJoinProperty = "secretId")
     private List<SecretList> secretLists;
 
@@ -119,11 +120,18 @@ public class Secret {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getSecretDao() : null;
     }
-    @Generated(hash = 1928731570)
-    public Secret(Long id, String title, String url) {
+    public boolean getCloud() {
+        return this.cloud;
+    }
+    public void setCloud(boolean cloud) {
+        this.cloud = cloud;
+    }
+    @Generated(hash = 29723780)
+    public Secret(Long id, String title, String url, boolean cloud) {
         this.id = id;
         this.title = title;
         this.url = url;
+        this.cloud = cloud;
     }
     @Generated(hash = 974314130)
     public Secret() {

@@ -12,9 +12,10 @@
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
-       >
-        <activity android:name=".activity.MainActivity"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action
@@ -24,24 +25,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.Register"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.Login"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.Register"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.Login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.CreateGestureActivity"
+            android:label="@string/title_activity_create_gesture"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GesturePasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.LookPassWord"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ConfirmPassword"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.AddSubject"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_activity_create_gesture" />
-        <activity android:name=".activity.GesturePasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".activity.LookPassWord"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.ConfirmPassword"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.AddSubject"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.Secretdetails"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_secretdetails"></activity>
     </application>
 
 </manifest>

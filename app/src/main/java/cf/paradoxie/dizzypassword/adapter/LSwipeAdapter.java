@@ -41,6 +41,9 @@ public class LSwipeAdapter extends BaseAdapter {
     public interface IOnItemRightClickListener {
         void onRightClick(View v, int position);
     }
+    public Secret getsecret(int position){
+        return data.get(position);
+    }
 
     /**
      * @param

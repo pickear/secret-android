@@ -27,6 +27,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Url = new Property(2, String.class, "url", false, "URL");
+        public final static Property Cloud = new Property(3, boolean.class, "cloud", false, "CLOUD");
     };
 
     private DaoSession daoSession;
@@ -47,7 +48,8 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"SECRET\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
-                "\"URL\" TEXT);"); // 2: url
+                "\"URL\" TEXT," + // 2: url
+                "\"CLOUD\" INTEGER NOT NULL );"); // 3: cloud
     }
 
     /** Drops the underlying database table. */
@@ -74,6 +76,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         if (url != null) {
             stmt.bindString(3, url);
         }
+        stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
     }
 
     @Override
@@ -94,6 +97,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         if (url != null) {
             stmt.bindString(3, url);
         }
+        stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
     }
 
     @Override
@@ -112,7 +116,8 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         Secret entity = new Secret( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // url
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
+            cursor.getShort(offset + 3) != 0 // cloud
         );
         return entity;
     }
@@ -122,6 +127,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setCloud(cursor.getShort(offset + 3) != 0);
      }
     
     @Override

@@ -41,7 +41,9 @@ public class SwipeAdapter extends BaseAdapter {
     public interface IOnItemRightClickListener {
         void onRightClick(View v, int position);
     }
-
+    public SecretList.SubjectsBean getsecret(int position){
+        return data.get(position);
+    }
     /**
      * @param
      */
@@ -58,7 +60,7 @@ public class SwipeAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return data==null?0:data.size();
     }
 
     @Override

@@ -1,18 +1,17 @@
 package cf.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dou361.dialogui.DialogUIUtils;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -60,6 +59,7 @@ public class AddSubject extends Activity {
     EditText url;
     @Bind(R.id.ok)
     Button ok;
+    MaterialDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,6 @@ public class AddSubject extends Activity {
         listviewinfo.setAdapter(adapter);
     }
 
-    Dialog dialogUIUtils;
 
     @OnClick({R.id.back, R.id.ok})
     public void onViewClicked(View view) {
@@ -89,14 +88,18 @@ public class AddSubject extends Activity {
                 } else if (!StringUtils.isEmpty(eorre)) {
                     Toast.makeText(AddSubject.this, eorre, Toast.LENGTH_LONG).show();
                 } else {
-                    dialogUIUtils = DialogUIUtils.showCustomAlert(AddSubject.this, rootView, Gravity.CENTER, true, false).show();
-                    custed = (EditText) rootView.findViewById(R.id.et_1);
-                    cancel = (Button) rootView.findViewById(R.id.cancel);
-                    sure = (Button) rootView.findViewById(R.id.sure);
+                    dialog = new MaterialDialog.Builder(AddSubject.this)
+                            .customView(rootView, false)
+                            .backgroundColor(Color.parseColor("#ffffff"))
+                            .build();
+                    dialog.show();
+                    custed = (EditText) dialog.findViewById(R.id.et_1);
+                    cancel = (Button) dialog.findViewById(R.id.cancel);
+                    sure = (Button) dialog.findViewById(R.id.sure);
                     cancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DialogUIUtils.dismiss(dialogUIUtils);
+                            dialog.dismiss();
                         }
                     });
                     sure.setOnClickListener(new View.OnClickListener() {
@@ -110,35 +113,33 @@ public class AddSubject extends Activity {
                                 try {
                                     subject.entryptAllSecret(custed.getText().toString().trim());
                                     Log.e("backinfo", GsonUtil.getGsonInstance().toJson(subject));
-                                    if(StringUtils.isEmpty(SPUtils.getInstance().getString("username",""))){
-                                        cf.paradoxie.dizzypassword.dbdomain.Secret secret=new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                                    if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", "")) || (StringUtils.isEmpty(SPUtils.getInstance().getString("username", "")) && SPUtils.getInstance().getBoolean("cloud") == false)) {
+                                        cf.paradoxie.dizzypassword.dbdomain.Secret secret = new cf.paradoxie.dizzypassword.dbdomain.Secret();
                                         secret.setTitle(secrettitle.getText().toString().trim());
                                         secret.setUrl(url.getText().toString().trim());
+                                        secret.setCloud(false);
                                         SecretHelp.insert(secret);
-                                        Long secretid= SecretHelp.getlastid();
-                                       Log.e("backinfo","长度："+adapter.getData().size());
-                                        for(int i=0;i<adapter.getData().size();i++){
-                                            SecretList secretList=new SecretList();
+                                        Long secretid = SecretHelp.getlastid();
+                                        for (int i = 0; i < adapter.getData().size(); i++) {
+                                            SecretList secretList = new SecretList();
                                             secretList.setSecretId(secretid);
                                             secretList.setName(adapter.getData().get(i).getName());
                                             secretList.setValuse(adapter.getData().get(i).getValue());
                                             SecretListHelp.insert(secretList);
                                         }
 
-                                        UpdataView updataView=new UpdataView();
+                                        UpdataView updataView = new UpdataView();
                                         updataView.setView("HOME");
                                         EventBus.getDefault().post(updataView);
                                         Toast.makeText(AddSubject.this, "保存本地成功", Toast.LENGTH_LONG).show();
                                         finish();
-                                        DialogUIUtils.dismiss(dialogUIUtils);
-                                    }else{
+                                        dialog.dismiss();
+                                    } else {
                                         Logined(subject);
                                     }
 
                                 } catch (Exception e) {
                                     Toast.makeText(AddSubject.this, "加密出错" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    Log.e("backinfo", e.getMessage());
-                                    Log.e("backinfo", e.toString());
 
                                     e.printStackTrace();
                                 }
@@ -160,7 +161,7 @@ public class AddSubject extends Activity {
     }
 
     private String isEmptyEorre() {
-        Log.e("backinfo", "数据："+GsonUtil.getGsonInstance().toJson(adapter.getData()));
+        Log.e("backinfo", "数据：" + GsonUtil.getGsonInstance().toJson(adapter.getData()));
         for (int i = 0; i < adapter.getData().size(); i++) {
             if (StringUtils.isEmpty(adapter.getData().get(i).getName())) {
                 return "请输入或自定义第" + (i + 1) + "项目的密码类型";
@@ -181,7 +182,7 @@ public class AddSubject extends Activity {
                 ServerSecret serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), ServerSecret.class);
                 if (response.code() == 200) {
                     Toast.makeText(AddSubject.this, "添加成功", Toast.LENGTH_LONG).show();
-                    DialogUIUtils.dismiss(dialogUIUtils);
+                    dialog.dismiss();
                 } else {
                     Toast.makeText(AddSubject.this, "添加失败", Toast.LENGTH_LONG).show();
                 }

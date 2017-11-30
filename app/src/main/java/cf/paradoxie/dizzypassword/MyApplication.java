@@ -3,15 +3,21 @@ package cf.paradoxie.dizzypassword;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.weasel.secret.common.domain.User;
+import com.weasel.secret.common.helper.EntryptionHelper;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -22,11 +28,16 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.DBName;
 import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
+import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.gen.DaoMaster;
 import cf.paradoxie.dizzypassword.gen.DaoSession;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
+import cf.paradoxie.dizzypassword.util.SPUtils;
+import cf.paradoxie.dizzypassword.util.StringUtils;
 import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
@@ -51,6 +62,9 @@ public class MyApplication extends Application {
         initOkGo();
         setDatabase();
         DaoManager.getInstance().init(this);
+        if(!StringUtils.isEmpty(SPUtils.getInstance().getString("username",""))){
+            login();
+        }
     }
 
     public static MyApplication getInstances(){
@@ -219,7 +233,48 @@ public class MyApplication extends Application {
         }
     }
 
+    private void login() {
+        User user=new User();
+        user.setUsername(SPUtils.getInstance().getString("username"));
+        try {
+            user.setPassword(EntryptionHelper.decrypt("password",SPUtils.getInstance().getString("password")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+
+        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("backinfo", "登录返回的消息response.body()：" + response.body());
+                Log.e("backinfo", "登录返回的消息response.message()：" + response.message());
+                Log.e("backinfo", "登录返回的消息response.toString()：" + response.toString());
+                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
+                if (loginBean.getCode().equals("0000")) {
+
+                }
+
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+            }
+
+            @Override
+            public void onStart(Request<String, ? extends Request> request) {
+                super.onStart(request);
+            }
+
+            @Override
+            public void onFinish() {
+
+                super.onFinish();
+            }
+        });
+
+
+    }
 
 
 
