@@ -47,8 +47,7 @@ public class Myfragment extends Fragment {
     CircleImageView personalimg;
     @Bind(R.id.login)
     TextView login;
-    @Bind(R.id.personalID)
-    TextView personalID;
+
     @Bind(R.id.personalname)
     TextView personalname;
     @Bind(R.id.userinfo)
@@ -105,6 +104,9 @@ public class Myfragment extends Fragment {
                 LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
                 if (loginBean.getCode().equals("0000")) {
                     exitlogin.setVisibility(View.VISIBLE);
+                    login.setVisibility(View.GONE);
+                    userinfo.setVisibility(View.VISIBLE);
+
                 }
 
             }

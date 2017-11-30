@@ -38,13 +38,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/personalID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="------"
-                android:textColor="#ffffff" />
+
 
             <TextView
                 android:id="@+id/personalname"
