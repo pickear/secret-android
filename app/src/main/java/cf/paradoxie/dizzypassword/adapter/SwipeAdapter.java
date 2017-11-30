@@ -80,7 +80,7 @@ public class SwipeAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item, parent, false);
             item = new ViewHolder();
-
+            item.url = (TextView)convertView.findViewById(R.id.url);
             item.item_right = (View)convertView.findViewById(R.id.item_right);
             item.item_left_txt = (TextView)convertView.findViewById(R.id.item_left_txt);
             item.item_right_txt = (TextView)convertView.findViewById(R.id.item_right_txt);
@@ -93,8 +93,9 @@ public class SwipeAdapter extends BaseAdapter {
         LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
         item.item_right.setLayoutParams(lp2);
         item.item_right.setBackgroundColor(Color.parseColor("#333333"));
-        item.item_left_txt.setText(data.get(position).getTitle());
+        item.item_left_txt.setText("标题:"+data.get(position).getTitle());
         item.item_right_txt.setText("删除");
+        item.url.setText("链接:"+data.get(position).getUrl());
         item.item_right.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -131,7 +132,7 @@ public class SwipeAdapter extends BaseAdapter {
 
         View item_right;
 
-        TextView item_left_txt;
+        TextView item_left_txt,url;
 
         TextView item_right_txt;
     }

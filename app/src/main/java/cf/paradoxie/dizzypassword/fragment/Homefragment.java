@@ -1,5 +1,6 @@
 package cf.paradoxie.dizzypassword.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,9 +17,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.dou361.dialogui.DialogUIUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.weasel.secret.common.domain.User;
+import com.weasel.secret.common.helper.EntryptionHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +42,7 @@ import cf.paradoxie.dizzypassword.adapter.SwipeAdapter;
 import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
 import cf.paradoxie.dizzypassword.dbdomain.Secret;
+import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.SecretList;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
@@ -49,7 +55,7 @@ import cf.paradoxie.dizzypassword.widget.SwipeListView;
 public class Homefragment extends Fragment {
 
     View view;
-
+    Dialog dialog;
 
     SwipeAdapter adapter;
 
@@ -62,7 +68,7 @@ public class Homefragment extends Fragment {
     EditText custed;
     PassValitationPopwindow passValitationPopwindow;
     Button cancel,sure;
-
+    boolean updata=true;
     View rootView;
     LSwipeAdapter ladapter;
     @Override
@@ -133,19 +139,6 @@ public class Homefragment extends Fragment {
                     }
                 });
 
-             /*   if (StringUtils.isEmpty(aCache.getAsString(Constant.PD))) {
-                    intent = new Intent(getActivity(), LookPassWord.class);
-                    startActivity(intent);
-                } else {
-                    passValitationPopwindow = new PassValitationPopwindow(getActivity(), 1, view, new PassValitationPopwindow.OnInputNumberCodeCallback() {
-
-                        @Override
-                        public void onSuccess() {
-                            passValitationPopwindow.dismiss();
-                        }
-                    });
-                }*/
-
 
             }
         });
@@ -166,8 +159,71 @@ public class Homefragment extends Fragment {
             });
             swipelistview.setAdapter(ladapter);
         } else {
-            init();
+            Logined();
+
         }
+    }
+    private void Logined() {
+        OkGo.<String>get(AllApi.logined).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
+                if (loginBean.getCode().equals("0000")) {
+                    init();
+                }else if(loginBean.getCode().equals("0001")){
+                    login();
+                }
+            }
+
+            @Override
+            public void onStart(Request<String, ? extends Request> request) {
+                dialog = DialogUIUtils.showLoading(getActivity(), "加载中...", true, false, false, true).show();
+                super.onStart(request);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
+    private void login() {
+        User user=new User();
+        user.setUsername(SPUtils.getInstance().getString("username"));
+        try {
+            user.setPassword(EntryptionHelper.decrypt("password", SPUtils.getInstance().getString("password")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+
+                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
+                if (loginBean.getCode().equals("0000")) {
+                    init();
+                }
+
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+            }
+
+            @Override
+            public void onStart(Request<String, ? extends Request> request) {
+                super.onStart(request);
+            }
+
+            @Override
+            public void onFinish() {
+
+                super.onFinish();
+            }
+        });
+
+
     }
 
     private void init() {
@@ -191,6 +247,9 @@ public class Homefragment extends Fragment {
 
             @Override
             public void onFinish() {
+                if (dialog != null && dialog.isShowing()) {
+                    DialogUIUtils.dismiss(dialog);
+                }
                 super.onFinish();
             }
 

@@ -134,6 +134,7 @@ public class Register extends Activity {
                         Log.e("backinfo", "注册返回的消息response.code()：" + response.code());
                         if (response.code() == 200) {
                             Toast.makeText(Register.this, "恭喜你注册成功", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
 
