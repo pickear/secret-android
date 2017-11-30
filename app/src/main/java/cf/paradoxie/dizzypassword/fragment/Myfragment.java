@@ -106,7 +106,7 @@ public class Myfragment extends Fragment {
                     exitlogin.setVisibility(View.VISIBLE);
                     login.setVisibility(View.GONE);
                     userinfo.setVisibility(View.VISIBLE);
-
+                    personalname.setText(SPUtils.getInstance().getString("username"));
                 }
 
             }
