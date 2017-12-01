@@ -5,6 +5,7 @@
 
     <!-- android:theme="@style/AppTheme.NoActionBar" -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".MyApplication"
@@ -59,6 +60,14 @@
             android:name=".activity.Secretdetails"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_secretdetails"></activity>
+        <service
+            android:name="cf.paradoxie.dizzypassword.service.HeartbeatService"
+            android:label="QServer"
+            android:persistent="true" >
+            <intent-filter>
+                <action android:name="HeartbeatService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

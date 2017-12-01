@@ -36,6 +36,7 @@
             <TextView
                 android:id="@+id/url"
                 android:paddingLeft="10dp"
+                android:textColor="@color/textcolor"
                 android:paddingBottom="10dp"
                 android:paddingRight="10dp"
                 android:layout_width="wrap_content"

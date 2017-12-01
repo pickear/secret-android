@@ -62,5 +62,6 @@ dependencies {
     compile 'com.dou361.dialogui:jjdxm-dialogui:1.0.3'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile 'ch.ielse:switchbutton:1.0.0'
    // compile 'com.afollestad.material-dialogs:commons:0.9.6.0'
 }

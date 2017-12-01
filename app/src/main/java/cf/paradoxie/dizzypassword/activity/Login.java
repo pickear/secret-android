@@ -35,6 +35,7 @@ import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
+import cf.paradoxie.dizzypassword.service.HeartbeatService;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
@@ -72,7 +73,7 @@ public class Login extends Activity {
         ButterKnife.bind(this);
         userName.addTextChangedListener(new TextChangeWatcher());
         password.addTextChangedListener(new TextChangeWatcher());
-        SPUtils.getInstance().put("cloud", true);
+        CloudSynchronization.setChecked(SPUtils.getInstance().getBoolean("cloud", true));
         CloudSynchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -169,11 +170,14 @@ public class Login extends Activity {
                     try {
                         SPUtils.getInstance().put("username", user.getUsername());
                         SPUtils.getInstance().put("password", EntryptionHelper.encrypt("password", user.getPassword()));
+                        Intent serviceIntent = new Intent(Login.this, HeartbeatService.class);
+                        serviceIntent.putExtra("url", AllApi.beat);
+                        startService(serviceIntent);
                         UpdataView updataView=new UpdataView();
                         updataView.setView("HOME");
                         EventBus.getDefault().post(updataView);
                     } catch (Exception e) {
-                        Log.e("backinfo", "加密出错");
+                        Log.e("backinfo", "密码加密出错");
                         e.printStackTrace();
                     }
                     finish();

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_bg"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -26,6 +27,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="10dp"
+            android:visibility="gone"
             android:text="登录\t/注册"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -97,6 +99,56 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_keyboard_arrow_right" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view" />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/islogin"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_action_cloudy" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_weight="1"
+                    android:text="是否同步"
+                    android:textSize="16sp"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/textcolor" />
+
+                <ch.ielse.view.SwitchView
+                    android:id="@+id/v_launcher_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:isOpened="true"
+                    app:primaryColorDark="@color/appcolor"
+                    app:primaryColor="@color/appcolor"
+                    android:paddingLeft="12dip"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="12dip"/>
 
                 <View
                     android:layout_width="match_parent"

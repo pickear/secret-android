@@ -35,9 +35,11 @@ import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
+import cf.paradoxie.dizzypassword.service.HeartbeatService;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 import cf.paradoxie.dizzypassword.widget.CircleImageView;
+import ch.ielse.view.SwitchView;
 import io.reactivex.annotations.NonNull;
 
 public class Myfragment extends Fragment {
@@ -58,6 +60,10 @@ public class Myfragment extends Fragment {
     LinearLayout allsetting;
     @Bind(R.id.exitlogin)
     Button exitlogin;
+    @Bind(R.id.v_launcher_voice)
+    SwitchView vLauncherVoice;
+    @Bind(R.id.islogin)
+    LinearLayout islogin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,16 +72,31 @@ public class Myfragment extends Fragment {
         EventBus.getDefault().register(this);
         ButterKnife.bind(this, view);
         islogin();
+        vLauncherVoice.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+            @Override
+            public void toggleToOn(SwitchView view) {
 
+            }
+
+            @Override
+            public void toggleToOff(SwitchView view) {
+
+            }
+        });
         return view;
     }
-    private void islogin(){
-        if(StringUtils.isEmpty(SPUtils.getInstance().getString("username",""))){
+
+    private void islogin() {
+        if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
             exitlogin.setVisibility(View.GONE);
-        }else{
+            login.setVisibility(View.VISIBLE);
+            userinfo.setVisibility(View.GONE);
+
+        } else {
             Logined();
         }
     }
+
     private void Logined() {
         OkGo.<String>get(AllApi.logined).execute(new StringCallback() {
             @Override
@@ -83,14 +104,20 @@ public class Myfragment extends Fragment {
                 LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
                 if (loginBean.getCode().equals("0000")) {
                     exitlogin.setVisibility(View.VISIBLE);
-                }else{
+                    islogin.setVisibility(View.VISIBLE);
+                    login.setVisibility(View.GONE);
+                    userinfo.setVisibility(View.VISIBLE);
+                    personalname.setText(SPUtils.getInstance().getString("username"));
+                    vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
+                } else {
                     login();
                 }
             }
         });
     }
+
     private void login() {
-        User user=new User();
+        User user = new User();
         user.setUsername(SPUtils.getInstance().getString("username"));
         try {
             user.setPassword(EntryptionHelper.decrypt("password", SPUtils.getInstance().getString("password")));
@@ -106,7 +133,10 @@ public class Myfragment extends Fragment {
                     exitlogin.setVisibility(View.VISIBLE);
                     login.setVisibility(View.GONE);
                     userinfo.setVisibility(View.VISIBLE);
+                    islogin.setVisibility(View.VISIBLE);
+
                     personalname.setText(SPUtils.getInstance().getString("username"));
+                    vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
                 }
 
             }
@@ -136,46 +166,53 @@ public class Myfragment extends Fragment {
         EventBus.getDefault().unregister(this);
         ButterKnife.unbind(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1000)
     public void receiveMsg(UpdataView event) {
         String tag = event.getView();
         if (tag != null && !TextUtils.isEmpty(tag)) {
             Log.i("hemiy", "收到了tag的消息");
-            Logined();
+            islogin();
         } else {
 
         }
     }
+
     @OnClick({R.id.exitlogin, R.id.login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.exitlogin:
                 new MaterialDialog.Builder(getActivity())
-                .title("退出")
-                    .content("你确定要退出账号吗？")
+                        .title("退出")
+                        .content("你确定要退出账号吗？")
+                        .titleColor(Color.parseColor("#000000"))
+                        .contentColor(Color.parseColor("#333333"))
                         .backgroundColor(Color.parseColor("#ffffff"))
-                    .positiveText("确定")
-                    .negativeText("取消")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            SPUtils.getInstance().remove("username");
-                            SPUtils.getInstance().remove("password");
-                            UpdataView updataView=new UpdataView();
-                            updataView.setView("HOME");
-                            EventBus.getDefault().post(updataView);
-                            exitlogin.setVisibility(View.GONE);
-                        }
-                    })
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                SPUtils.getInstance().remove("username");
+                                SPUtils.getInstance().remove("password");
+                                UpdataView updataView = new UpdataView();
+                                updataView.setView("HOME");
+                                Intent serviceIntent = new Intent(getActivity(), HeartbeatService.class);
+                                getActivity().stopService(serviceIntent);
+                                EventBus.getDefault().post(updataView);
+                                exitlogin.setVisibility(View.GONE);
+                                islogin.setVisibility(View.GONE);
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
                 break;
             case R.id.login:
-                Intent intent=new Intent(getActivity(), Login.class);
+                Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 break;
         }
