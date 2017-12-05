@@ -3,21 +3,15 @@ package cf.paradoxie.dizzypassword;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
-import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
-import com.weasel.secret.common.domain.User;
-import com.weasel.secret.common.helper.EntryptionHelper;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -28,16 +22,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.DBName;
 import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
-import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.gen.DaoMaster;
 import cf.paradoxie.dizzypassword.gen.DaoSession;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.util.SPUtils;
-import cf.paradoxie.dizzypassword.util.StringUtils;
 import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
@@ -62,9 +51,7 @@ public class MyApplication extends Application {
         initOkGo();
         setDatabase();
         DaoManager.getInstance().init(this);
-        if(!StringUtils.isEmpty(SPUtils.getInstance().getString("username",""))){
-            login();
-        }
+
     }
 
     public static MyApplication getInstances(){
@@ -142,10 +129,13 @@ public class MyApplication extends Application {
 
         // 其他统一的配置
         // 详细说明看GitHub文档：https://github.com/jeasonlzy/
-        OkGo.getInstance().init(this)                           //必须调用初始化
+        OkGo.getInstance().init(this)
+
+                             //必须调用初始化
                 .setOkHttpClient(builder.build())               //建议设置OkHttpClient，不设置会使用默认的
                 .setCacheMode(CacheMode.NO_CACHE)               //全局统一缓存模式，默认不使用缓存，可以不传
                 .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)   //全局统一缓存时间，默认永不过期，可以不传
+
                 .setRetryCount(3)  ;                             //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
               /*  .addCommonHeaders(headers)                      //全局公共头
                 .addCommonParams(params);         */              //全局公共参数
@@ -231,49 +221,6 @@ public class MyApplication extends Application {
         } else {
             return false;
         }
-    }
-
-    private void login() {
-        User user=new User();
-        user.setUsername(SPUtils.getInstance().getString("username"));
-        try {
-            user.setPassword(EntryptionHelper.decrypt("password",SPUtils.getInstance().getString("password")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                Log.e("backinfo", "登录返回的消息response.body()：" + response.body());
-                Log.e("backinfo", "登录返回的消息response.message()：" + response.message());
-                Log.e("backinfo", "登录返回的消息response.toString()：" + response.toString());
-                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if (loginBean.getCode().equals("0000")) {
-
-                }
-
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-            }
-
-            @Override
-            public void onStart(Request<String, ? extends Request> request) {
-                super.onStart(request);
-            }
-
-            @Override
-            public void onFinish() {
-
-                super.onFinish();
-            }
-        });
-
-
     }
 
 

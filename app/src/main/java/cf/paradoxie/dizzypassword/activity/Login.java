@@ -35,7 +35,6 @@ import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.service.HeartbeatService;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
@@ -148,7 +147,11 @@ public class Login extends Activity {
     Dialog dialog;
 
     private void login() {
-
+       /* HttpUrl httpUrl = HttpUrl.parse(AllApi.login);
+        Cookie.Builder builder = new Cookie.Builder();
+        Cookie cookie = builder.name("myCookieKey1").value("myCookieValue1").domain(httpUrl.host()).build();
+        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+        cookieStore.saveCookie(httpUrl, cookie);*/
         user.setUsername(userName.getText().toString().trim());
         user.setPassword(password.getText().toString().trim());
         // Log.e("backinfo", GsonUtil.getGsonInstance().toJson(user));
@@ -170,9 +173,9 @@ public class Login extends Activity {
                     try {
                         SPUtils.getInstance().put("username", user.getUsername());
                         SPUtils.getInstance().put("password", EntryptionHelper.encrypt("password", user.getPassword()));
-                        Intent serviceIntent = new Intent(Login.this, HeartbeatService.class);
+                     /*   Intent serviceIntent = new Intent(Login.this, HeartbeatService.class);
                         serviceIntent.putExtra("url", AllApi.beat);
-                        startService(serviceIntent);
+                        startService(serviceIntent);*/
                         UpdataView updataView=new UpdataView();
                         updataView.setView("HOME");
                         EventBus.getDefault().post(updataView);

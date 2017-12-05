@@ -3,7 +3,6 @@ package cf.paradoxie.dizzypassword.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +14,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
-import com.weasel.secret.common.domain.User;
-import com.weasel.secret.common.helper.EntryptionHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,11 +23,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.activity.BaseFragment;
 import cf.paradoxie.dizzypassword.activity.Login;
-import cf.paradoxie.dizzypassword.api.AllApi;
-import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.service.HeartbeatService;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
@@ -42,7 +33,7 @@ import cf.paradoxie.dizzypassword.widget.CircleImageView;
 import ch.ielse.view.SwitchView;
 import io.reactivex.annotations.NonNull;
 
-public class Myfragment extends Fragment {
+public class Myfragment extends BaseFragment {
 
     View view;
     @Bind(R.id.personalimg)
@@ -91,75 +82,12 @@ public class Myfragment extends Fragment {
             exitlogin.setVisibility(View.GONE);
             login.setVisibility(View.VISIBLE);
             userinfo.setVisibility(View.GONE);
-
         } else {
-            Logined();
+            finishlogin();
+           // isLogin();
+          //  Logined();
         }
     }
-
-    private void Logined() {
-        OkGo.<String>get(AllApi.logined).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if (loginBean.getCode().equals("0000")) {
-                    exitlogin.setVisibility(View.VISIBLE);
-                    islogin.setVisibility(View.VISIBLE);
-                    login.setVisibility(View.GONE);
-                    userinfo.setVisibility(View.VISIBLE);
-                    personalname.setText(SPUtils.getInstance().getString("username"));
-                    vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
-                } else {
-                    login();
-                }
-            }
-        });
-    }
-
-    private void login() {
-        User user = new User();
-        user.setUsername(SPUtils.getInstance().getString("username"));
-        try {
-            user.setPassword(EntryptionHelper.decrypt("password", SPUtils.getInstance().getString("password")));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        OkGo.<String>post(AllApi.login).tag(this).upJson(GsonUtil.getGsonInstance().toJson(user)).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-
-                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if (loginBean.getCode().equals("0000")) {
-                    exitlogin.setVisibility(View.VISIBLE);
-                    login.setVisibility(View.GONE);
-                    userinfo.setVisibility(View.VISIBLE);
-                    islogin.setVisibility(View.VISIBLE);
-
-                    personalname.setText(SPUtils.getInstance().getString("username"));
-                    vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
-                }
-
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-            }
-
-            @Override
-            public void onStart(Request<String, ? extends Request> request) {
-                super.onStart(request);
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-            }
-        });
-
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -216,5 +144,20 @@ public class Myfragment extends Fragment {
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void finishlogin() {
+        exitlogin.setVisibility(View.VISIBLE);
+        islogin.setVisibility(View.VISIBLE);
+        login.setVisibility(View.GONE);
+        userinfo.setVisibility(View.VISIBLE);
+        personalname.setText(SPUtils.getInstance().getString("username"));
+        vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
+    }
+
+    @Override
+    public void onerror() {
+
     }
 }

@@ -32,7 +32,6 @@ import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
 import cf.paradoxie.dizzypassword.dbdomain.SecretList;
-import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.ServerSecret;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
@@ -124,7 +123,7 @@ public class AddSubject extends Activity {
                                             SecretList secretList = new SecretList();
                                             secretList.setSecretId(secretid);
                                             secretList.setName(adapter.getData().get(i).getName());
-                                            secretList.setValuse(adapter.getData().get(i).getValue());
+                                            secretList.setValue(adapter.getData().get(i).getValue());
                                             SecretListHelp.insert(secretList);
                                         }
 
@@ -135,7 +134,8 @@ public class AddSubject extends Activity {
                                         finish();
                                         dialog.dismiss();
                                     } else {
-                                        Logined(subject);
+                                        Sava(subject);
+
                                     }
 
                                 } catch (Exception e) {
@@ -173,6 +173,7 @@ public class AddSubject extends Activity {
     }
 
     private void Sava(Subject subject) {
+        Log.e("backinfo","上传数据："+GsonUtil.getGsonInstance().toJson(subject));
         OkGo.<String>post(AllApi.save).upJson(GsonUtil.getGsonInstance().toJson(subject)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
@@ -183,6 +184,13 @@ public class AddSubject extends Activity {
                 if (response.code() == 200) {
                     Toast.makeText(AddSubject.this, "添加成功", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
+                    UpdataView updataView = new UpdataView();
+                    updataView.setView("HOME");
+                    EventBus.getDefault().post(updataView);
+                    finish();
+                }else if(response.code() == 302){
+                    Intent intent=new Intent(AddSubject.this,Login.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(AddSubject.this, "添加失败", Toast.LENGTH_LONG).show();
                 }
@@ -190,21 +198,5 @@ public class AddSubject extends Activity {
         });
     }
 
-    private void Logined(final Subject subject) {
-        OkGo.<String>get(AllApi.logined).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if (loginBean.getCode().equals("0000")) {
-                    Sava(subject);
-                } else if (loginBean.getCode().equals("0001")) {
-                    Toast.makeText(AddSubject.this, "未登录，请先登录", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(AddSubject.this, Login.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(AddSubject.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
+
 }

@@ -18,4 +18,5 @@
     <string name="gesture_error">手势密码输入错误</string>
     <string name="gesture_correct">输入正确</string>
     <string name="title_activity_secretdetails">Secretdetails</string>
+    <string name="title_activity_edit_secret">EditSecret</string>
 </resources>

@@ -3,7 +3,6 @@ package cf.paradoxie.dizzypassword.adapter;
 import android.app.Dialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -205,29 +204,5 @@ public class AddTypeAdapter extends BaseAdapter {
 
     }
 
-    class PASTextChanged implements TextWatcher {
-        private ViewHolder mHolder;
-        public PASTextChanged(ViewHolder holder) {
-            mHolder = holder;
-        }
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s != null && !"".equals(s.toString())) {
-                int position = (Integer) mHolder.valuse.getTag();
-                Log.e("backinfo","position:"+position);
-                data.get(position).setValue(s.toString());
-            }
-
-        }
-    }
 }

@@ -2,6 +2,7 @@ package cf.paradoxie.dizzypassword.dbdomain;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
@@ -12,7 +13,8 @@ public class SecretList {
     @Id
     private Long id;
     private String name;
-    private String valuse;
+    @Property(nameInDb = "value")
+    private String value;
     private long secretId;//此为 外键,和customer 对应起来
     public long getSecretId() {
         return this.secretId;
@@ -20,11 +22,11 @@ public class SecretList {
     public void setSecretId(long secretId) {
         this.secretId = secretId;
     }
-    public String getValuse() {
-        return this.valuse;
+    public String getValue() {
+        return this.value;
     }
-    public void setValuse(String valuse) {
-        this.valuse = valuse;
+    public void setValue(String value) {
+        this.value = value;
     }
     public String getName() {
         return this.name;
@@ -38,14 +40,15 @@ public class SecretList {
     public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 492116311)
-    public SecretList(Long id, String name, String valuse, long secretId) {
+    @Generated(hash = 275404014)
+    public SecretList(Long id, String name, String value, long secretId) {
         this.id = id;
         this.name = name;
-        this.valuse = valuse;
+        this.value = value;
         this.secretId = secretId;
     }
     @Generated(hash = 957179475)
     public SecretList() {
     }
+   
 }

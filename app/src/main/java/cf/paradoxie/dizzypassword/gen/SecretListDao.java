@@ -29,11 +29,11 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Valuse = new Property(2, String.class, "valuse", false, "VALUSE");
+        public final static Property Value = new Property(2, String.class, "value", false, "value");
         public final static Property SecretId = new Property(3, long.class, "secretId", false, "SECRET_ID");
     };
 
-    private Query<SecretList> secret_SecretListsQuery;
+    private Query<SecretList> secret_SecretsQuery;
 
     public SecretListDao(DaoConfig config) {
         super(config);
@@ -49,7 +49,7 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"SECRET_LIST\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
-                "\"VALUSE\" TEXT," + // 2: valuse
+                "\"value\" TEXT," + // 2: value
                 "\"SECRET_ID\" INTEGER NOT NULL );"); // 3: secretId
     }
 
@@ -73,9 +73,9 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
             stmt.bindString(2, name);
         }
  
-        String valuse = entity.getValuse();
-        if (valuse != null) {
-            stmt.bindString(3, valuse);
+        String value = entity.getValue();
+        if (value != null) {
+            stmt.bindString(3, value);
         }
         stmt.bindLong(4, entity.getSecretId());
     }
@@ -94,9 +94,9 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
             stmt.bindString(2, name);
         }
  
-        String valuse = entity.getValuse();
-        if (valuse != null) {
-            stmt.bindString(3, valuse);
+        String value = entity.getValue();
+        if (value != null) {
+            stmt.bindString(3, value);
         }
         stmt.bindLong(4, entity.getSecretId());
     }
@@ -111,7 +111,7 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
         SecretList entity = new SecretList( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // valuse
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // value
             cursor.getLong(offset + 3) // secretId
         );
         return entity;
@@ -121,7 +121,7 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
     public void readEntity(Cursor cursor, SecretList entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setValuse(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setValue(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSecretId(cursor.getLong(offset + 3));
      }
     
@@ -145,16 +145,16 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "secretLists" to-many relationship of Secret. */
-    public List<SecretList> _querySecret_SecretLists(long secretId) {
+    /** Internal query to resolve the "secrets" to-many relationship of Secret. */
+    public List<SecretList> _querySecret_Secrets(long secretId) {
         synchronized (this) {
-            if (secret_SecretListsQuery == null) {
+            if (secret_SecretsQuery == null) {
                 QueryBuilder<SecretList> queryBuilder = queryBuilder();
                 queryBuilder.where(Properties.SecretId.eq(null));
-                secret_SecretListsQuery = queryBuilder.build();
+                secret_SecretsQuery = queryBuilder.build();
             }
         }
-        Query<SecretList> query = secret_SecretListsQuery.forCurrentThread();
+        Query<SecretList> query = secret_SecretsQuery.forCurrentThread();
         query.setParameter(0, secretId);
         return query.list();
     }

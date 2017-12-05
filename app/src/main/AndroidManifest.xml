@@ -17,7 +17,8 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
@@ -58,16 +59,21 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.Secretdetails"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_secretdetails"></activity>
+            android:label="@string/title_activity_secretdetails"
+            android:screenOrientation="portrait" />
+
         <service
-            android:name="cf.paradoxie.dizzypassword.service.HeartbeatService"
+            android:name=".service.HeartbeatService"
             android:label="QServer"
-            android:persistent="true" >
+            android:persistent="true">
             <intent-filter>
                 <action android:name="HeartbeatService" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".activity.EditSecret"
+            android:label="@string/title_activity_edit_secret"></activity>
     </application>
 
 </manifest>

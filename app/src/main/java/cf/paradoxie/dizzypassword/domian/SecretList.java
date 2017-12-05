@@ -15,7 +15,7 @@ public class SecretList {
      */
 
     private String email;
-    private int id;
+    private Long id;
     private String password;
     private String username;
     private List<SubjectsBean> subjects;
@@ -28,11 +28,11 @@ public class SecretList {
         this.email = email;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,17 +69,17 @@ public class SecretList {
          * userId : 0
          */
 
-        private int id;
+        private Long id;
         private String title;
         private String url;
         private int userId;
         private List<SecretsBean> secrets;
 
-        public int getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
             this.id = id;
         }
 
@@ -123,16 +123,16 @@ public class SecretList {
              * value : string
              */
 
-            private int id;
+            private Long id;
             private String name;
             private int subjectId;
             private String value;
 
-            public int getId() {
+            public Long getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(Long id) {
                 this.id = id;
             }
 

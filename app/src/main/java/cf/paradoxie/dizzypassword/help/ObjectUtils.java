@@ -245,4 +245,12 @@ public class ObjectUtils {
         }
         return method.invoke(owner);
     }
+    /**
+     * 此方法可将obj对象中名为propertyName的属性的值设置为value。*/
+    public static void setProperty(Object obj, String propertyName, Object value)throws Exception{
+        Class clazz=obj.getClass();   //获取字节码对象
+        Field field=clazz.getDeclaredField(propertyName); //暴力反射获取字段
+        field.setAccessible(true); //设置访问权限
+        field.set(obj,value);   //设置值
+    }
 }

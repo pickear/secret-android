@@ -56,8 +56,11 @@ public class SecretHelp {
      *
      * @param
      */
-    public static void update(Secret secret) {
+    public static void update(Secret secret,List<SecretList> secres) {
         DaoManager.getInstance().getDaoSession().getSecretDao().update(secret);
+        for(int i=0;i<secres.size();i++){
+            DaoManager.getInstance().getDaoSession().getSecretListDao().update(secres.get(i));
+        }
     }
     public static SecretDao customerDao() {
         return DaoManager.getInstance().getDaoSession().getSecretDao();
@@ -84,14 +87,14 @@ public class SecretHelp {
     public static List<Secret> query(Long id) {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretListDao.Properties.Id.eq(id)).list();
         for(int i=0;i<secrets.size();i++){
-            secrets.get(i).setSecretLists(SecretListHelp.query(secrets.get(i).getId()));
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
         }
         return secrets;
     }
     public static List<Secret> queryall() {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
         for(int i=0;i<secrets.size();i++){
-            secrets.get(i).setSecretLists(SecretListHelp.query(secrets.get(i).getId()));
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
         }
         return secrets;
     }
