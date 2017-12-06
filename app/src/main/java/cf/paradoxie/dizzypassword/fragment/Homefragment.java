@@ -226,9 +226,11 @@ public class Homefragment extends BaseFragment {
             List<Secret> secrets=SecretHelp.queryall();
             Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
             if(secrets.size()<=0){
+                Log.e("backinfo","进去空");
                 ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                         getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
             }else{
+                Log.e("backinfo","进去不为空");
                 ydPageStateManager.showContent();
                 adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
                 listView.setAdapter(adapter);

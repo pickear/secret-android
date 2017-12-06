@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,6 +32,7 @@ import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.BaseFragment;
 import cf.paradoxie.dizzypassword.activity.Login;
+import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
 import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
@@ -72,16 +77,16 @@ public class Myfragment extends BaseFragment {
         vLauncherVoice.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {
-                vLauncherVoice.setOpened(true);
-                List<Secret> secrets=SecretHelp.querycloud();
-                List<com.weasel.secret.common.domain.Subject> subjects=new ArrayList<com.weasel.secret.common.domain.Subject>();
-                for(int i=0;i<secrets.size();i++){
-                    com.weasel.secret.common.domain.Subject subject=new com.weasel.secret.common.domain.Subject();
+
+                List<Secret> secrets = SecretHelp.querycloud();
+                List<com.weasel.secret.common.domain.Subject> subjects = new ArrayList<com.weasel.secret.common.domain.Subject>();
+                for (int i = 0; i < secrets.size(); i++) {
+                    com.weasel.secret.common.domain.Subject subject = new com.weasel.secret.common.domain.Subject();
                     subject.setTitle(secrets.get(i).getTitle());
                     subject.setUrl(secrets.get(i).getUrl());
-                    List<com.weasel.secret.common.domain.Secret> secretList=new ArrayList<com.weasel.secret.common.domain.Secret>();
-                    for(int j=0;j<secrets.get(i).getSecrets().size();j++){
-                        com.weasel.secret.common.domain.Secret secret=new com.weasel.secret.common.domain.Secret();
+                    List<com.weasel.secret.common.domain.Secret> secretList = new ArrayList<com.weasel.secret.common.domain.Secret>();
+                    for (int j = 0; j < secrets.get(i).getSecrets().size(); j++) {
+                        com.weasel.secret.common.domain.Secret secret = new com.weasel.secret.common.domain.Secret();
                         secret.setName(secrets.get(i).getSecrets().get(j).getName());
                         secret.setValue(secrets.get(i).getSecrets().get(j).getValue());
                         secretList.add(secret);
@@ -89,15 +94,20 @@ public class Myfragment extends BaseFragment {
                     subject.setSecrets(secretList);
                     subjects.add(subject);
                 }
+                if(subjects.size()>0){
+                    cound(subjects);
+                }else{
+                    Toast.makeText(getActivity(),"本地没有数据需要同步",Toast.LENGTH_LONG).show();
+                }
 
-              Log.e("backinfo", GsonUtil.getGsonInstance().toJson(subjects));
+                Log.e("backinfo", "需要传给云同步" + GsonUtil.getGsonInstance().toJson(subjects));
 
             }
 
             @Override
             public void toggleToOff(SwitchView view) {
                 vLauncherVoice.setOpened(false);
-              //  Log.e("backinfo","toggleToOff");
+                //  Log.e("backinfo","toggleToOff");
             }
         });
         return view;
@@ -110,10 +120,11 @@ public class Myfragment extends BaseFragment {
             userinfo.setVisibility(View.GONE);
         } else {
             finishlogin();
-           // isLogin();
-          //  Logined();
+            // isLogin();
+            //  Logined();
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -185,5 +196,41 @@ public class Myfragment extends BaseFragment {
     @Override
     public void onerror() {
 
+    }
+
+    private void cound(List<com.weasel.secret.common.domain.Subject> subjects) {
+        ShowProgress("上传中...");
+        OkGo.<String>post(AllApi.savelist).upJson(GsonUtil.getGsonInstance().toJson(subjects)).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("backinfo", "上传云服务" + response.body());
+                if(response.code()==200){
+                    SecretHelp.updatacloud();
+                    UpdataView updataView = new UpdataView();
+                    updataView.setView("HOME");
+                    EventBus.getDefault().post(updataView);
+                    Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
+                    vLauncherVoice.setOpened(true);
+                }else if(response.code()==302){
+                    Intent intent=new Intent(getActivity(),Login.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getActivity(), "同步失败", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                HideProgress();
+                super.onFinish();
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+
+                super.onError(response);
+            }
+        });
     }
 }

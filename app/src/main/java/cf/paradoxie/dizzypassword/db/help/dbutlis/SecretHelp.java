@@ -62,6 +62,15 @@ public class SecretHelp {
             DaoManager.getInstance().getDaoSession().getSecretListDao().update(secres.get(i));
         }
     }
+    /**
+     * 更新数据
+     *
+     * @param
+     */
+    public static void update(Secret secret) {
+        DaoManager.getInstance().getDaoSession().getSecretDao().update(secret);
+
+    }
     public static SecretDao customerDao() {
         return DaoManager.getInstance().getDaoSession().getSecretDao();
     }
@@ -97,6 +106,14 @@ public class SecretHelp {
             secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
         }
         return secrets;
+    }
+    public static void updatacloud() {
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Cloud.eq(false)).list();
+        for(int i=0;i<secrets.size();i++){
+           secrets.get(i).setCloud(true);
+            update(secrets.get(i));
+        }
+
     }
     public static List<Secret> querycloud() {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Cloud.eq(false)).list();
