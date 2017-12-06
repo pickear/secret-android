@@ -24,6 +24,8 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.yd.commonlibrary.pagestate.YdPageStateManager;
+import com.yd.commonlibrary.pagestate.listener.OnErrorRetryListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -77,11 +79,13 @@ public class Homefragment extends BaseFragment {
     Long id;
     boolean isdelete=false;
     int mposition=-1;
+    YdPageStateManager ydPageStateManager;
     MaterialDialog dialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_homefragment, null);
+        ydPageStateManager =new YdPageStateManager(view, R.id.listView);
         ButterKnife.bind(this, view);
         //   footerview = inflater.inflate(R.layout.footer, null);
         rootView = View.inflate(getActivity(), R.layout.key, null);
@@ -219,13 +223,20 @@ public class Homefragment extends BaseFragment {
 
     private void initdata() {
         if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
+            List<Secret> secrets=SecretHelp.queryall();
             Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
-            adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
-            listView.setAdapter(adapter);
-            listView.setMenuCreator(creator);
+            if(secrets.size()<=0){
+                ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                        getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
+            }else{
+                ydPageStateManager.showContent();
+                adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
+                listView.setAdapter(adapter);
+                listView.setMenuCreator(creator);
+            }
+
 
         } else {
-            ShowProgress("加载中...");
             init();
            // isLogin();
 
@@ -234,6 +245,7 @@ public class Homefragment extends BaseFragment {
 
 
     private void init() {
+        ShowProgress("加载中...");
         OkGo.<String>get(AllApi.query).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
@@ -241,10 +253,15 @@ public class Homefragment extends BaseFragment {
                 Log.e("backinfo", response.toString());
                 SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
                 if(response.code()==200){
-
-                    adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
-                    listView.setAdapter(adapter);
-                    listView.setMenuCreator(creator);
+                    if(serverSecret.getSubjects().size()<=0){
+                        ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
+                    }else {
+                        ydPageStateManager.showContent();
+                        adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
+                        listView.setAdapter(adapter);
+                        listView.setMenuCreator(creator);
+                    }
                 }else if(response.code() == 302){
                     Intent intent=new Intent(getActivity(),Login.class);
                     startActivity(intent);
@@ -262,7 +279,14 @@ public class Homefragment extends BaseFragment {
 
             @Override
             public void onError(Response<String> response) {
-
+                ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
+                        getString(R.string.ydPageState_error_title), getString(R.string.ydPageState_error_details),
+                        getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
+                            @Override
+                            public void onErrorRetry(View view) {
+                                init();
+                            }
+                        });
                 super.onError(response);
             }
         });

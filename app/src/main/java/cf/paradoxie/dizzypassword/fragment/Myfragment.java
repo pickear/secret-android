@@ -19,13 +19,19 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cf.paradoxie.dizzypassword.R;
 import cf.paradoxie.dizzypassword.activity.BaseFragment;
 import cf.paradoxie.dizzypassword.activity.Login;
+import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
+import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.service.HeartbeatService;
 import cf.paradoxie.dizzypassword.util.SPUtils;
 import cf.paradoxie.dizzypassword.util.StringUtils;
@@ -66,12 +72,32 @@ public class Myfragment extends BaseFragment {
         vLauncherVoice.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {
+                vLauncherVoice.setOpened(true);
+                List<Secret> secrets=SecretHelp.querycloud();
+                List<com.weasel.secret.common.domain.Subject> subjects=new ArrayList<com.weasel.secret.common.domain.Subject>();
+                for(int i=0;i<secrets.size();i++){
+                    com.weasel.secret.common.domain.Subject subject=new com.weasel.secret.common.domain.Subject();
+                    subject.setTitle(secrets.get(i).getTitle());
+                    subject.setUrl(secrets.get(i).getUrl());
+                    List<com.weasel.secret.common.domain.Secret> secretList=new ArrayList<com.weasel.secret.common.domain.Secret>();
+                    for(int j=0;j<secrets.get(i).getSecrets().size();j++){
+                        com.weasel.secret.common.domain.Secret secret=new com.weasel.secret.common.domain.Secret();
+                        secret.setName(secrets.get(i).getSecrets().get(j).getName());
+                        secret.setValue(secrets.get(i).getSecrets().get(j).getValue());
+                        secretList.add(secret);
+                    }
+                    subject.setSecrets(secretList);
+                    subjects.add(subject);
+                }
+
+              Log.e("backinfo", GsonUtil.getGsonInstance().toJson(subjects));
 
             }
 
             @Override
             public void toggleToOff(SwitchView view) {
-
+                vLauncherVoice.setOpened(false);
+              //  Log.e("backinfo","toggleToOff");
             }
         });
         return view;
@@ -153,7 +179,7 @@ public class Myfragment extends BaseFragment {
         login.setVisibility(View.GONE);
         userinfo.setVisibility(View.VISIBLE);
         personalname.setText(SPUtils.getInstance().getString("username"));
-        vLauncherVoice.setOpened(SPUtils.getInstance().getBoolean("cloud", true));
+
     }
 
     @Override

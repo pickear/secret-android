@@ -98,6 +98,13 @@ public class SecretHelp {
         }
         return secrets;
     }
+    public static List<Secret> querycloud() {
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Cloud.eq(false)).list();
+        for(int i=0;i<secrets.size();i++){
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
+        }
+        return secrets;
+    }
     public static Long getlastid(){
         List<Secret> secrets=querySecretAll();
         return secrets.get(secrets.size()-1).getId();

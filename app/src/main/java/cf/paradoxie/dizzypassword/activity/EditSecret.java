@@ -81,7 +81,12 @@ public class EditSecret extends Activity {
             subjectsBean = GsonUtil.getGsonInstance().fromJson(json, UpdataSecret.class);
             secrettitle.setText(subjectsBean.getTitle());
             url.setText(subjectsBean.getUrl());
-            adapter = new LSwipeAdapter(EditSecret.this, subjectsBean.getSecrets(), key);
+          /*  if(location.equals("0")){
+                adapter = new LSwipeAdapter(EditSecret.this, subjectsBean.getSecretLists(), key);
+            }else{*/
+                adapter = new LSwipeAdapter(EditSecret.this, subjectsBean.getSecrets(), key);
+          //  }
+
             editListview.setAdapter(adapter);
         }
     }
@@ -104,6 +109,7 @@ public class EditSecret extends Activity {
                         subject.setTitle(secrettitle.getText().toString().trim());
                         subject.setId(subjectsBean.getId());
                         subject.setUrl(url.getText().toString().trim());
+                        Log.e("backinfo","编辑："+GsonUtil.getGsonInstance().toJson(adapter.getData()));
                         List<Secret> secrets=new ArrayList<Secret>();
                         Type type = new TypeToken<ArrayList<Secret>>() {}.getType();
                         secrets=GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
@@ -111,7 +117,7 @@ public class EditSecret extends Activity {
                         try {
                             Log.e("backinfo","key:"+key);
                             subject.entryptAllSecret(key);
-                            Log.e("backinfo", "上传数据："+GsonUtil.getGsonInstance().toJson(subject));
+                            Log.e("backinfo", "上传数据：" + GsonUtil.getGsonInstance().toJson(subject));
                             Sava(subject);
                         } catch (Exception e) {
                             Log.e("backinfo","加密出错");
@@ -125,6 +131,7 @@ public class EditSecret extends Activity {
                         List<SecretList> secrets=new ArrayList<SecretList>();
                         Type type = new TypeToken<ArrayList<SecretList>>() {}.getType();
                         secrets=GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
+                        Log.e("backinfo","编辑："+GsonUtil.getGsonInstance().toJson(adapter.getData()));
                         secret.setSecrets(secrets);
                         Iterator var2 = secret.getSecrets().iterator();
                         while(var2.hasNext()) {
@@ -137,8 +144,12 @@ public class EditSecret extends Activity {
 
                         }
                         SecretHelp.update(secret, secret.getSecrets());
+                        UpdataView updataView = new UpdataView();
+                        updataView.setView("HOME");
+                        EventBus.getDefault().post(updataView);
+                        finish();
                         Toast.makeText(EditSecret.this,"修改成功",Toast.LENGTH_LONG).show();
-                        Log.e("backinfo","本地数据："+GsonUtil.getGsonInstance().toJson(subjectsBean));
+
                     }
 
                 }
