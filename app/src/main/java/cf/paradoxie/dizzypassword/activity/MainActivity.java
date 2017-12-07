@@ -1,13 +1,24 @@
 package cf.paradoxie.dizzypassword.activity;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+
+import com.dou361.update.UpdateHelper;
+import com.dou361.update.listener.ForceListener;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.weasel.secret.common.domain.UpdateInfo;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -21,10 +32,13 @@ import javax.net.ssl.X509TrustManager;
 
 import cf.paradoxie.dizzypassword.MyApplication;
 import cf.paradoxie.dizzypassword.R;
+import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.fragment.Homefragment;
 import cf.paradoxie.dizzypassword.fragment.Myfragment;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.tabhost.Tab;
 import cf.paradoxie.dizzypassword.tabhost.TabFragmentHost;
+import cf.paradoxie.dizzypassword.util.StringUtils;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -58,11 +72,68 @@ public class MainActivity extends AppCompatActivity {
 
         initSocketHttps();
         connectSocket();
+        updateapp();
 
+    }
+    public void updateapp(){
+        OkGo.<String>get(AllApi.update).params("version", getVersionName(MainActivity.this)).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("backinfo", "response:" + response.body());
+                cf.paradoxie.dizzypassword.appupdate.bean.Update update = new cf.paradoxie.dizzypassword.appupdate.bean.Update();
+                UpdateInfo info = GsonUtil.getGsonInstance().fromJson(response.body(), UpdateInfo.class);
+                if(info.isHasUpdate()==true&& !StringUtils.isEmpty(info.getUrl())){
+                    update.setCode(0);
+                    update.getData().setDownload_url(info.getUrl());
+                    update.getData().setForce(info.isForce());
+                    update.getData().setV_size((int) info.getSize());
+                    update.getData().setUpdate_content(info.getDescription());
+                    update.getData().setV_code(getVersionCode(MainActivity.this)+1);
+                    update.getData().setV_name(getVersionName(MainActivity.this));
+                    networkUpdate(GsonUtil.getGsonInstance().toJson(update));
+                }
+              /*  String requestStri = "{\"code\":0,\"data\":{\"download_url\":\"http://wap.apk.anzhi.com/data3/apk/201512/20/55089e385f6e9f350e6455f995ca3452_26503500.apk\",\"force\":false,\"update_content\":\"测试更新接口\",\"v_code\":\"10\",\"v_name\":\"v1.0.0.16070810\",\"v_sha1\":\"7db76e18ac92bb29ff0ef012abfe178a78477534\",\"v_size\":12365909}}";
+                networkAutoUpdate(requestStri);*/
+
+
+            }
+        });
+    }
+
+    private void networkAutoUpdate(String requestStri) {
+        UpdateHelper.getInstance()
+                .setRequestResultData(requestStri)
+                .setForceListener(new ForceListener() {
+                    @Override
+                    public void onUserCancel(boolean force) {
+                        if (force) {
+                            //退出应用
+                            finish();
+                        }
+                    }
+                })
+                .checkNoUrl(MainActivity.this);
 
     }
 
+    /**
+     * 分离网络的检测更新
+     */
+    private void networkUpdate(String data) {
 
+        UpdateHelper.getInstance()
+                .setRequestResultData(data)
+                .setForceListener(new ForceListener() {
+                    @Override
+                    public void onUserCancel(boolean force) {
+                        if (force) {
+                            //退出应用
+                            finish();
+                        }
+                    }
+                })
+                .checkNoUrl(MainActivity.this);
+    }
     private void initView() {
         Tab tab_home = new Tab(homefragment.getClass(), R.string.home, mImageViewArray[0]);
         Tab tws = new Tab(twofragment.getClass(), R.string.My, mImageViewArray[1]);
@@ -101,6 +172,31 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    //版本号
+    public static int getVersionCode(Context context) {
+        return getPackageInfo(context).versionCode;
+    }
+
+    //版本名
+    public static String getVersionName(Context context) {
+        return getPackageInfo(context).versionName;
+    }
+
+    private static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
+
+        try {
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_CONFIGURATIONS);
+
+            return pi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi;
+    }
     @Override
     public void onBackPressed() {
         exitBy2Click();

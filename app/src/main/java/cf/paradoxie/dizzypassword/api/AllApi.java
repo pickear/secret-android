@@ -8,10 +8,11 @@ public class AllApi {
     public static String register=Home+"user/register";
     public static String login=Home+"user/login";
     public static String save=Home+"/subject/save";
-    public static String savelist=Home+"/subject/save-list";
+    public static String savelist=Home+"subject/synchronize";
     public static String list=Home+"/subject/list";
     //public static String logined=Home+"/user/logined";
     public static String beat=Home+"/user/beat";
     public static String query=Home+"/user/query";
     public static String delete=Home+"subject/delete";
+    public static String update=Home+"update-info";
 }

@@ -22,6 +22,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import cf.paradoxie.dizzypassword.appupdate.UpdateConfig;
 import cf.paradoxie.dizzypassword.db.help.DBName;
 import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
@@ -47,6 +48,7 @@ public class MyApplication extends Application {
 
         super.onCreate();
         mInstance = this;
+        UpdateConfig.initNoUrl(this);
         mContext = getApplicationContext();
         initOkGo();
         setDatabase();

@@ -274,6 +274,11 @@ public class Homefragment extends BaseFragment {
             }
 
             @Override
+            public void onCacheSuccess(Response<String> response) {
+                super.onCacheSuccess(response);
+            }
+
+            @Override
             public void onFinish() {
                 HideProgress();
                 super.onFinish();
@@ -281,6 +286,10 @@ public class Homefragment extends BaseFragment {
 
             @Override
             public void onError(Response<String> response) {
+                Log.e("backinfo","response.body()"+response.body());
+                Log.e("backinfo","response.message()"+response.message());
+                Log.e("backinfo","response.getException()"+response.getException());
+
                 ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
                         getString(R.string.ydPageState_error_title), getString(R.string.ydPageState_error_details),
                         getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
