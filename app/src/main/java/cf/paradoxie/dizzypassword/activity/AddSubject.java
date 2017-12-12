@@ -177,23 +177,43 @@ public class AddSubject extends Activity {
         OkGo.<String>post(AllApi.save).upJson(GsonUtil.getGsonInstance().toJson(subject)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("backinfo", response.body());
-
-                Log.e("backinfo", response.toString());
                 ServerSecret serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), ServerSecret.class);
-                if (response.code() == 200) {
-                    Toast.makeText(AddSubject.this, "添加成功", Toast.LENGTH_LONG).show();
+                if("false".equals(response.headers().get("logined"))){
+                    Intent intent = new Intent(AddSubject.this, Login.class);
+                    SPUtils.getInstance().remove("username");
+                    EventBus.getDefault().post(false);
+                    startActivity(intent);
+                }else{
                     dialog.dismiss();
                     UpdataView updataView = new UpdataView();
                     updataView.setView("HOME");
                     EventBus.getDefault().post(updataView);
                     finish();
-                }else if(response.code() == 302){
-                    Intent intent=new Intent(AddSubject.this,Login.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(AddSubject.this, "添加失败", Toast.LENGTH_LONG).show();
                 }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+
+                    cf.paradoxie.dizzypassword.dbdomain.Secret secret = new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                    secret.setTitle(secrettitle.getText().toString().trim());
+                    secret.setUrl(url.getText().toString().trim());
+                    secret.setCloud(false);
+                    SecretHelp.insert(secret);
+                    Long secretid = SecretHelp.getlastid();
+                    for (int i = 0; i < adapter.getData().size(); i++) {
+                        SecretList secretList = new SecretList();
+                        secretList.setSecretId(secretid);
+                        secretList.setName(adapter.getData().get(i).getName());
+                        secretList.setValue(adapter.getData().get(i).getValue());
+                        SecretListHelp.insert(secretList);
+                    }
+                    UpdataView updataView = new UpdataView();
+                    updataView.setView("HOME");
+                    EventBus.getDefault().post(updataView);
+                    finish();
+
+                super.onError(response);
             }
         });
     }

@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
 
+import java.util.Date;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.gen.DaoSession;
@@ -25,6 +26,18 @@ public class Secret {
     private String title;
     private String url;
     private boolean cloud;
+    private Date createTime;
+    private Date updateTime;
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Property(nameInDb = "secrets")
     @ToMany(referencedJoinProperty = "secretId")
     private List<SecretList> secrets;
@@ -128,13 +141,38 @@ public class Secret {
     public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 29723780)
-    public Secret(Long id, String title, String url, boolean cloud) {
+
+    public boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+    @Generated(hash = 693331982)
+    public Secret(Long id, String title, String url, boolean cloud, Date createTime, Date updateTime,
+            boolean deleted) {
         this.id = id;
         this.title = title;
         this.url = url;
         this.cloud = cloud;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.deleted = deleted;
     }
+
     @Generated(hash = 974314130)
     public Secret() {
     }

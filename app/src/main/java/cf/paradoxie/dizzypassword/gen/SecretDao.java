@@ -28,6 +28,9 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Url = new Property(2, String.class, "url", false, "URL");
         public final static Property Cloud = new Property(3, boolean.class, "cloud", false, "CLOUD");
+        public final static Property CreateTime = new Property(4, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(5, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property Deleted = new Property(6, boolean.class, "deleted", false, "DELETED");
     };
 
     private DaoSession daoSession;
@@ -49,7 +52,10 @@ public class SecretDao extends AbstractDao<Secret, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"URL\" TEXT," + // 2: url
-                "\"CLOUD\" INTEGER NOT NULL );"); // 3: cloud
+                "\"CLOUD\" INTEGER NOT NULL ," + // 3: cloud
+                "\"CREATE_TIME\" INTEGER," + // 4: createTime
+                "\"UPDATE_TIME\" INTEGER," + // 5: updateTime
+                "\"DELETED\" INTEGER NOT NULL );"); // 6: deleted
     }
 
     /** Drops the underlying database table. */
@@ -77,6 +83,17 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             stmt.bindString(3, url);
         }
         stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
+ 
+        java.util.Date createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindLong(5, createTime.getTime());
+        }
+ 
+        java.util.Date updateTime = entity.getUpdateTime();
+        if (updateTime != null) {
+            stmt.bindLong(6, updateTime.getTime());
+        }
+        stmt.bindLong(7, entity.getDeleted() ? 1L: 0L);
     }
 
     @Override
@@ -98,6 +115,17 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             stmt.bindString(3, url);
         }
         stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
+ 
+        java.util.Date createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindLong(5, createTime.getTime());
+        }
+ 
+        java.util.Date updateTime = entity.getUpdateTime();
+        if (updateTime != null) {
+            stmt.bindLong(6, updateTime.getTime());
+        }
+        stmt.bindLong(7, entity.getDeleted() ? 1L: 0L);
     }
 
     @Override
@@ -117,7 +145,10 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
-            cursor.getShort(offset + 3) != 0 // cloud
+            cursor.getShort(offset + 3) != 0, // cloud
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createTime
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // updateTime
+            cursor.getShort(offset + 6) != 0 // deleted
         );
         return entity;
     }
@@ -128,6 +159,9 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCloud(cursor.getShort(offset + 3) != 0);
+        entity.setCreateTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setUpdateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setDeleted(cursor.getShort(offset + 6) != 0);
      }
     
     @Override

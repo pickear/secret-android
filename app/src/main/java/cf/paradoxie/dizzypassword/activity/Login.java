@@ -68,10 +68,11 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // new ArrayList<String>().stream().forEach(name -> System.out.println(name));
+        SPUtils.getInstance().put("cloud", true);
         ButterKnife.bind(this);
         userName.addTextChangedListener(new TextChangeWatcher());
         password.addTextChangedListener(new TextChangeWatcher());
+        SPUtils.getInstance().put("cloud",SPUtils.getInstance().getBoolean("cloud", true));
         CloudSynchronization.setChecked(SPUtils.getInstance().getBoolean("cloud", true));
         CloudSynchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -188,6 +189,11 @@ public class Login extends Activity {
                     Toast.makeText(Login.this, loginBean.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
+            }
+
+            @Override
+            public void onCacheSuccess(Response<String> response) {
+                super.onCacheSuccess(response);
             }
 
             @Override

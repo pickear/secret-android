@@ -21,6 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -31,6 +32,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +48,12 @@ import cf.paradoxie.dizzypassword.adapter.LSwipeAdapter;
 import cf.paradoxie.dizzypassword.adapter.SwipeAdapter;
 import cf.paradoxie.dizzypassword.api.AllApi;
 import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
+import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
 import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.SecretList;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
+import cf.paradoxie.dizzypassword.help.Date_U;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.password.PassValitationPopwindow;
 import cf.paradoxie.dizzypassword.util.ACache;
@@ -77,15 +81,16 @@ public class Homefragment extends BaseFragment {
     View rootView;
     LSwipeAdapter ladapter;
     Long id;
-    boolean isdelete=false;
-    int mposition=-1;
+    boolean isdelete = false;
+
     YdPageStateManager ydPageStateManager;
     MaterialDialog dialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_homefragment, null);
-        ydPageStateManager =new YdPageStateManager(view, R.id.listView);
+        ydPageStateManager = new YdPageStateManager(view, R.id.listView);
         ButterKnife.bind(this, view);
         //   footerview = inflater.inflate(R.layout.footer, null);
         rootView = View.inflate(getActivity(), R.layout.key, null);
@@ -99,14 +104,15 @@ public class Homefragment extends BaseFragment {
         });
         EventBus.getDefault().register(this);
         aCache = ACache.get(getActivity());
+        Log.e("backinfo", "当前时间戳：" + Date_U.getNowDate());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 dialog = new MaterialDialog.Builder(getActivity())
-                                .customView(rootView, false)
-                                .backgroundColor(Color.parseColor("#ffffff"))
-                                .build();
+                        .customView(rootView, false)
+                        .backgroundColor(Color.parseColor("#ffffff"))
+                        .build();
                 dialog.show();
                 custed = (EditText) dialog.findViewById(R.id.et_1);
                 cancel = (Button) dialog.findViewById(R.id.cancel);
@@ -176,12 +182,12 @@ public class Homefragment extends BaseFragment {
                         sure.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(custed.getText().toString().trim().length()==8){
+                                if (custed.getText().toString().trim().length() == 8) {
                                     Intent intent = new Intent(getActivity(), EditSecret.class);
                                     if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
                                         intent.putExtra("json", GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)));
                                         intent.putExtra("location", "0");
-                                        intent.putExtra("key",custed.getText().toString().trim());
+                                        intent.putExtra("key", custed.getText().toString().trim());
                                     } else {
                                         intent.putExtra("json", GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)));
                                         intent.putExtra("location", "1");
@@ -189,7 +195,7 @@ public class Homefragment extends BaseFragment {
                                     }
                                     startActivity(intent);
                                     dialog.dismiss();
-                                }else{
+                                } else {
                                     Toast.makeText(getActivity(), "请输入完整的8位数秘钥", Toast.LENGTH_LONG).show();
                                 }
 
@@ -198,18 +204,25 @@ public class Homefragment extends BaseFragment {
 
                         break;
                     case 1:
-                        isdelete=true;
-                        mposition=position;
-                        if(StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))){
-                            Secret secret= (Secret) adapter.getsecret(position);
+                        isdelete = true;
+
+                        if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
+                            Secret secret = (Secret) adapter.getsecret(position);
                             SecretHelp.delete(secret.getId());
                             adapter.delete(position);
-                        }else{
-                            ShowProgress("删除中...");
+                        } else {
+
                             Log.e("backinfo", GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)));
-                            SecretList.SubjectsBean secret= (SecretList.SubjectsBean) adapter.getsecret(position);
-                            id=secret.getId();
-                            Delete(id);
+                            SecretList.SubjectsBean secret = null;
+                            try {
+                                secret = GsonUtil.fromjson(GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)), SecretList.SubjectsBean.class);
+                                //  id = secret.getId();
+                                Delete(secret, position);
+                            } catch (Exception e) {
+                                Log.e("backinfo", "解析出错" + e.getLocalizedMessage());
+                                e.printStackTrace();
+                            }
+
                         }
 
                         break;
@@ -223,58 +236,68 @@ public class Homefragment extends BaseFragment {
 
     private void initdata() {
         if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
-            List<Secret> secrets=SecretHelp.queryall();
+            List<Secret> secrets = SecretHelp.queryall();
             Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
-            if(secrets.size()<=0){
-                Log.e("backinfo","进去空");
+            if (secrets.size() <= 0) {
+                Log.e("backinfo", "进去空");
                 ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                         getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
-            }else{
-                Log.e("backinfo","进去不为空");
+            } else {
+                Log.e("backinfo", "进去不为空");
                 ydPageStateManager.showContent();
                 adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
                 listView.setAdapter(adapter);
                 listView.setMenuCreator(creator);
             }
-
-
         } else {
-            init();
-           // isLogin();
-
+            cound();
         }
     }
 
 
     private void init() {
+        List<Secret> secrets = SecretHelp.querycloud();
+        adapter = new SwipeAdapter(getActivity(), secrets);
+        listView.setAdapter(adapter);
+        listView.setMenuCreator(creator);
+       /* cookie.Getcookie(AllApi.query);
         ShowProgress("加载中...");
-        OkGo.<String>get(AllApi.query).execute(new StringCallback() {
+        OkGo.<String>get(AllApi.query).cacheMode(CacheMode.DEFAULT).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", response.body());
-                Log.e("backinfo", response.toString());
                 SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
-                if(response.code()==200){
-                    if(serverSecret.getSubjects().size()<=0){
+                if ("false".equals(response.headers().get("logined"))) {
+                    Intent intent = new Intent(getActivity(), Login.class);
+                    SPUtils.getInstance().remove("username");
+                    EventBus.getDefault().post(false);
+                    startActivity(intent);
+                } else {
+                    if (serverSecret.getSubjects().size() <= 0) {
                         ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                                 getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
-                    }else {
+                    } else {
                         ydPageStateManager.showContent();
                         adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
                         listView.setAdapter(adapter);
                         listView.setMenuCreator(creator);
                     }
-                }else if(response.code() == 302){
-                    Intent intent=new Intent(getActivity(),Login.class);
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(getActivity(), "获取数据出错", Toast.LENGTH_LONG).show();
                 }
 
             }
 
             @Override
             public void onCacheSuccess(Response<String> response) {
+                SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
+                if (serverSecret.getSubjects().size() <= 0) {
+                    ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                            getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
+                } else {
+                    ydPageStateManager.showContent();
+                    adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
+                    listView.setAdapter(adapter);
+                    listView.setMenuCreator(creator);
+                }
                 super.onCacheSuccess(response);
             }
 
@@ -286,10 +309,6 @@ public class Homefragment extends BaseFragment {
 
             @Override
             public void onError(Response<String> response) {
-                Log.e("backinfo","response.body()"+response.body());
-                Log.e("backinfo","response.message()"+response.message());
-                Log.e("backinfo","response.getException()"+response.getException());
-
                 ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
                         getString(R.string.ydPageState_error_title), getString(R.string.ydPageState_error_details),
                         getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
@@ -300,7 +319,7 @@ public class Homefragment extends BaseFragment {
                         });
                 super.onError(response);
             }
-        });
+        });*/
     }
 
     // step 1. create a MenuCreator
@@ -367,11 +386,11 @@ public class Homefragment extends BaseFragment {
     @Override
     public void finishlogin() {
         Log.e("backinfo", "登录完成");
-        if(isdelete==true){
+      /*  if (isdelete == true) {
             Delete(id);
-        }else{
+        } else {
             init();
-        }
+        }*/
 
     }
 
@@ -380,26 +399,149 @@ public class Homefragment extends BaseFragment {
 
     }
 
-    private void Delete(Long mid){
-        Log.e("backinfo","mid:"+mid);
+    private void cound() {
+        List<Secret> secrets = SecretHelp.querycloud();
+        List<com.weasel.secret.common.domain.Subject> subjects = new ArrayList<com.weasel.secret.common.domain.Subject>();
+        for (int i = 0; i < secrets.size(); i++) {
+            com.weasel.secret.common.domain.Subject subject = new com.weasel.secret.common.domain.Subject();
+            subject.setTitle(secrets.get(i).getTitle());
+            subject.setUrl(secrets.get(i).getUrl());
+            subject.setId(secrets.get(i).getId());
+            subject.setDeleted(secrets.get(i).getDeleted());
+            subject.setUpdateTime(secrets.get(i).getUpdateTime());
+            List<com.weasel.secret.common.domain.Secret> secretList = new ArrayList<com.weasel.secret.common.domain.Secret>();
+            for (int j = 0; j < secrets.get(i).getSecrets().size(); j++) {
+                com.weasel.secret.common.domain.Secret secret = new com.weasel.secret.common.domain.Secret();
+                secret.setName(secrets.get(i).getSecrets().get(j).getName());
+                secret.setValue(secrets.get(i).getSecrets().get(j).getValue());
+                secret.setId(secrets.get(i).getSecrets().get(j).getId());
+                secretList.add(secret);
+            }
+            subject.setSecrets(secretList);
+            subjects.add(subject);
+        }
+        Log.e("backinfo", "需要同步的数据：" + GsonUtil.getGsonInstance().toJson(subjects));
+        if (SPUtils.getInstance().getBoolean("cloud", false) == true) {
+            ShowProgress("加载中...");
+            OkGo.<String>post(AllApi.savelist).upJson(GsonUtil.getGsonInstance().toJson(subjects)).execute(new StringCallback() {
+                @Override
+                public void onSuccess(Response<String> response) {
+                    Log.e("backinfo", "同步返回的数据：" + response.body());
+                    if ("false".equals(response.headers().get("logined"))) {
+                        Intent intent = new Intent(getActivity(), Login.class);
+                        SPUtils.getInstance().remove("username");
+                        EventBus.getDefault().post(false);
+                        startActivity(intent);
+                    } else {
+                        try {
+                            List<cf.paradoxie.dizzypassword.domian.Subject> subjects1 = new ArrayList<cf.paradoxie.dizzypassword.domian.Subject>();
+                            Type type = new TypeToken<ArrayList<cf.paradoxie.dizzypassword.domian.Subject>>() {
+                            }.getType();
+                            subjects1 = GsonUtil.getGsonInstance().fromJson(response.body(), type);
 
-        OkGo.<String>delete(AllApi.delete + "?id=" + mid).execute(new StringCallback() {
+                            // init();
+                            if (subjects1.size() <= 0) {
+                                ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                        getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
+                            } else {
+                                ydPageStateManager.showContent();
+                                adapter = new SwipeAdapter(getActivity(), subjects1);
+                                listView.setAdapter(adapter);
+                                listView.setMenuCreator(creator);
+                                SecretHelp.deleteall();
+                                List<Secret> secretList = new ArrayList<Secret>();
+                                for (int i = 0; i < subjects1.size(); i++) {
+                                    Secret secret = new Secret();
+                                    secret.setId(subjects1.get(i).getId());
+                                    secret.setCloud(true);
+                                    secret.setCreateTime(Date_U.getDateLong(subjects1.get(i).getCreateTime()));
+                                    secret.setUrl(subjects1.get(i).getUrl());
+                                    secret.setTitle(subjects1.get(i).getTitle());
+                                    SecretHelp.insert(secret);
+                                    List<cf.paradoxie.dizzypassword.dbdomain.SecretList> secretLists = new ArrayList<cf.paradoxie.dizzypassword.dbdomain.SecretList>();
+                                    for (int j = 0; j < subjects1.get(i).getSecrets().size(); j++) {
+                                        cf.paradoxie.dizzypassword.dbdomain.SecretList list = new cf.paradoxie.dizzypassword.dbdomain.SecretList();
+                                        list.setSecretId(subjects1.get(i).getId());
+                                        list.setId(subjects1.get(i).getSecrets().get(j).getId());
+                                        list.setName(subjects1.get(i).getSecrets().get(j).getName());
+                                        list.setValue(subjects1.get(i).getSecrets().get(j).getValue());
+                                        SecretListHelp.insert(list);
+                                    }
+                                }
+                                Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
+                            }
+                            Toast.makeText(getActivity(), "加载成功", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "解析出错", Toast.LENGTH_SHORT).show();
+                            ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
+                                    "解析","解析出错",
+                                    getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
+                                        @Override
+                                        public void onErrorRetry(View view) {
+                                            cound();
+                                        }
+                                    });
+
+
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    HideProgress();
+                }
+
+                @Override
+                public void onFinish() {
+                    HideProgress();
+                    super.onFinish();
+                }
+
+                @Override
+                public void onError(Response<String> response) {
+                    Log.e("backinfo", "出错" + response.getException());
+                    List<Secret> secrets = SecretHelp.queryall();
+                    Log.e("backinfo", "出错" + response.code());
+                    if (secrets.size() <= 0) {
+                        ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
+                    } else {
+                        ydPageStateManager.showContent();
+                    }
+                    adapter = new SwipeAdapter(getActivity(), secrets);
+                    listView.setAdapter(adapter);
+                    listView.setMenuCreator(creator);
+
+                    super.onError(response);
+                }
+            });
+        } else {
+            Log.e("backinfo", "没有数据要同步");
+            init();
+        }
+
+    }
+
+    private void Delete(final SecretList.SubjectsBean secret, final int mposition) {
+        Log.e("backinfo", "mid:" + secret.getId());
+        ShowProgress("删除中...");
+        OkGo.<String>delete(AllApi.delete + "?id=" + secret.getId()).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "删除：" + response.body());
                 LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if (loginBean.getCode().equals("0000")) {
+                if ("false".equals(response.headers().get("logined"))) {
+                    Intent intent = new Intent(getActivity(), Login.class);
+                    startActivity(intent);
+                } else if (loginBean.getCode().equals("0000")) {
                     if (mposition != -1) {
                         adapter.delete(mposition);
                     }
-                }else if(response.code() == 302){
-                    Intent intent=new Intent(getActivity(),Login.class);
-                    startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), loginBean.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
-                mposition = -1;
             }
 
             @Override
@@ -410,7 +552,15 @@ public class Homefragment extends BaseFragment {
 
             @Override
             public void onError(Response<String> response) {
-                mposition = -1;
+
+                Secret secret1 = new Secret();
+                secret1.setTitle(secret.getTitle());
+                secret1.setId(secret.getId());
+                secret1.setCloud(false);
+                secret1.setDeleted(true);
+                SecretHelp.update(secret1);
+                adapter.delete(mposition);
+
                 Log.e("backinfo", "删除失败");
                 super.onError(response);
             }

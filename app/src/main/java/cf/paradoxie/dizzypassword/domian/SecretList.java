@@ -73,10 +73,37 @@ public class SecretList {
         private String title;
         private String url;
         private int userId;
+        private Long createTime;
+        private Long updateTime;
+        private boolean deleted;
         private List<SecretsBean> secrets;
 
         public Long getId() {
             return id;
+        }
+
+        public Long getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(Long createTime) {
+            this.createTime = createTime;
+        }
+
+        public Long getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(Long updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public boolean isDeleted() {
+            return deleted;
+        }
+
+        public void setDeleted(boolean deleted) {
+            this.deleted = deleted;
         }
 
         public void setId(Long id) {

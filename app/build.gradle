@@ -36,7 +36,7 @@ android {
     }
 }
 greendao {
-    schemaVersion 3
+    schemaVersion 2
     daoPackage 'cf.paradoxie.dizzypassword.gen'
     targetGenDir 'src/main/java'
 }

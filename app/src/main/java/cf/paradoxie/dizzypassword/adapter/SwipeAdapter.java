@@ -1,13 +1,10 @@
 package cf.paradoxie.dizzypassword.adapter;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
@@ -70,22 +67,22 @@ public class SwipeAdapter<T> extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item, parent, false);
             item = new ViewHolder();
             item.url = (TextView)convertView.findViewById(R.id.url);
-            item.item_right = (View)convertView.findViewById(R.id.item_right);
+
             item.item_left_txt = (TextView)convertView.findViewById(R.id.item_left_txt);
-            item.item_right_txt = (TextView)convertView.findViewById(R.id.item_right_txt);
+            item.createTime = (TextView)convertView.findViewById(R.id.createTime);
+            item.updateTime = (TextView)convertView.findViewById(R.id.updateTime);
             convertView.setTag(item);
         } else {// 有直接获得ViewHolder
             item = (ViewHolder)convertView.getTag();
         }
 
 
-        LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
-        item.item_right.setLayoutParams(lp2);
-        item.item_right.setBackgroundColor(Color.parseColor("#333333"));
-        item.item_left_txt.setText("标题:" + getFieldValueByName("title", data.get(position)));
-        item.item_right_txt.setText("删除");
-        item.url.setText("链接:"+getFieldValueByName("url",data.get(position)));
 
+        item.item_left_txt.setText("标题:" + getFieldValueByName("title", data.get(position)));
+
+        item.url.setText("链接:"+getFieldValueByName("url",data.get(position)));
+      //  item.createTime.setText("创建时间："+ Date_U.toLongDateString((Long) getFieldValueByName("createTime", data.get(position))));
+       // item.updateTime.setText("更新时间："+Date_U.toLongDateString((Long) getFieldValueByName("updateTime", data.get(position))));
         return convertView;
     }
     /**
@@ -105,10 +102,10 @@ public class SwipeAdapter<T> extends BaseAdapter {
     private class ViewHolder {
 
 
-        View item_right;
 
-        TextView item_left_txt,url;
 
-        TextView item_right_txt;
+        TextView item_left_txt,url,createTime,updateTime;
+
+
     }
 }

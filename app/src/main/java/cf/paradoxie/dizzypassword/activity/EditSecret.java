@@ -38,6 +38,7 @@ import cf.paradoxie.dizzypassword.dbdomain.SecretList;
 import cf.paradoxie.dizzypassword.dbdomain.UpdataSecret;
 import cf.paradoxie.dizzypassword.domian.ServerSecret;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
+import cf.paradoxie.dizzypassword.help.Date_U;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.help.ObjectUtils;
 import cf.paradoxie.dizzypassword.util.SPUtils;
@@ -78,6 +79,7 @@ public class EditSecret extends Activity {
             key = bundle.getString("key");
             Log.e("backinfo", "json:" + json);
             Log.e("backinfo", "location:" + location);
+            Log.e("backinfo", "key:" + key);
             subjectsBean = GsonUtil.getGsonInstance().fromJson(json, UpdataSecret.class);
             secrettitle.setText(subjectsBean.getTitle());
             url.setText(subjectsBean.getUrl());
@@ -109,6 +111,7 @@ public class EditSecret extends Activity {
                         subject.setTitle(secrettitle.getText().toString().trim());
                         subject.setId(subjectsBean.getId());
                         subject.setUrl(url.getText().toString().trim());
+                        subject.setUpdateTime(Date_U.getNowDate());
                         Log.e("backinfo","编辑："+GsonUtil.getGsonInstance().toJson(adapter.getData()));
                         List<Secret> secrets=new ArrayList<Secret>();
                         Type type = new TypeToken<ArrayList<Secret>>() {}.getType();
@@ -128,6 +131,8 @@ public class EditSecret extends Activity {
                         secret.setUrl(url.getText().toString().trim());
                         secret.setId(subjectsBean.getId());
                         secret.setTitle(secrettitle.getText().toString().trim());
+                        secret.setCloud(false);
+                        secret.setUpdateTime(Date_U.getNowDate());
                         List<SecretList> secrets=new ArrayList<SecretList>();
                         Type type = new TypeToken<ArrayList<SecretList>>() {}.getType();
                         secrets=GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
@@ -180,30 +185,58 @@ public class EditSecret extends Activity {
         OkGo.<String>post(AllApi.save).upJson(GsonUtil.getGsonInstance().toJson(subject)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("backinfo", response.body());
-
-                Log.e("backinfo", response.toString());
                 ServerSecret serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), ServerSecret.class);
-                if (response.code() == 200) {
+                if("false".equals(response.headers().get("logined"))){
+                    Intent intent=new Intent(EditSecret.this,Login.class);
+                    SPUtils.getInstance().remove("username");
+                    EventBus.getDefault().post(false);
+                    startActivity(intent);
+                }else{
                     Toast.makeText(EditSecret.this, "添加成功", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                     UpdataView updataView = new UpdataView();
                     updataView.setView("HOME");
                     EventBus.getDefault().post(updataView);
                     finish();
-                }else if(response.code() == 302){
-                    Intent intent=new Intent(EditSecret.this,Login.class);
-                    startActivity(intent);
-
-                } else {
-                    Toast.makeText(EditSecret.this, "添加失败", Toast.LENGTH_LONG).show();
                 }
+
             }
 
             @Override
             public void onFinish() {
                 dialog.dismiss();
                 super.onFinish();
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                cf.paradoxie.dizzypassword.dbdomain.Secret secret=new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                secret.setUrl(url.getText().toString().trim());
+                secret.setId(subjectsBean.getId());
+                secret.setTitle(secrettitle.getText().toString().trim());
+                secret.setCloud(false);
+                secret.setUpdateTime(Date_U.getNowDate());
+                List<SecretList> secrets=new ArrayList<SecretList>();
+                Type type = new TypeToken<ArrayList<SecretList>>() {}.getType();
+                secrets=GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
+                Log.e("backinfo","编辑："+GsonUtil.getGsonInstance().toJson(adapter.getData()));
+                secret.setSecrets(secrets);
+                Iterator var2 = secret.getSecrets().iterator();
+                while(var2.hasNext()) {
+                    SecretList secretList = (SecretList)var2.next();
+                    try {
+                        secretList.setValue(EntryptionHelper.encrypt(key, secretList.getValue()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                SecretHelp.update(secret, secret.getSecrets());
+                UpdataView updataView = new UpdataView();
+                updataView.setView("HOME");
+                EventBus.getDefault().post(updataView);
+                finish();
+                super.onError(response);
             }
         });
     }

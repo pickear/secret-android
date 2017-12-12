@@ -3,6 +3,7 @@ package cf.paradoxie.dizzypassword.help;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 /**
  * Created by a1 on 2017/11/16.
  */
@@ -24,4 +25,8 @@ public class GsonUtil {
     {
         return GsonHolder.INSTANCE;
     }
+    public static <T> T fromjson(String json, Class<T> classOfT)throws Exception{
+        return GsonUtil.getGsonInstance().fromJson(json ,classOfT);
+    }
+
 }

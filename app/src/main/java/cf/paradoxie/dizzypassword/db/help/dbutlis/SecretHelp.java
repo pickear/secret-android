@@ -50,6 +50,7 @@ public class SecretHelp {
      */
     public static void deleteall() {
         DaoManager.getInstance().getDaoSession().getSecretDao().deleteAll();
+        DaoManager.getInstance().getDaoSession().getSecretListDao().deleteAll();
     }
     /**
      * 更新数据
@@ -83,7 +84,7 @@ public class SecretHelp {
      * @return
      */
     public static List<Secret> querySecretAll() {
-        return DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
+        return DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Deleted.eq(false)).list();
     }
     public static List<SecretList> querySecretListAll() {
         return DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().list();
@@ -101,7 +102,7 @@ public class SecretHelp {
         return secrets;
     }
     public static List<Secret> queryall() {
-        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Deleted.eq(false)).list();
         for(int i=0;i<secrets.size();i++){
             secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
         }
