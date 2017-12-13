@@ -118,17 +118,17 @@ public class AddSubject extends Activity {
                                         secret.setUrl(url.getText().toString().trim());
                                         secret.setCloud(false);
                                         SecretHelp.insert(secret);
-                                        Long secretid = SecretHelp.getlastid();
+                                        Long secretsid = SecretHelp.getlastid();
                                         for (int i = 0; i < adapter.getData().size(); i++) {
                                             SecretList secretList = new SecretList();
-                                            secretList.setSecretId(secretid);
+                                            secretList.setSecretId(secretsid);
                                             secretList.setName(adapter.getData().get(i).getName());
                                             secretList.setValue(adapter.getData().get(i).getValue());
                                             SecretListHelp.insert(secretList);
                                         }
 
                                         UpdataView updataView = new UpdataView();
-                                        updataView.setView("HOME");
+                                        updataView.setView("db");
                                         EventBus.getDefault().post(updataView);
                                         Toast.makeText(AddSubject.this, "保存本地成功", Toast.LENGTH_LONG).show();
                                         finish();
@@ -177,28 +177,51 @@ public class AddSubject extends Activity {
         OkGo.<String>post(AllApi.save).upJson(GsonUtil.getGsonInstance().toJson(subject)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                ServerSecret serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), ServerSecret.class);
-                if("false".equals(response.headers().get("logined"))){
-                    Intent intent = new Intent(AddSubject.this, Login.class);
-                    SPUtils.getInstance().remove("username");
-                    EventBus.getDefault().post(false);
-                    startActivity(intent);
-                }else{
-                    dialog.dismiss();
-                    UpdataView updataView = new UpdataView();
-                    updataView.setView("HOME");
-                    EventBus.getDefault().post(updataView);
-                    finish();
+                try {
+                    ServerSecret serverSecret = GsonUtil.fromjson(response.body(), ServerSecret.class);
+                    if("false".equals(response.headers().get("logined"))){
+                        Intent intent = new Intent(AddSubject.this, Login.class);
+                        SPUtils.getInstance().remove("username");
+                        EventBus.getDefault().post(false);
+                        startActivity(intent);
+                    }else{
+                        dialog.dismiss();
+                        cf.paradoxie.dizzypassword.dbdomain.Secret secret=new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                        secret.setCloud(true);
+
+                        secret.setTitle(serverSecret.getTitle());
+                        secret.setUrl(serverSecret.getUrl());
+                        secret.setCloud(false);
+                        secret.setId(serverSecret.getId());
+                        SecretHelp.insert(secret);
+                        Long lasdid=SecretHelp.getlastid();
+                        for (int i = 0; i <serverSecret.getSecrets().size(); i++) {
+                            SecretList secretList = new SecretList();
+                            secretList.setId(serverSecret.getSecrets().get(i).getId());
+                            secretList.setSecretId(lasdid);
+                            secretList.setName(serverSecret.getSecrets().get(i).getName());
+                            secretList.setValue(serverSecret.getSecrets().get(i).getValue());
+                            secretList.setSubjectId(serverSecret.getSecrets().get(i).getSubjectId());
+                            SecretListHelp.insert(secretList);
+                        }
+                        UpdataView updataView = new UpdataView();
+                        updataView.setView("db");
+                        EventBus.getDefault().post(updataView);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
             public void onError(Response<String> response) {
-
                     cf.paradoxie.dizzypassword.dbdomain.Secret secret = new cf.paradoxie.dizzypassword.dbdomain.Secret();
                     secret.setTitle(secrettitle.getText().toString().trim());
                     secret.setUrl(url.getText().toString().trim());
                     secret.setCloud(false);
+
                     SecretHelp.insert(secret);
                     Long secretid = SecretHelp.getlastid();
                     for (int i = 0; i < adapter.getData().size(); i++) {
@@ -209,7 +232,7 @@ public class AddSubject extends Activity {
                         SecretListHelp.insert(secretList);
                     }
                     UpdataView updataView = new UpdataView();
-                    updataView.setView("HOME");
+                    updataView.setView("db");
                     EventBus.getDefault().post(updataView);
                     finish();
 

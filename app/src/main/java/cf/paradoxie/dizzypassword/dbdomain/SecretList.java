@@ -11,7 +11,9 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class SecretList {
     @Id
+    private Long sid;
     private Long id;
+    private Long subjectId;
     private String name;
     @Property(nameInDb = "value")
     private String value;
@@ -40,9 +42,24 @@ public class SecretList {
     public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 275404014)
-    public SecretList(Long id, String name, String value, long secretId) {
+    public Long getSid() {
+        return this.sid;
+    }
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
+    public Long getSubjectId() {
+        return this.subjectId;
+    }
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
+    @Generated(hash = 1724804417)
+    public SecretList(Long sid, Long id, Long subjectId, String name, String value,
+            long secretId) {
+        this.sid = sid;
         this.id = id;
+        this.subjectId = subjectId;
         this.name = name;
         this.value = value;
         this.secretId = secretId;
@@ -50,5 +67,5 @@ public class SecretList {
     @Generated(hash = 957179475)
     public SecretList() {
     }
-   
+
 }

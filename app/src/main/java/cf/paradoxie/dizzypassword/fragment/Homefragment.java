@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -53,7 +52,6 @@ import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import cf.paradoxie.dizzypassword.domian.LoginBean;
 import cf.paradoxie.dizzypassword.domian.SecretList;
 import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.help.Date_U;
 import cf.paradoxie.dizzypassword.help.GsonUtil;
 import cf.paradoxie.dizzypassword.password.PassValitationPopwindow;
 import cf.paradoxie.dizzypassword.util.ACache;
@@ -93,6 +91,7 @@ public class Homefragment extends BaseFragment {
         ydPageStateManager = new YdPageStateManager(view, R.id.listView);
         ButterKnife.bind(this, view);
         //   footerview = inflater.inflate(R.layout.footer, null);
+
         rootView = View.inflate(getActivity(), R.layout.key, null);
         add = (ImageButton) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
@@ -102,10 +101,9 @@ public class Homefragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+        //SecretHelp.deleteall();
         EventBus.getDefault().register(this);
         aCache = ACache.get(getActivity());
-        Log.e("backinfo", "当前时间戳：" + Date_U.getNowDate());
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -179,6 +177,7 @@ public class Homefragment extends BaseFragment {
                                 dialog.dismiss();
                             }
                         });
+                        custed.setText("12345678");
                         sure.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -208,8 +207,14 @@ public class Homefragment extends BaseFragment {
 
                         if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
                             Secret secret = (Secret) adapter.getsecret(position);
-                            SecretHelp.delete(secret.getId());
+                            SecretHelp.delete(secret.getSid());
                             adapter.delete(position);
+                            if (adapter.getCount() == 0) {
+                                ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                        getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
+                            } else {
+                                ydPageStateManager.showContent();
+                            }
                         } else {
 
                             Log.e("backinfo", GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)));
@@ -224,7 +229,7 @@ public class Homefragment extends BaseFragment {
                             }
 
                         }
-
+                        getdb();
                         break;
                 }
                 return false;
@@ -233,19 +238,20 @@ public class Homefragment extends BaseFragment {
 
         return view;
     }
-
+    private void getdb(){
+        Log.e("backinfo","secret:"+GsonUtil.getGsonInstance().toJson(SecretHelp.querySecretAll()));
+        Log.e("backinfo","secretlist:"+GsonUtil.getGsonInstance().toJson(SecretListHelp.querySecretAll()));
+    }
     private void initdata() {
         if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
             List<Secret> secrets = SecretHelp.queryall();
             Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
             if (secrets.size() <= 0) {
-                Log.e("backinfo", "进去空");
                 ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                         getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
             } else {
-                Log.e("backinfo", "进去不为空");
                 ydPageStateManager.showContent();
-                adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
+                adapter = new SwipeAdapter(getActivity(), secrets);
                 listView.setAdapter(adapter);
                 listView.setMenuCreator(creator);
             }
@@ -260,66 +266,7 @@ public class Homefragment extends BaseFragment {
         adapter = new SwipeAdapter(getActivity(), secrets);
         listView.setAdapter(adapter);
         listView.setMenuCreator(creator);
-       /* cookie.Getcookie(AllApi.query);
-        ShowProgress("加载中...");
-        OkGo.<String>get(AllApi.query).cacheMode(CacheMode.DEFAULT).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                Log.e("backinfo", response.body());
-                SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
-                if ("false".equals(response.headers().get("logined"))) {
-                    Intent intent = new Intent(getActivity(), Login.class);
-                    SPUtils.getInstance().remove("username");
-                    EventBus.getDefault().post(false);
-                    startActivity(intent);
-                } else {
-                    if (serverSecret.getSubjects().size() <= 0) {
-                        ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
-                                getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
-                    } else {
-                        ydPageStateManager.showContent();
-                        adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
-                        listView.setAdapter(adapter);
-                        listView.setMenuCreator(creator);
-                    }
-                }
 
-            }
-
-            @Override
-            public void onCacheSuccess(Response<String> response) {
-                SecretList serverSecret = GsonUtil.getGsonInstance().fromJson(response.body(), SecretList.class);
-                if (serverSecret.getSubjects().size() <= 0) {
-                    ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
-                            getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
-                } else {
-                    ydPageStateManager.showContent();
-                    adapter = new SwipeAdapter(getActivity(), serverSecret.getSubjects());
-                    listView.setAdapter(adapter);
-                    listView.setMenuCreator(creator);
-                }
-                super.onCacheSuccess(response);
-            }
-
-            @Override
-            public void onFinish() {
-                HideProgress();
-                super.onFinish();
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
-                        getString(R.string.ydPageState_error_title), getString(R.string.ydPageState_error_details),
-                        getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
-                            @Override
-                            public void onErrorRetry(View view) {
-                                init();
-                            }
-                        });
-                super.onError(response);
-            }
-        });*/
     }
 
     // step 1. create a MenuCreator
@@ -375,11 +322,24 @@ public class Homefragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 1000)
     public void receiveMsg(UpdataView event) {
         String tag = event.getView();
-        if (tag != null && !TextUtils.isEmpty(tag)) {
+        if (tag.equals("HOME")) {
             Log.i("hemiy", "收到了tag的消息");
             initdata();
-        } else {
-
+        } else if (tag.equals("db")) {
+           List<Secret> secrets=SecretHelp.queryall();
+            getdb();
+            Log.e("backinfo","数据库所有数据："+GsonUtil.getGsonInstance().toJson(secrets));
+            if (secrets.size() <= 0) {
+                Log.e("backinfo", "进去空");
+                ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                        getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
+            } else {
+                Log.e("backinfo", "进去不为空");
+                ydPageStateManager.showContent();
+                adapter = new SwipeAdapter(getActivity(),secrets);
+                listView.setAdapter(adapter);
+                listView.setMenuCreator(creator);
+            }
         }
     }
 
@@ -406,7 +366,9 @@ public class Homefragment extends BaseFragment {
             com.weasel.secret.common.domain.Subject subject = new com.weasel.secret.common.domain.Subject();
             subject.setTitle(secrets.get(i).getTitle());
             subject.setUrl(secrets.get(i).getUrl());
-            subject.setId(secrets.get(i).getId());
+            if(secrets.get(i).getId()!=null){
+                subject.setId(secrets.get(i).getId());
+            }
             subject.setDeleted(secrets.get(i).getDeleted());
             subject.setUpdateTime(secrets.get(i).getUpdateTime());
             List<com.weasel.secret.common.domain.Secret> secretList = new ArrayList<com.weasel.secret.common.domain.Secret>();
@@ -414,7 +376,12 @@ public class Homefragment extends BaseFragment {
                 com.weasel.secret.common.domain.Secret secret = new com.weasel.secret.common.domain.Secret();
                 secret.setName(secrets.get(i).getSecrets().get(j).getName());
                 secret.setValue(secrets.get(i).getSecrets().get(j).getValue());
-                secret.setId(secrets.get(i).getSecrets().get(j).getId());
+                if(secrets.get(i).getSecrets().get(j).getSubjectId()!=null){
+                    secret.setSubjectId(secrets.get(i).getSecrets().get(j).getSubjectId());
+                }
+                if(secrets.get(i).getSecrets().get(j).getId()!=null){
+                    secret.setId(secrets.get(i).getSecrets().get(j).getId());
+                }
                 secretList.add(secret);
             }
             subject.setSecrets(secretList);
@@ -445,43 +412,45 @@ public class Homefragment extends BaseFragment {
                                         getString(R.string.ydPageState_empty_title), "云端没有数据，请添加");
                             } else {
                                 ydPageStateManager.showContent();
-                                adapter = new SwipeAdapter(getActivity(), subjects1);
-                                listView.setAdapter(adapter);
-                                listView.setMenuCreator(creator);
                                 SecretHelp.deleteall();
                                 List<Secret> secretList = new ArrayList<Secret>();
                                 for (int i = 0; i < subjects1.size(); i++) {
                                     Secret secret = new Secret();
                                     secret.setId(subjects1.get(i).getId());
                                     secret.setCloud(true);
-                                    secret.setCreateTime(Date_U.getDateLong(subjects1.get(i).getCreateTime()));
+                                    secret.setCreateTime(subjects1.get(i).getCreateTime());
                                     secret.setUrl(subjects1.get(i).getUrl());
                                     secret.setTitle(subjects1.get(i).getTitle());
+                                    secret.setUpdateTime(subjects1.get(i).getUpdateTime());
                                     SecretHelp.insert(secret);
+                                    Long lasdid=SecretHelp.getlastid();
                                     List<cf.paradoxie.dizzypassword.dbdomain.SecretList> secretLists = new ArrayList<cf.paradoxie.dizzypassword.dbdomain.SecretList>();
                                     for (int j = 0; j < subjects1.get(i).getSecrets().size(); j++) {
                                         cf.paradoxie.dizzypassword.dbdomain.SecretList list = new cf.paradoxie.dizzypassword.dbdomain.SecretList();
-                                        list.setSecretId(subjects1.get(i).getId());
+                                        list.setSubjectId(subjects1.get(i).getSecrets().get(j).getSubjectId());
                                         list.setId(subjects1.get(i).getSecrets().get(j).getId());
                                         list.setName(subjects1.get(i).getSecrets().get(j).getName());
                                         list.setValue(subjects1.get(i).getSecrets().get(j).getValue());
+                                        list.setSecretId(lasdid);
                                         SecretListHelp.insert(list);
                                     }
                                 }
+                                adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
+                                listView.setAdapter(adapter);
+                                listView.setMenuCreator(creator);
                                 Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
                             }
                             Toast.makeText(getActivity(), "加载成功", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "解析出错", Toast.LENGTH_SHORT).show();
                             ydPageStateManager.showError(getResources().getDrawable(R.mipmap.nointent),
-                                    "解析","解析出错",
+                                    "解析", "解析出错",
                                     getString(R.string.ydPageState_retry), new OnErrorRetryListener() {
                                         @Override
                                         public void onErrorRetry(View view) {
                                             cound();
                                         }
                                     });
-
 
                             e.printStackTrace();
                         }
@@ -537,6 +506,12 @@ public class Homefragment extends BaseFragment {
                 } else if (loginBean.getCode().equals("0000")) {
                     if (mposition != -1) {
                         adapter.delete(mposition);
+                        if (adapter.getCount() == 0) {
+                            ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                    getString(R.string.ydPageState_empty_title), "该账户下没有数据，请添加");
+                        } else {
+                            ydPageStateManager.showContent();
+                        }
                     }
                 } else {
                     Toast.makeText(getActivity(), loginBean.getMessage(), Toast.LENGTH_LONG).show();
@@ -552,15 +527,22 @@ public class Homefragment extends BaseFragment {
 
             @Override
             public void onError(Response<String> response) {
-
                 Secret secret1 = new Secret();
                 secret1.setTitle(secret.getTitle());
-                secret1.setId(secret.getId());
+                secret1.setSid(secret.getSid());
+                if(secret.getId()!=null){
+                    secret1.setId(secret.getId());
+                }
                 secret1.setCloud(false);
                 secret1.setDeleted(true);
                 SecretHelp.update(secret1);
                 adapter.delete(mposition);
-
+                if (adapter.getCount() == 0) {
+                    ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                            getString(R.string.ydPageState_empty_title), "该账户下没有数据，请添加");
+                } else {
+                    ydPageStateManager.showContent();
+                }
                 Log.e("backinfo", "删除失败");
                 super.onError(response);
             }

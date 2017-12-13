@@ -13,21 +13,29 @@ public class UpdataSecret {
      * url : ggvvvb
      * userId : 22
      */
-
+    private Long sid;
     private Long id;
     private String title;
     private String url;
     private int userId;
     private List<SecretsBean> secrets;
-    private List<SecretList> secretLists;
 
-    public List<SecretList> getSecretLists() {
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
+    //  private List<SecretList> secretLists;
+
+   /* public List<SecretList> getSecretLists() {
         return secretLists;
     }
 
     public void setSecretLists(List<SecretList> secretLists) {
         this.secretLists = secretLists;
-    }
+    }*/
 
     public Long getId() {
         return id;
@@ -77,11 +85,20 @@ public class UpdataSecret {
 
          * subjectId : 17
          */
+        private Long sid;
 
-        private int id;
+        public Long getSid() {
+            return sid;
+        }
+
+        public void setSid(Long sid) {
+            this.sid = sid;
+        }
+        private Long subjectId;
+        private Long id;
         private String name;
         private String value;
-        private int subjectId;
+
         private long secretId;//此为 外键,和customer 对应起来
 
         public long getSecretId() {
@@ -92,11 +109,11 @@ public class UpdataSecret {
             this.secretId = secretId;
         }
 
-        public int getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
             this.id = id;
         }
 
@@ -116,12 +133,5 @@ public class UpdataSecret {
             this.value = value;
         }
 
-        public int getSubjectId() {
-            return subjectId;
-        }
-
-        public void setSubjectId(int subjectId) {
-            this.subjectId = subjectId;
-        }
     }
 }

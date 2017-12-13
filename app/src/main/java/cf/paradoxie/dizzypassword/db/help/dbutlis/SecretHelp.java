@@ -1,11 +1,14 @@
 package cf.paradoxie.dizzypassword.db.help.dbutlis;
 
+import android.util.Log;
+
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.dbdomain.Secret;
 import cf.paradoxie.dizzypassword.dbdomain.SecretList;
 import cf.paradoxie.dizzypassword.gen.SecretDao;
 import cf.paradoxie.dizzypassword.gen.SecretListDao;
+import cf.paradoxie.dizzypassword.help.GsonUtil;
 
 /**
  * Created by a1 on 2017/11/28.
@@ -34,8 +37,13 @@ public class SecretHelp {
      * @param id
      */
     public static void delete(long id) {
+        Log.e("backinfo", "要删除的数据id:" + id);
         DaoManager.getInstance().getDaoSession().getSecretDao().deleteByKey(id);
-        DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(id)).buildDelete();
+        List<SecretList> secretLists = DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(id)).build().list();
+        for (SecretList secretList : secretLists) {
+            DaoManager.getInstance().getDaoSession().getSecretListDao().delete(secretList);
+        }
+        //DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(id)).buildDelete();
     }
     /**
      * 删除数据
@@ -58,6 +66,9 @@ public class SecretHelp {
      * @param
      */
     public static void update(Secret secret,List<SecretList> secres) {
+        Log.e("backinfo", "要改变父类"+GsonUtil.getGsonInstance().toJson(secret));
+        Log.e("backinfo", "要改变子类"+GsonUtil.getGsonInstance().toJson(secres));
+        Log.e("backinfo", "要改变父类id"+secret.getId());
         DaoManager.getInstance().getDaoSession().getSecretDao().update(secret);
         for(int i=0;i<secres.size();i++){
             DaoManager.getInstance().getDaoSession().getSecretListDao().update(secres.get(i));
@@ -97,14 +108,14 @@ public class SecretHelp {
     public static List<Secret> query(Long id) {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretListDao.Properties.Id.eq(id)).list();
         for(int i=0;i<secrets.size();i++){
-            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }
         return secrets;
     }
     public static List<Secret> queryall() {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Deleted.eq(false)).list();
         for(int i=0;i<secrets.size();i++){
-            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }
         return secrets;
     }
@@ -119,13 +130,13 @@ public class SecretHelp {
     public static List<Secret> querycloud() {
         List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Cloud.eq(false)).list();
         for(int i=0;i<secrets.size();i++){
-            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getId()));
+            secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }
         return secrets;
     }
     public static Long getlastid(){
         List<Secret> secrets=querySecretAll();
-        return secrets.get(secrets.size()-1).getId();
+        return secrets.get(secrets.size()-1).getSid();
     }
 
     /**

@@ -326,13 +326,13 @@ public class Date_U {
      *
      * @return 返回时间类型 yyyy-MM-dd HH:mm:ss
      */
-    public static Date getNowDate() {
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static Long getNowDate() {
+     /*   SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(getSysCurrentTime());
         ParsePosition pos = new ParsePosition(0);
         Date currentTime_2 = formatter.parse(dateString, pos);
-        return currentTime_2;
+        return currentTime_2;*/
+        return new Date().getTime();
     }
     /**
      * 获取现在时间
@@ -340,12 +340,13 @@ public class Date_U {
      * @return 返回时间类型 yyyy-MM-dd HH:mm:ss
      */
     public static Long getNowDateLong() {
-        Date currentTime = new Date();
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(getSysCurrentTime());
         ParsePosition pos = new ParsePosition(0);
         Date currentTime_2 = formatter.parse(dateString, pos);
         return currentTime_2.getTime();
+
     }
     /**
      * 获取现在时间

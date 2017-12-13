@@ -14,17 +14,17 @@ public class ServerSecret {
      * secrets : [{"id":13,"subjectId":0,"name":"登录密码","value":"pFxp5wgPEgaDeVFxmrGqgpoPddp1YrXjISnPwd5aQLg=\n"}]
      */
 
-    private int id;
+    private Long id;
     private int userId;
     private String title;
     private String url;
     private List<SecretsBean> secrets;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,24 +69,24 @@ public class ServerSecret {
 
          */
 
-        private int id;
-        private int subjectId;
+        private Long id;
+        private Long subjectId;
         private String name;
         private String value;
 
-        public int getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
             this.id = id;
         }
 
-        public int getSubjectId() {
+        public Long getSubjectId() {
             return subjectId;
         }
 
-        public void setSubjectId(int subjectId) {
+        public void setSubjectId(Long subjectId) {
             this.subjectId = subjectId;
         }
 

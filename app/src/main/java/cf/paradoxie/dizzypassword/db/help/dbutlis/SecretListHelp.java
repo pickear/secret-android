@@ -68,8 +68,8 @@ public class SecretListHelp {
      *
      * @return
      */
-    public static List<SecretList> query(Long id) {
-        return DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(id)).list();
+    public static List<SecretList> query(Long SecretId) {
+        return DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(SecretId)).list();
     }
 
     /**

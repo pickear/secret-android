@@ -68,7 +68,7 @@ public class SecretList {
          * url : string
          * userId : 0
          */
-
+        private Long sid;
         private Long id;
         private String title;
         private String url;
@@ -77,6 +77,14 @@ public class SecretList {
         private Long updateTime;
         private boolean deleted;
         private List<SecretsBean> secrets;
+
+        public Long getSid() {
+            return sid;
+        }
+
+        public void setSid(Long sid) {
+            this.sid = sid;
+        }
 
         public Long getId() {
             return id;
@@ -154,6 +162,15 @@ public class SecretList {
             private String name;
             private int subjectId;
             private String value;
+            private long secretId;
+
+            public long getSecretId() {
+                return secretId;
+            }
+
+            public void setSecretId(long secretId) {
+                this.secretId = secretId;
+            }
 
             public Long getId() {
                 return id;

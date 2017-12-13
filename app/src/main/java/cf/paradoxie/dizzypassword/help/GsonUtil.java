@@ -11,6 +11,7 @@ public class GsonUtil {
     private static class GsonHolder{
         private static final Gson INSTANCE = new GsonBuilder()
                 .setLenient()// json宽松
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .enableComplexMapKeySerialization()//支持Map的key为复杂对象的形式
                 .serializeNulls() //智能null
                 .setPrettyPrinting()// 调教格式

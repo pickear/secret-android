@@ -27,10 +27,12 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Value = new Property(2, String.class, "value", false, "value");
-        public final static Property SecretId = new Property(3, long.class, "secretId", false, "SECRET_ID");
+        public final static Property Sid = new Property(0, Long.class, "sid", true, "_id");
+        public final static Property Id = new Property(1, Long.class, "id", false, "ID");
+        public final static Property SubjectId = new Property(2, Long.class, "subjectId", false, "SUBJECT_ID");
+        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
+        public final static Property Value = new Property(4, String.class, "value", false, "value");
+        public final static Property SecretId = new Property(5, long.class, "secretId", false, "SECRET_ID");
     };
 
     private Query<SecretList> secret_SecretsQuery;
@@ -47,10 +49,12 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SECRET_LIST\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"value\" TEXT," + // 2: value
-                "\"SECRET_ID\" INTEGER NOT NULL );"); // 3: secretId
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: sid
+                "\"ID\" INTEGER," + // 1: id
+                "\"SUBJECT_ID\" INTEGER," + // 2: subjectId
+                "\"NAME\" TEXT," + // 3: name
+                "\"value\" TEXT," + // 4: value
+                "\"SECRET_ID\" INTEGER NOT NULL );"); // 5: secretId
     }
 
     /** Drops the underlying database table. */
@@ -63,42 +67,62 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
     protected final void bindValues(DatabaseStatement stmt, SecretList entity) {
         stmt.clearBindings();
  
+        Long sid = entity.getSid();
+        if (sid != null) {
+            stmt.bindLong(1, sid);
+        }
+ 
         Long id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindLong(2, id);
+        }
+ 
+        Long subjectId = entity.getSubjectId();
+        if (subjectId != null) {
+            stmt.bindLong(3, subjectId);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(4, name);
         }
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(3, value);
+            stmt.bindString(5, value);
         }
-        stmt.bindLong(4, entity.getSecretId());
+        stmt.bindLong(6, entity.getSecretId());
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, SecretList entity) {
         stmt.clearBindings();
  
+        Long sid = entity.getSid();
+        if (sid != null) {
+            stmt.bindLong(1, sid);
+        }
+ 
         Long id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindLong(2, id);
+        }
+ 
+        Long subjectId = entity.getSubjectId();
+        if (subjectId != null) {
+            stmt.bindLong(3, subjectId);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(4, name);
         }
  
         String value = entity.getValue();
         if (value != null) {
-            stmt.bindString(3, value);
+            stmt.bindString(5, value);
         }
-        stmt.bindLong(4, entity.getSecretId());
+        stmt.bindLong(6, entity.getSecretId());
     }
 
     @Override
@@ -109,32 +133,36 @@ public class SecretListDao extends AbstractDao<SecretList, Long> {
     @Override
     public SecretList readEntity(Cursor cursor, int offset) {
         SecretList entity = new SecretList( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // value
-            cursor.getLong(offset + 3) // secretId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // sid
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // id
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // subjectId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // name
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // value
+            cursor.getLong(offset + 5) // secretId
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, SecretList entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setValue(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setSecretId(cursor.getLong(offset + 3));
+        entity.setSid(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setSubjectId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setValue(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setSecretId(cursor.getLong(offset + 5));
      }
     
     @Override
     protected final Long updateKeyAfterInsert(SecretList entity, long rowId) {
-        entity.setId(rowId);
+        entity.setSid(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(SecretList entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getSid();
         } else {
             return null;
         }

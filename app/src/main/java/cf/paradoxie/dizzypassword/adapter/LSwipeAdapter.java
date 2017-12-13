@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.dbdomain.UpdataSecret;
+import cf.paradoxie.dizzypassword.dbdomain.SecretList;
 import cf.paradoxie.dizzypassword.help.ObjectUtils;
 import cf.paradoxie.dizzypassword.pickerview.Util;
 import cf.paradoxie.dizzypassword.util.StringUtils;
 
 
 public class LSwipeAdapter extends BaseAdapter {
-    List<UpdataSecret.SecretsBean> data;
+    List<SecretList> data;
     ArrayList<String> typedata = new ArrayList<>();
     /**
      * 上下文对象
@@ -42,7 +42,7 @@ public class LSwipeAdapter extends BaseAdapter {
     Dialog dialog;
 
 
-    public UpdataSecret.SecretsBean getsecret(int position) {
+    public SecretList getsecret(int position) {
         return data.get(position);
     }
 
@@ -51,7 +51,7 @@ public class LSwipeAdapter extends BaseAdapter {
     /**
      * @param
      */
-    public LSwipeAdapter(Activity ctx, List<UpdataSecret.SecretsBean> mdata, String MKEY) {
+    public LSwipeAdapter(Activity ctx, List<SecretList> mdata, String MKEY) {
         mContext = ctx;
         KEY = MKEY;
         init(mdata);
@@ -61,7 +61,7 @@ public class LSwipeAdapter extends BaseAdapter {
         typedata.add("自定义");
     }
 
-    private void init(List<UpdataSecret.SecretsBean> mdata) {
+    private void init(List<SecretList> mdata) {
         for (int i = 0; i < mdata.size(); i++) {
             String value = "";
             try {
@@ -87,7 +87,7 @@ public class LSwipeAdapter extends BaseAdapter {
         data = mdata;
     }
 
-    public List<UpdataSecret.SecretsBean> getData() {
+    public List<SecretList> getData() {
         return data;
     }
 

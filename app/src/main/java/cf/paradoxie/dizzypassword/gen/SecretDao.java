@@ -24,13 +24,14 @@ public class SecretDao extends AbstractDao<Secret, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
-        public final static Property Url = new Property(2, String.class, "url", false, "URL");
-        public final static Property Cloud = new Property(3, boolean.class, "cloud", false, "CLOUD");
-        public final static Property CreateTime = new Property(4, java.util.Date.class, "createTime", false, "CREATE_TIME");
-        public final static Property UpdateTime = new Property(5, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property Deleted = new Property(6, boolean.class, "deleted", false, "DELETED");
+        public final static Property Sid = new Property(0, Long.class, "sid", true, "_id");
+        public final static Property Id = new Property(1, Long.class, "id", false, "ID");
+        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
+        public final static Property Url = new Property(3, String.class, "url", false, "URL");
+        public final static Property Cloud = new Property(4, boolean.class, "cloud", false, "CLOUD");
+        public final static Property CreateTime = new Property(5, Long.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(6, Long.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property Deleted = new Property(7, boolean.class, "deleted", false, "DELETED");
     };
 
     private DaoSession daoSession;
@@ -49,13 +50,14 @@ public class SecretDao extends AbstractDao<Secret, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SECRET\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"TITLE\" TEXT," + // 1: title
-                "\"URL\" TEXT," + // 2: url
-                "\"CLOUD\" INTEGER NOT NULL ," + // 3: cloud
-                "\"CREATE_TIME\" INTEGER," + // 4: createTime
-                "\"UPDATE_TIME\" INTEGER," + // 5: updateTime
-                "\"DELETED\" INTEGER NOT NULL );"); // 6: deleted
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: sid
+                "\"ID\" INTEGER," + // 1: id
+                "\"TITLE\" TEXT," + // 2: title
+                "\"URL\" TEXT," + // 3: url
+                "\"CLOUD\" INTEGER NOT NULL ," + // 4: cloud
+                "\"CREATE_TIME\" INTEGER," + // 5: createTime
+                "\"UPDATE_TIME\" INTEGER," + // 6: updateTime
+                "\"DELETED\" INTEGER NOT NULL );"); // 7: deleted
     }
 
     /** Drops the underlying database table. */
@@ -68,64 +70,74 @@ public class SecretDao extends AbstractDao<Secret, Long> {
     protected final void bindValues(DatabaseStatement stmt, Secret entity) {
         stmt.clearBindings();
  
+        Long sid = entity.getSid();
+        if (sid != null) {
+            stmt.bindLong(1, sid);
+        }
+ 
         Long id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindLong(2, id);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(2, title);
+            stmt.bindString(3, title);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(3, url);
+            stmt.bindString(4, url);
         }
-        stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
+        stmt.bindLong(5, entity.getCloud() ? 1L: 0L);
  
-        java.util.Date createTime = entity.getCreateTime();
+        Long createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(5, createTime.getTime());
+            stmt.bindLong(6, createTime);
         }
  
-        java.util.Date updateTime = entity.getUpdateTime();
+        Long updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(6, updateTime.getTime());
+            stmt.bindLong(7, updateTime);
         }
-        stmt.bindLong(7, entity.getDeleted() ? 1L: 0L);
+        stmt.bindLong(8, entity.getDeleted() ? 1L: 0L);
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, Secret entity) {
         stmt.clearBindings();
  
+        Long sid = entity.getSid();
+        if (sid != null) {
+            stmt.bindLong(1, sid);
+        }
+ 
         Long id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindLong(2, id);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(2, title);
+            stmt.bindString(3, title);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(3, url);
+            stmt.bindString(4, url);
         }
-        stmt.bindLong(4, entity.getCloud() ? 1L: 0L);
+        stmt.bindLong(5, entity.getCloud() ? 1L: 0L);
  
-        java.util.Date createTime = entity.getCreateTime();
+        Long createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(5, createTime.getTime());
+            stmt.bindLong(6, createTime);
         }
  
-        java.util.Date updateTime = entity.getUpdateTime();
+        Long updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(6, updateTime.getTime());
+            stmt.bindLong(7, updateTime);
         }
-        stmt.bindLong(7, entity.getDeleted() ? 1L: 0L);
+        stmt.bindLong(8, entity.getDeleted() ? 1L: 0L);
     }
 
     @Override
@@ -142,38 +154,40 @@ public class SecretDao extends AbstractDao<Secret, Long> {
     @Override
     public Secret readEntity(Cursor cursor, int offset) {
         Secret entity = new Secret( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
-            cursor.getShort(offset + 3) != 0, // cloud
-            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createTime
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // updateTime
-            cursor.getShort(offset + 6) != 0 // deleted
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // sid
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // id
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // url
+            cursor.getShort(offset + 4) != 0, // cloud
+            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // createTime
+            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // updateTime
+            cursor.getShort(offset + 7) != 0 // deleted
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, Secret entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCloud(cursor.getShort(offset + 3) != 0);
-        entity.setCreateTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
-        entity.setUpdateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
-        entity.setDeleted(cursor.getShort(offset + 6) != 0);
+        entity.setSid(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setCloud(cursor.getShort(offset + 4) != 0);
+        entity.setCreateTime(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
+        entity.setUpdateTime(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setDeleted(cursor.getShort(offset + 7) != 0);
      }
     
     @Override
     protected final Long updateKeyAfterInsert(Secret entity, long rowId) {
-        entity.setId(rowId);
+        entity.setSid(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(Secret entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getSid();
         } else {
             return null;
         }
