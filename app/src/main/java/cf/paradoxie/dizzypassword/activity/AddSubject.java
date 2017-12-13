@@ -188,10 +188,8 @@ public class AddSubject extends Activity {
                         dialog.dismiss();
                         cf.paradoxie.dizzypassword.dbdomain.Secret secret=new cf.paradoxie.dizzypassword.dbdomain.Secret();
                         secret.setCloud(true);
-
                         secret.setTitle(serverSecret.getTitle());
                         secret.setUrl(serverSecret.getUrl());
-                        secret.setCloud(false);
                         secret.setId(serverSecret.getId());
                         SecretHelp.insert(secret);
                         Long lasdid=SecretHelp.getlastid();
@@ -221,7 +219,6 @@ public class AddSubject extends Activity {
                     secret.setTitle(secrettitle.getText().toString().trim());
                     secret.setUrl(url.getText().toString().trim());
                     secret.setCloud(false);
-
                     SecretHelp.insert(secret);
                     Long secretid = SecretHelp.getlastid();
                     for (int i = 0; i < adapter.getData().size(); i++) {
