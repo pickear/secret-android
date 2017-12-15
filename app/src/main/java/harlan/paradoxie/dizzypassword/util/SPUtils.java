@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.util;
+package harlan.paradoxie.dizzypassword.util;
 
 
 import android.annotation.SuppressLint;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import cf.paradoxie.dizzypassword.MyApplication;
+import harlan.paradoxie.dizzypassword.MyApplication;
 
 /**
  * <pre>

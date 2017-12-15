@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.util;
+package harlan.paradoxie.dizzypassword.util;
 
 import android.widget.EditText;
 

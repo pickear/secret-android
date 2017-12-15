@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.util;
+package harlan.paradoxie.dizzypassword.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
