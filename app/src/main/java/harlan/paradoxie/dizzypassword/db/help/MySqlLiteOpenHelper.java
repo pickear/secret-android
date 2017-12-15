@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db.help;
+package harlan.paradoxie.dizzypassword.db.help;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,8 +6,8 @@ import android.util.Log;
 
 import org.greenrobot.greendao.database.Database;
 
-import cf.paradoxie.dizzypassword.gen.DaoMaster;
-import cf.paradoxie.dizzypassword.gen.SecretDao;
+import harlan.paradoxie.dizzypassword.gen.DaoMaster;
+import harlan.paradoxie.dizzypassword.gen.SecretDao;
 
 /**
  * Created by zhangqie on 2016/3/26.

@@ -1,14 +1,14 @@
-package cf.paradoxie.dizzypassword.db.help.dbutlis;
+package harlan.paradoxie.dizzypassword.db.help.dbutlis;
 
 import android.util.Log;
 
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.dbdomain.Secret;
-import cf.paradoxie.dizzypassword.dbdomain.SecretList;
-import cf.paradoxie.dizzypassword.gen.SecretDao;
-import cf.paradoxie.dizzypassword.gen.SecretListDao;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.dbdomain.Secret;
+import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
+import harlan.paradoxie.dizzypassword.gen.SecretDao;
+import harlan.paradoxie.dizzypassword.gen.SecretListDao;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
 
 /**
  * Created by a1 on 2017/11/28.
@@ -128,7 +128,7 @@ public class SecretHelp {
 
     }
     public static List<Secret> querycloud() {
-        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Cloud.eq(false)).list();
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
         for(int i=0;i<secrets.size();i++){
             secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }

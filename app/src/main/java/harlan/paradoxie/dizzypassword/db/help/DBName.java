@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db.help;
+package harlan.paradoxie.dizzypassword.db.help;
 
 /**
  * Created by a1 on 2017/11/28.

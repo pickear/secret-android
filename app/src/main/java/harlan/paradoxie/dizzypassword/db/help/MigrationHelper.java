@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.db.help;
+package harlan.paradoxie.dizzypassword.db.help;
 
 import android.database.Cursor;
 import android.text.TextUtils;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.gen.DaoMaster;
+import harlan.paradoxie.dizzypassword.gen.DaoMaster;
 
 
 public class MigrationHelper {

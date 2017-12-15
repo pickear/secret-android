@@ -1,9 +1,9 @@
-package cf.paradoxie.dizzypassword.db.help.dbutlis;
+package harlan.paradoxie.dizzypassword.db.help.dbutlis;
 
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.dbdomain.SecretList;
-import cf.paradoxie.dizzypassword.gen.SecretListDao;
+import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
+import harlan.paradoxie.dizzypassword.gen.SecretListDao;
 
 /**
  * Created by a1 on 2017/11/28.
@@ -26,14 +26,7 @@ public class SecretListHelp {
     public static void insertList(List<SecretList> secrets) {
         DaoManager.getInstance().getDaoSession().getSecretListDao().insertInTx(secrets);
     }
-    /**
-     * 删除数据
-     *
-     * @param id
-     */
-    public static void delete(long id) {
-        DaoManager.getInstance().getDaoSession().getSecretListDao().deleteByKey(id);
-    }
+
     /**
      * 删除数据
      *
@@ -41,6 +34,25 @@ public class SecretListHelp {
      */
     public static void deleteall() {
         DaoManager.getInstance().getDaoSession().getSecretListDao().deleteAll();
+    }
+    /**
+     * 删除数据
+     *
+     * @param Sid
+     */
+    public static void delete(long Sid) {
+        List<SecretList> secretLists = DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.SecretId.eq(Sid)).build().list();
+        for (SecretList secretList : secretLists) {
+            DaoManager.getInstance().getDaoSession().getSecretListDao().delete(secretList);
+        }
+    }
+    /**
+     * 删除数据
+     *
+     * @param
+     */
+    public static void delete(SecretList secretList) {
+        DaoManager.getInstance().getDaoSession().getSecretListDao().delete(secretList);
     }
     /**
      * 更新数据

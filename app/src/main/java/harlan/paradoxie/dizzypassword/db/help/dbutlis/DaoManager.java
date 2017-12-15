@@ -1,11 +1,11 @@
-package cf.paradoxie.dizzypassword.db.help.dbutlis;
+package harlan.paradoxie.dizzypassword.db.help.dbutlis;
 
 import android.content.Context;
 
-import cf.paradoxie.dizzypassword.MyApplication;
-import cf.paradoxie.dizzypassword.db.help.DBName;
-import cf.paradoxie.dizzypassword.gen.DaoMaster;
-import cf.paradoxie.dizzypassword.gen.DaoSession;
+import harlan.paradoxie.dizzypassword.MyApplication;
+import harlan.paradoxie.dizzypassword.db.help.DBName;
+import harlan.paradoxie.dizzypassword.gen.DaoMaster;
+import harlan.paradoxie.dizzypassword.gen.DaoSession;
 
 
 /**
