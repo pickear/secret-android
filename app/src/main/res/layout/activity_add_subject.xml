@@ -6,7 +6,7 @@
     android:background="@color/app_bg"
     android:orientation="vertical"
 
-    tools:context="cf.paradoxie.dizzypassword.activity.AddSubject">
+    tools:context="harlan.paradoxie.dizzypassword.activity.AddSubject">
 
     <include layout="@layout/back_layout"></include>
 
@@ -34,14 +34,6 @@
                 android:textColor="@color/textcolor"
                 android:textColorHint="@color/textcolor"
                 android:textSize="16sp" />
-            <cf.paradoxie.dizzypassword.widget.CustListView
-                android:id="@+id/listviewinfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </cf.paradoxie.dizzypassword.widget.CustListView>
-
-
             <EditText
                 android:id="@+id/url"
                 android:layout_width="match_parent"
@@ -55,6 +47,15 @@
                 android:textColor="@color/textcolor"
                 android:textColorHint="@color/textcolor"
                 android:textSize="16sp" />
+            <harlan.paradoxie.dizzypassword.widget.CustListView
+                android:id="@+id/listviewinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </harlan.paradoxie.dizzypassword.widget.CustListView>
+
+
+
 
             <Button
                 android:id="@+id/ok"

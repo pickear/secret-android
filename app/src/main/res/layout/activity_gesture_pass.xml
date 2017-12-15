@@ -20,7 +20,7 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
-        <cf.paradoxie.dizzypassword.widget.LockPatternView
+        <harlan.paradoxie.dizzypassword.widget.LockPatternView
             android:id="@+id/lockPatternView"
             android:layout_width="270dp"
             android:layout_height="270dp"

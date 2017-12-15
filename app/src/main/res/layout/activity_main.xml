@@ -19,7 +19,7 @@
             android:layout_weight="1"
              />
 
-        <cf.paradoxie.dizzypassword.tabhost.TabFragmentHost
+        <harlan.paradoxie.dizzypassword.tabhost.TabFragmentHost
             android:id="@+id/tabhost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
              />
-        </cf.paradoxie.dizzypassword.tabhost.TabFragmentHost>
+        </harlan.paradoxie.dizzypassword.tabhost.TabFragmentHost>
 
 
     </LinearLayout>

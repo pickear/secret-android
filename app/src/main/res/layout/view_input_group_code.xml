@@ -63,7 +63,7 @@
                 style="@style/InputGroupCodeViewNumber" />
         </LinearLayout>
 
-        <cf.paradoxie.dizzypassword.password.ExpandGridView
+        <harlan.paradoxie.dizzypassword.password.ExpandGridView
             android:id="@+id/numbers_gridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

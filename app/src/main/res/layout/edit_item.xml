@@ -14,21 +14,40 @@
         android:layout_weight="1"
         android:layout_marginLeft="10dp"
         android:padding="10dp"
+        android:layout_gravity="center"
         android:background="@drawable/padd"
-        android:hint="请选择密码类型"
-
+        android:hint="密码类型"
+        android:textSize="16sp"
         android:drawableRight="@drawable/ic_keyboard_arrow_down"/>
     <EditText
         android:id="@+id/valuse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:background="@drawable/padd"
         android:hint="请输入密码"
         android:padding="10dp"
         android:singleLine="true"
+        android:layout_gravity="center"
         android:textColor="@color/textcolor"
         android:textColorHint="@color/textcolor"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/deletetype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="16dp"
+
+        android:background="@drawable/ic_action_cancel"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ic_action_add" />
 </LinearLayout>

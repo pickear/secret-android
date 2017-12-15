@@ -54,6 +54,7 @@
             android:background="@drawable/padd"
             android:cursorVisible="true"
             android:maxLines="1"
+            android:inputType="textPassword"
             android:maxLength="8"
             android:hint="请输入8位数的秘钥"
             android:textColorHint="@color/textcolor"

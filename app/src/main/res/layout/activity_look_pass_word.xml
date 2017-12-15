@@ -7,7 +7,7 @@
     android:background="@color/app_bg"
 
     android:orientation="vertical"
-    tools:context="cf.paradoxie.dizzypassword.activity.LookPassWord">
+    tools:context="harlan.paradoxie.dizzypassword.activity.LookPassWord">
     <include
         layout="@layout/back_layout"></include>
     <TextView
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:text="该6位数字密码将用于查看详情"/>
-    <cf.paradoxie.dizzypassword.password.PswInputView
+    <harlan.paradoxie.dizzypassword.password.PswInputView
         android:layout_width="match_parent"
         app:count="8"
         android:id="@+id/psw_input"

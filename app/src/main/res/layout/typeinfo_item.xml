@@ -20,7 +20,7 @@
             android:layout_marginLeft="10dp"
             android:padding="10dp"
             android:background="@drawable/padd"
-            android:hint="请选择密码类型"
+            android:hint="密码类型"
 
             android:drawableRight="@drawable/ic_keyboard_arrow_down"/>
 
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_weight="4"
+            android:layout_weight="1"
             android:background="@drawable/padd"
             android:hint="请输入密码"
             android:padding="10dp"
