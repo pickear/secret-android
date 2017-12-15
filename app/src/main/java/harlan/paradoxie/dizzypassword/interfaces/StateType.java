@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.interfaces;
+package harlan.paradoxie.dizzypassword.interfaces;
 
 /**
  * Created by a1 on 2017/12/4.
