@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,18 +26,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.adapter.AddTypeAdapter;
-import cf.paradoxie.dizzypassword.api.AllApi;
-import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
-import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
-import cf.paradoxie.dizzypassword.dbdomain.SecretList;
-import cf.paradoxie.dizzypassword.domian.ServerSecret;
-import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.util.SPUtils;
-import cf.paradoxie.dizzypassword.util.StringUtils;
-import cf.paradoxie.dizzypassword.widget.CustListView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.adapter.AddTypeAdapter;
+import harlan.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
+import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
+import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
+import harlan.paradoxie.dizzypassword.domian.ServerSecret;
+import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.util.SPUtils;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.widget.CustListView;
 
 public class AddSubject extends Activity {
     AddTypeAdapter adapter;
@@ -113,7 +113,7 @@ public class AddSubject extends Activity {
                                     subject.entryptAllSecret(custed.getText().toString().trim());
                                     Log.e("backinfo", GsonUtil.getGsonInstance().toJson(subject));
                                     if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", "")) || (StringUtils.isEmpty(SPUtils.getInstance().getString("username", "")) && SPUtils.getInstance().getBoolean("cloud") == false)) {
-                                        cf.paradoxie.dizzypassword.dbdomain.Secret secret = new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                                        harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                                         secret.setTitle(secrettitle.getText().toString().trim());
                                         secret.setUrl(url.getText().toString().trim());
                                         secret.setCloud(false);
@@ -186,7 +186,7 @@ public class AddSubject extends Activity {
                         startActivity(intent);
                     }else{
                         dialog.dismiss();
-                        cf.paradoxie.dizzypassword.dbdomain.Secret secret=new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                        harlan.paradoxie.dizzypassword.dbdomain.Secret secret=new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                         secret.setCloud(true);
                         secret.setTitle(serverSecret.getTitle());
                         secret.setUrl(serverSecret.getUrl());
@@ -215,7 +215,7 @@ public class AddSubject extends Activity {
 
             @Override
             public void onError(Response<String> response) {
-                    cf.paradoxie.dizzypassword.dbdomain.Secret secret = new cf.paradoxie.dizzypassword.dbdomain.Secret();
+                    harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                     secret.setTitle(secrettitle.getText().toString().trim());
                     secret.setUrl(url.getText().toString().trim());
                     secret.setCloud(false);
