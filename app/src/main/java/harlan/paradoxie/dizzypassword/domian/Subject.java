@@ -1,23 +1,29 @@
-package cf.paradoxie.dizzypassword.domian;
+package harlan.paradoxie.dizzypassword.domian;
 
 import java.util.List;
 
 /**
- * Created by a1 on 2017/11/27.
+ * Created by a1 on 2017/12/8.
  */
-public class ServerSecret {
+public class Subject {
     /**
-     * id : 13
+     * id : 17
      * userId : 22
-     * title : 账号
-     * url : 大大方方发发发
-     * secrets : [{"id":13,"subjectId":0,"name":"登录密码","value":"pFxp5wgPEgaDeVFxmrGqgpoPddp1YrXjISnPwd5aQLg=\n"}]
+     * title : tggg
+     * url : ggvvvb
+     * createTime : 1512677856000
+     * updateTime : 1512677906000
+     * deleted : false
+     * secrets : [{"id":17,"subjectId":17,"name":"登录密码","value":"hKLuNFIikOM=\n"}]
      */
 
     private Long id;
-    private int userId;
+    private Long userId;
     private String title;
     private String url;
+    private long createTime;
+    private long updateTime;
+    private boolean deleted;
     private List<SecretsBean> secrets;
 
     public Long getId() {
@@ -28,11 +34,11 @@ public class ServerSecret {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -52,6 +58,30 @@ public class ServerSecret {
         this.url = url;
     }
 
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public List<SecretsBean> getSecrets() {
         return secrets;
     }
@@ -62,10 +92,10 @@ public class ServerSecret {
 
     public static class SecretsBean {
         /**
-         * id : 13
-         * subjectId : 0
+         * id : 17
+         * subjectId : 17
          * name : 登录密码
-         * value : pFxp5wgPEgaDeVFxmrGqgpoPddp1YrXjISnPwd5aQLg=
+         * value : hKLuNFIikOM=
 
          */
 

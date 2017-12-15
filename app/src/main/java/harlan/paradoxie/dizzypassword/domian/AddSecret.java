@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.domian;
+package harlan.paradoxie.dizzypassword.domian;
 
 /**
  * Created by a1 on 2017/11/22.

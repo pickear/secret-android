@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.domian;
+package harlan.paradoxie.dizzypassword.domian;
 
 import java.util.List;
 
