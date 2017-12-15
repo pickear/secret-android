@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.password;
+package harlan.paradoxie.dizzypassword.password;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 /**
  * @author fanbaolong

@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.password;
+package harlan.paradoxie.dizzypassword.password;
 
 import android.content.Context;
 import android.util.AttributeSet;

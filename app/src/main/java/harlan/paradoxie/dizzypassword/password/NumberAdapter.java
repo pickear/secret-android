@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.password;
+package harlan.paradoxie.dizzypassword.password;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 public class NumberAdapter extends BaseAdapter{
 

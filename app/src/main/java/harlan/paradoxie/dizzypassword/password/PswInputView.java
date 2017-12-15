@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.password;
+package harlan.paradoxie.dizzypassword.password;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -21,7 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 /**
  * 封装成lib，方便直接调用
