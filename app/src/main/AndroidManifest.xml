@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="cf.paradoxie.dizzypassword">
+    package="harlan.paradoxie.dizzypassword">
 
     <!-- android:theme="@style/AppTheme.NoActionBar" -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
-        android:name=".MyApplication"
+        android:name="harlan.paradoxie.dizzypassword.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="harlan.paradoxie.dizzypassword.activity.MainActivity"
 
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -29,43 +29,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.Register"
+            android:name="harlan.paradoxie.dizzypassword.activity.Register"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.Login"
+            android:name="harlan.paradoxie.dizzypassword.activity.Login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.CreateGestureActivity"
+            android:name="harlan.paradoxie.dizzypassword.activity.CreateGestureActivity"
             android:label="@string/title_activity_create_gesture"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.GesturePasswordActivity"
+            android:name="harlan.paradoxie.dizzypassword.activity.GesturePasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.LookPassWord"
+            android:name="harlan.paradoxie.dizzypassword.activity.LookPassWord"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ConfirmPassword"
+            android:name="harlan.paradoxie.dizzypassword.activity.ConfirmPassword"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.AddSubject"
+            android:name="harlan.paradoxie.dizzypassword.activity.AddSubject"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.Secretdetails"
+            android:name="harlan.paradoxie.dizzypassword.activity.Secretdetails"
             android:label="@string/title_activity_secretdetails"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".service.HeartbeatService"
+            android:name="harlan.paradoxie.dizzypassword.service.HeartbeatService"
             android:label="QServer"
             android:persistent="true">
             <intent-filter>
@@ -74,7 +74,7 @@
         </service>
 
         <activity
-            android:name=".activity.EditSecret"
+            android:name="harlan.paradoxie.dizzypassword.activity.EditSecret"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_edit_secret"></activity>
     </application>
