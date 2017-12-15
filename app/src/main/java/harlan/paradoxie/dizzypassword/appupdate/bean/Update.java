@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.appupdate.bean;
+package harlan.paradoxie.dizzypassword.appupdate.bean;
 
 /**
  * Created by a1 on 2017/12/7.

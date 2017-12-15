@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.appupdate.bean;
+package harlan.paradoxie.dizzypassword.appupdate.bean;
 
 /**
  * ========================================

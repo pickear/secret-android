@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.appupdate;
+package harlan.paradoxie.dizzypassword.appupdate;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -9,8 +9,8 @@ import com.dou361.update.ParseData;
 import com.dou361.update.UpdateHelper;
 import com.dou361.update.bean.Update;
 
-import cf.paradoxie.dizzypassword.appupdate.bean.CheckResultRepository;
-import cf.paradoxie.dizzypassword.appupdate.bean.UpdateBean;
+import harlan.paradoxie.dizzypassword.appupdate.bean.CheckResultRepository;
+import harlan.paradoxie.dizzypassword.appupdate.bean.UpdateBean;
 
 /**
  * Created by a1 on 2017/6/13.
