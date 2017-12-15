@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.dou361.dialogui.DialogUIUtils;
 
-import cf.paradoxie.dizzypassword.interfaces.StateType;
+import harlan.paradoxie.dizzypassword.interfaces.StateType;
 
 public abstract class BaseFragment extends Fragment implements StateType {
 
