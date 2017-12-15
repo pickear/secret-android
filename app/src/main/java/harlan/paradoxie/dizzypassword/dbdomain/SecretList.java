@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.dbdomain;
+package harlan.paradoxie.dizzypassword.dbdomain;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;

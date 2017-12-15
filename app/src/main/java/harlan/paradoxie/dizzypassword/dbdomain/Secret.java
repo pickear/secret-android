@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.dbdomain;
+package harlan.paradoxie.dizzypassword.dbdomain;
 
 import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
@@ -9,9 +9,11 @@ import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.gen.DaoSession;
-import cf.paradoxie.dizzypassword.gen.SecretDao;
-import cf.paradoxie.dizzypassword.gen.SecretListDao;
+import harlan.paradoxie.dizzypassword.gen.DaoSession;
+import harlan.paradoxie.dizzypassword.gen.SecretDao;
+import harlan.paradoxie.dizzypassword.gen.SecretListDao;
+
+
 
 
 
@@ -205,7 +207,5 @@ public class Secret {
     public Secret() {
     }
 
-
-   
 
 }
