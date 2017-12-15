@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.adapter;
+package harlan.paradoxie.dizzypassword.adapter;
 
 import android.app.Activity;
 import android.util.Log;
@@ -13,8 +13,8 @@ import com.weasel.secret.common.helper.EntryptionHelper;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 
 public class DetailsAdapter<T> extends BaseAdapter {

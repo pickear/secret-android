@@ -1,10 +1,10 @@
-package cf.paradoxie.dizzypassword.adapter;
+package harlan.paradoxie.dizzypassword.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.dou361.dialogui.DialogUIUtils;
 import com.weasel.secret.common.helper.EntryptionHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.dbdomain.SecretList;
-import cf.paradoxie.dizzypassword.help.ObjectUtils;
-import cf.paradoxie.dizzypassword.pickerview.Util;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
+import harlan.paradoxie.dizzypassword.help.ObjectUtils;
+import harlan.paradoxie.dizzypassword.pickerview.Util;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 
 public class LSwipeAdapter extends BaseAdapter {
@@ -54,13 +55,22 @@ public class LSwipeAdapter extends BaseAdapter {
     public LSwipeAdapter(Activity ctx, List<SecretList> mdata, String MKEY) {
         mContext = ctx;
         KEY = MKEY;
+        rootView = View.inflate(ctx, R.layout.custinputview, null);
         init(mdata);
         typedata.add("登录密码");
         typedata.add("取现密码");
         typedata.add("支付密码");
         typedata.add("自定义");
     }
-
+    private void addItem(){
+        SecretList secretList=new SecretList();
+        data.add(secretList);
+        notifyDataSetChanged();
+    }
+    private void remove(int position){
+        data.remove(position);
+        notifyDataSetChanged();
+    }
     private void init(List<SecretList> mdata) {
         for (int i = 0; i < mdata.size(); i++) {
             String value = "";
@@ -116,8 +126,8 @@ public class LSwipeAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.type = (TextView) convertView.findViewById(R.id.type);
             holder.valuse = (EditText) convertView.findViewById(R.id.valuse);
-           /* holder.valuse.addTextChangedListener(new watcher(holder));
-            holder.valuse.setTag(mposition);*/
+            holder.add = (TextView) convertView.findViewById(R.id.add);
+            holder.deletetype = (TextView) convertView.findViewById(R.id.deletetype);
             convertView.setTag(holder);
         } else {// 有直接获得ViewHolder
             holder = (ViewHolder) convertView.getTag();
@@ -138,6 +148,21 @@ public class LSwipeAdapter extends BaseAdapter {
                         }
                     }
                 });
+            }
+        });
+        holder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
+        holder.deletetype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //SecretList secretList=GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(data.get(mposition)),SecretList.class);
+                //SecretListHelp.delete(secretList);
+                remove(mposition);
+
             }
         });
         final EditText tempEditText= holder.valuse;
@@ -161,40 +186,25 @@ public class LSwipeAdapter extends BaseAdapter {
 
             }
         });
+        if(mposition==0){
+            holder.add.setVisibility(View.VISIBLE);
+            holder.deletetype.setVisibility(View.VISIBLE);
+        }else{
+            holder.add.setVisibility(View.GONE);
+            holder.deletetype.setVisibility(View.VISIBLE);
+        }
         holder.type.setText(data.get(mposition).getName());
         holder.valuse.setText(data.get(mposition).getValue());
         return convertView;
     }
 
-    class watcher implements TextWatcher {
-        private ViewHolder mHolder;
-
-        public watcher(ViewHolder holder) {
-            mHolder = holder;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s != null && !"".equals(s.toString())) {
-                int position = (Integer) mHolder.valuse.getTag();
-                data.get(position).setValue(s.toString());
-            }
-        }
-    }
-
 
     private void showcustdialog(final int postion) {
-        dialog = DialogUIUtils.showCustomAlert(mContext, rootView, Gravity.CENTER, true, false).show();
+        dialog = new MaterialDialog.Builder(mContext)
+                .customView(rootView, false)
+                .backgroundColor(Color.parseColor("#ffffff"))
+                .build();
+        dialog.show();
         custed = (EditText) rootView.findViewById(R.id.et_1);
         cancel = (Button) rootView.findViewById(R.id.cancel);
         sure = (Button) rootView.findViewById(R.id.sure);
@@ -213,10 +223,8 @@ public class LSwipeAdapter extends BaseAdapter {
                 } else {
 
                     data.get(postion).setName(custed.getText().toString().trim());
-                    // ObjectUtils.setProperty(data.get(postion), "name", custed.getText().toString().trim());
-
-
-                    DialogUIUtils.dismiss(dialog);
+                    dialog.dismiss();
+                    //DialogUIUtils.dismiss(dialog);
                     notifyDataSetChanged();
                 }
 
@@ -226,7 +234,7 @@ public class LSwipeAdapter extends BaseAdapter {
 
     private class ViewHolder {
         EditText valuse;
-        TextView type;
+        TextView type,deletetype,add;
 
     }
 }

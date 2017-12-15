@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.adapter;
+package harlan.paradoxie.dizzypassword.adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 
 public class SwipeAdapter<T> extends BaseAdapter {

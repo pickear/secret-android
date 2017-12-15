@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.adapter;
+package harlan.paradoxie.dizzypassword.adapter;
 
 import android.app.Dialog;
 import android.text.Editable;
@@ -19,10 +19,10 @@ import com.weasel.secret.common.domain.Secret;
 import java.util.ArrayList;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.activity.AddSubject;
-import cf.paradoxie.dizzypassword.pickerview.Util;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.activity.AddSubject;
+import harlan.paradoxie.dizzypassword.pickerview.Util;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 
 public class AddTypeAdapter extends BaseAdapter {
