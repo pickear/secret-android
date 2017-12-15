@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.help;
+package harlan.paradoxie.dizzypassword.help;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

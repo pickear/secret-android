@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.help;
+package harlan.paradoxie.dizzypassword.help;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
