@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -30,15 +30,15 @@ import java.util.TimerTask;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import cf.paradoxie.dizzypassword.MyApplication;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.api.AllApi;
-import cf.paradoxie.dizzypassword.fragment.Homefragment;
-import cf.paradoxie.dizzypassword.fragment.Myfragment;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.tabhost.Tab;
-import cf.paradoxie.dizzypassword.tabhost.TabFragmentHost;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.MyApplication;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.fragment.Homefragment;
+import harlan.paradoxie.dizzypassword.fragment.Myfragment;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.tabhost.Tab;
+import harlan.paradoxie.dizzypassword.tabhost.TabFragmentHost;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "response:" + response.body());
-                cf.paradoxie.dizzypassword.appupdate.bean.Update update = new cf.paradoxie.dizzypassword.appupdate.bean.Update();
+                harlan.paradoxie.dizzypassword.appupdate.bean.Update update = new harlan.paradoxie.dizzypassword.appupdate.bean.Update();
                 UpdateInfo info = GsonUtil.getGsonInstance().fromJson(response.body(), UpdateInfo.class);
                 if(info.isHasUpdate()==true&& !StringUtils.isEmpty(info.getUrl())){
                     update.setCode(0);

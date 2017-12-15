@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,13 +30,13 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.api.AllApi;
-import cf.paradoxie.dizzypassword.domian.LoginBean;
-import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.util.SPUtils;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.domian.LoginBean;
+import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.util.SPUtils;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 public class Login extends Activity {
 

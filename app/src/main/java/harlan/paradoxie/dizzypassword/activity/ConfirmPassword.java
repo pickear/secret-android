@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,10 +14,10 @@ import com.weasel.secret.common.helper.EntryptionHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.help.Constant;
-import cf.paradoxie.dizzypassword.password.PswInputView;
-import cf.paradoxie.dizzypassword.util.ACache;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.help.Constant;
+import harlan.paradoxie.dizzypassword.password.PswInputView;
+import harlan.paradoxie.dizzypassword.util.ACache;
 
 public class ConfirmPassword extends Activity {
 

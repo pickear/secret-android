@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,8 +11,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.password.PswInputView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.password.PswInputView;
 
 public class LookPassWord extends Activity {
 

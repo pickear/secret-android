@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,11 +10,11 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.adapter.DetailsAdapter;
-import cf.paradoxie.dizzypassword.domian.SecretList;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.widget.CustListView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.adapter.DetailsAdapter;
+import harlan.paradoxie.dizzypassword.domian.SecretList;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.widget.CustListView;
 
 public class Secretdetails extends Activity {
 

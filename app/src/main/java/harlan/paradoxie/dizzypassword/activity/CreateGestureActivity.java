@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.activity;
+package harlan.paradoxie.dizzypassword.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,13 +14,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.help.Constant;
-import cf.paradoxie.dizzypassword.util.ACache;
-import cf.paradoxie.dizzypassword.util.LockPatternUtil;
-import cf.paradoxie.dizzypassword.util.StringUtils;
-import cf.paradoxie.dizzypassword.widget.LockPatternIndicator;
-import cf.paradoxie.dizzypassword.widget.LockPatternView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.help.Constant;
+import harlan.paradoxie.dizzypassword.util.ACache;
+import harlan.paradoxie.dizzypassword.util.LockPatternUtil;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.widget.LockPatternIndicator;
+import harlan.paradoxie.dizzypassword.widget.LockPatternView;
 
 public class CreateGestureActivity extends Activity {
 
