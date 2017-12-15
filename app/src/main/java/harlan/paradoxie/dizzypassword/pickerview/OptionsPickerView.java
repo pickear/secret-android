@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview;
+package harlan.paradoxie.dizzypassword.pickerview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.view.BasePickerView;
-import cf.paradoxie.dizzypassword.pickerview.view.WheelOptions;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.view.BasePickerView;
+import harlan.paradoxie.dizzypassword.pickerview.view.WheelOptions;
 
 /**
  * Created by Sai on 15/11/22.

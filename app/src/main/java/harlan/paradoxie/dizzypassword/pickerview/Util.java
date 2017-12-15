@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview;
+package harlan.paradoxie.dizzypassword.pickerview;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.adapter.ArrayWheelAdapter;
-import cf.paradoxie.dizzypassword.pickerview.lib.WheelView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.adapter.ArrayWheelAdapter;
+import harlan.paradoxie.dizzypassword.pickerview.lib.WheelView;
 
 
 /**

@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview.lib;
+package harlan.paradoxie.dizzypassword.pickerview.lib;
 
 final class OnItemSelectedRunnable implements Runnable {
     final WheelView loopView;

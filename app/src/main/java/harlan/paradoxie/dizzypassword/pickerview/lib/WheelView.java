@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview.lib;
+package harlan.paradoxie.dizzypassword.pickerview.lib;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -19,9 +19,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.adapter.WheelAdapter;
-import cf.paradoxie.dizzypassword.pickerview.listener.OnItemSelectedListener;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.adapter.WheelAdapter;
+import harlan.paradoxie.dizzypassword.pickerview.listener.OnItemSelectedListener;
 
 /**
  * 3d滚轮控件

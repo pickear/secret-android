@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview;
+package harlan.paradoxie.dizzypassword.pickerview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.view.BasePickerView;
-import cf.paradoxie.dizzypassword.pickerview.view.WheelTime;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.view.BasePickerView;
+import harlan.paradoxie.dizzypassword.pickerview.view.WheelTime;
 
 
 /**

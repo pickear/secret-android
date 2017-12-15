@@ -1,8 +1,8 @@
-package cf.paradoxie.dizzypassword.pickerview.utils;
+package harlan.paradoxie.dizzypassword.pickerview.utils;
 
 import android.view.Gravity;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 
 /**

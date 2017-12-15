@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview.view;
+package harlan.paradoxie.dizzypassword.pickerview.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,9 +11,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.listener.OnDismissListener;
-import cf.paradoxie.dizzypassword.pickerview.utils.PickerViewAnimateUtil;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.listener.OnDismissListener;
+import harlan.paradoxie.dizzypassword.pickerview.utils.PickerViewAnimateUtil;
 
 
 /**

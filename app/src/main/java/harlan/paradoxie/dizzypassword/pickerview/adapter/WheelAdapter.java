@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview.adapter;
+package harlan.paradoxie.dizzypassword.pickerview.adapter;
 
 public interface WheelAdapter<T> {
 	/**

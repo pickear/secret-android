@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.pickerview.view;
+package harlan.paradoxie.dizzypassword.pickerview.view;
 
 import android.content.Context;
 import android.view.View;
@@ -8,11 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.pickerview.TimePickerView;
-import cf.paradoxie.dizzypassword.pickerview.adapter.NumericWheelAdapter;
-import cf.paradoxie.dizzypassword.pickerview.lib.WheelView;
-import cf.paradoxie.dizzypassword.pickerview.listener.OnItemSelectedListener;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.pickerview.TimePickerView;
+import harlan.paradoxie.dizzypassword.pickerview.adapter.NumericWheelAdapter;
+import harlan.paradoxie.dizzypassword.pickerview.lib.WheelView;
+import harlan.paradoxie.dizzypassword.pickerview.listener.OnItemSelectedListener;
 
 
 public class WheelTime {
