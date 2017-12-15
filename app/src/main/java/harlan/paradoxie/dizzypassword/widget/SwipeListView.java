@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.widget;
+package harlan.paradoxie.dizzypassword.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

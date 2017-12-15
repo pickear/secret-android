@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.widget;
+package harlan.paradoxie.dizzypassword.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,7 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import cf.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.R;
 
 
 public class CircleImageView extends ImageView{
