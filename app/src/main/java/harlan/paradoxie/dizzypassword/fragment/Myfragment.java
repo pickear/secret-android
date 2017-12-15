@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.fragment;
+package harlan.paradoxie.dizzypassword.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,14 +22,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.activity.BaseFragment;
-import cf.paradoxie.dizzypassword.activity.Login;
-import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.service.HeartbeatService;
-import cf.paradoxie.dizzypassword.util.SPUtils;
-import cf.paradoxie.dizzypassword.util.StringUtils;
-import cf.paradoxie.dizzypassword.widget.CircleImageView;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.activity.BaseFragment;
+import harlan.paradoxie.dizzypassword.activity.Login;
+import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.service.HeartbeatService;
+import harlan.paradoxie.dizzypassword.util.SPUtils;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.widget.CircleImageView;
 import ch.ielse.view.SwitchView;
 import io.reactivex.annotations.NonNull;
 

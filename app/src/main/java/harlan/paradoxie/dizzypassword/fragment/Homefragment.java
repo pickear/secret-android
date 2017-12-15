@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.fragment;
+package harlan.paradoxie.dizzypassword.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,26 +37,26 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cf.paradoxie.dizzypassword.R;
-import cf.paradoxie.dizzypassword.activity.AddSubject;
-import cf.paradoxie.dizzypassword.activity.BaseFragment;
-import cf.paradoxie.dizzypassword.activity.EditSecret;
-import cf.paradoxie.dizzypassword.activity.Login;
-import cf.paradoxie.dizzypassword.activity.Secretdetails;
-import cf.paradoxie.dizzypassword.adapter.LSwipeAdapter;
-import cf.paradoxie.dizzypassword.adapter.SwipeAdapter;
-import cf.paradoxie.dizzypassword.api.AllApi;
-import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
-import cf.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
-import cf.paradoxie.dizzypassword.dbdomain.Secret;
-import cf.paradoxie.dizzypassword.domian.LoginBean;
-import cf.paradoxie.dizzypassword.domian.SecretList;
-import cf.paradoxie.dizzypassword.domian.UpdataView;
-import cf.paradoxie.dizzypassword.help.GsonUtil;
-import cf.paradoxie.dizzypassword.password.PassValitationPopwindow;
-import cf.paradoxie.dizzypassword.util.ACache;
-import cf.paradoxie.dizzypassword.util.SPUtils;
-import cf.paradoxie.dizzypassword.util.StringUtils;
+import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.activity.AddSubject;
+import harlan.paradoxie.dizzypassword.activity.BaseFragment;
+import harlan.paradoxie.dizzypassword.activity.EditSecret;
+import harlan.paradoxie.dizzypassword.activity.Login;
+import harlan.paradoxie.dizzypassword.activity.Secretdetails;
+import harlan.paradoxie.dizzypassword.adapter.LSwipeAdapter;
+import harlan.paradoxie.dizzypassword.adapter.SwipeAdapter;
+import harlan.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
+import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
+import harlan.paradoxie.dizzypassword.dbdomain.Secret;
+import harlan.paradoxie.dizzypassword.domian.LoginBean;
+import harlan.paradoxie.dizzypassword.domian.SecretList;
+import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.password.PassValitationPopwindow;
+import harlan.paradoxie.dizzypassword.util.ACache;
+import harlan.paradoxie.dizzypassword.util.SPUtils;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 public class Homefragment extends BaseFragment {
 
@@ -177,7 +177,7 @@ public class Homefragment extends BaseFragment {
                                 dialog.dismiss();
                             }
                         });
-                        custed.setText("12345678");
+                        custed.setText("");
                         sure.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -376,9 +376,9 @@ public class Homefragment extends BaseFragment {
                 com.weasel.secret.common.domain.Secret secret = new com.weasel.secret.common.domain.Secret();
                 secret.setName(secrets.get(i).getSecrets().get(j).getName());
                 secret.setValue(secrets.get(i).getSecrets().get(j).getValue());
-                if(secrets.get(i).getSecrets().get(j).getSubjectId()!=null){
+               /* if(secrets.get(i).getSecrets().get(j).getSubjectId()!=null){
                     secret.setSubjectId(secrets.get(i).getSecrets().get(j).getSubjectId());
-                }
+                }*/
                 if(secrets.get(i).getSecrets().get(j).getId()!=null){
                     secret.setId(secrets.get(i).getSecrets().get(j).getId());
                 }
@@ -401,8 +401,8 @@ public class Homefragment extends BaseFragment {
                         startActivity(intent);
                     } else {
                         try {
-                            List<cf.paradoxie.dizzypassword.domian.Subject> subjects1 = new ArrayList<cf.paradoxie.dizzypassword.domian.Subject>();
-                            Type type = new TypeToken<ArrayList<cf.paradoxie.dizzypassword.domian.Subject>>() {
+                            List<harlan.paradoxie.dizzypassword.domian.Subject> subjects1 = new ArrayList<harlan.paradoxie.dizzypassword.domian.Subject>();
+                            Type type = new TypeToken<ArrayList<harlan.paradoxie.dizzypassword.domian.Subject>>() {
                             }.getType();
                             subjects1 = GsonUtil.getGsonInstance().fromJson(response.body(), type);
 
@@ -424,9 +424,9 @@ public class Homefragment extends BaseFragment {
                                     secret.setUpdateTime(subjects1.get(i).getUpdateTime());
                                     SecretHelp.insert(secret);
                                     Long lasdid=SecretHelp.getlastid();
-                                    List<cf.paradoxie.dizzypassword.dbdomain.SecretList> secretLists = new ArrayList<cf.paradoxie.dizzypassword.dbdomain.SecretList>();
+                                    List<harlan.paradoxie.dizzypassword.dbdomain.SecretList> secretLists = new ArrayList<harlan.paradoxie.dizzypassword.dbdomain.SecretList>();
                                     for (int j = 0; j < subjects1.get(i).getSecrets().size(); j++) {
-                                        cf.paradoxie.dizzypassword.dbdomain.SecretList list = new cf.paradoxie.dizzypassword.dbdomain.SecretList();
+                                        harlan.paradoxie.dizzypassword.dbdomain.SecretList list = new harlan.paradoxie.dizzypassword.dbdomain.SecretList();
                                         list.setSubjectId(subjects1.get(i).getSecrets().get(j).getSubjectId());
                                         list.setId(subjects1.get(i).getSecrets().get(j).getId());
                                         list.setName(subjects1.get(i).getSecrets().get(j).getName());
@@ -506,6 +506,7 @@ public class Homefragment extends BaseFragment {
                 } else if (loginBean.getCode().equals("0000")) {
                     if (mposition != -1) {
                         adapter.delete(mposition);
+                        SecretHelp.delete(secret.getSid());
                         if (adapter.getCount() == 0) {
                             ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                                     getString(R.string.ydPageState_empty_title), "该账户下没有数据，请添加");
