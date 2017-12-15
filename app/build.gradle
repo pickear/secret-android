@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "cf.paradoxie.dizzypassword"
+        applicationId "harlan.paradoxie.dizzypassword"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -36,8 +36,8 @@ android {
     }
 }
 greendao {
-    schemaVersion 2
-    daoPackage 'cf.paradoxie.dizzypassword.gen'
+    schemaVersion 1
+    daoPackage 'harlan.paradoxie.dizzypassword.gen'
     targetGenDir 'src/main/java'
 }
 dependencies {
