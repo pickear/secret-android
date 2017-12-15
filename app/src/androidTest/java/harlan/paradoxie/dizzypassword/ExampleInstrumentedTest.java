@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword;
+package harlan.paradoxie.dizzypassword;
 
 /**
  * Instrumentation test, which will execute on an Android device.

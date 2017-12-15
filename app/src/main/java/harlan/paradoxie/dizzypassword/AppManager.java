@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword;
+package harlan.paradoxie.dizzypassword;
 
 
 import android.app.Activity;

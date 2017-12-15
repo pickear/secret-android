@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword;
+package harlan.paradoxie.dizzypassword;
 
 import android.app.Application;
 import android.content.Context;
@@ -22,12 +22,12 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import cf.paradoxie.dizzypassword.appupdate.UpdateConfig;
-import cf.paradoxie.dizzypassword.db.help.DBName;
-import cf.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
-import cf.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
-import cf.paradoxie.dizzypassword.gen.DaoMaster;
-import cf.paradoxie.dizzypassword.gen.DaoSession;
+import harlan.paradoxie.dizzypassword.appupdate.UpdateConfig;
+import harlan.paradoxie.dizzypassword.db.help.DBName;
+import harlan.paradoxie.dizzypassword.db.help.MySqlLiteOpenHelper;
+import harlan.paradoxie.dizzypassword.db.help.dbutlis.DaoManager;
+import harlan.paradoxie.dizzypassword.gen.DaoMaster;
+import harlan.paradoxie.dizzypassword.gen.DaoSession;
 import okhttp3.OkHttpClient;
 
 public class MyApplication extends Application {
