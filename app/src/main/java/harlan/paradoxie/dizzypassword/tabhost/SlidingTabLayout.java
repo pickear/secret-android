@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cf.paradoxie.dizzypassword.tabhost;
+package harlan.paradoxie.dizzypassword.tabhost;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -1,10 +1,10 @@
-package cf.paradoxie.dizzypassword.tabhost;
+package harlan.paradoxie.dizzypassword.tabhost;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import cf.paradoxie.dizzypassword.fragment.home.SampleFragment;
+import harlan.paradoxie.dizzypassword.fragment.home.SampleFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
