@@ -1,4 +1,4 @@
-package cf.paradoxie.dizzypassword.service;
+package harlan.paradoxie.dizzypassword.service;
 
 import android.app.ActivityManager;
 import android.app.Service;
@@ -14,7 +14,7 @@ import com.lzy.okgo.model.Response;
 
 import java.util.List;
 
-import cf.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.api.AllApi;
 
 public class HeartbeatService extends Service implements Runnable {
     private Thread mThread;
