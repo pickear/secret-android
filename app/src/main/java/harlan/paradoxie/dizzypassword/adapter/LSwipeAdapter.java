@@ -77,13 +77,13 @@ public class LSwipeAdapter extends BaseAdapter {
             try {
                 value = EntryptionHelper.decrypt(KEY, (String) ObjectUtils.getValueByKey(mdata.get(i), "value"));
                 if (StringUtils.isEmpty(value)) {
-                    Toast.makeText(mContext, "秘钥错误", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "第"+i+"秘钥错误", Toast.LENGTH_LONG).show();
                     mContext.finish();
                 }
 
 
             } catch (Exception e) {
-                Toast.makeText(mContext, "秘钥错误", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "第"+i+"秘钥错误", Toast.LENGTH_LONG).show();
                 mContext.finish();
                 e.printStackTrace();
             }

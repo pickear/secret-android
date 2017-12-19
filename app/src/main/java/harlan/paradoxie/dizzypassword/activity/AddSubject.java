@@ -34,6 +34,7 @@ import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
 import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
 import harlan.paradoxie.dizzypassword.domian.ServerSecret;
 import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.help.Date_U;
 import harlan.paradoxie.dizzypassword.help.GsonUtil;
 import harlan.paradoxie.dizzypassword.util.SPUtils;
 import harlan.paradoxie.dizzypassword.util.StringUtils;
@@ -106,6 +107,7 @@ public class AddSubject extends Activity {
                         public void onClick(View v) {
                             if (!StringUtils.isEmpty(custed.getText().toString().trim()) && custed.getText().toString().trim().length() == 8) {
                                 Subject subject = new Subject();
+                                subject.setCreateTime(Date_U.getNowDate());
                                 subject.setTitle(secrettitle.getText().toString().trim());
                                 subject.setUrl(url.getText().toString().trim());
                                 subject.setSecrets(adapter.getData());
@@ -116,6 +118,7 @@ public class AddSubject extends Activity {
                                         harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                                         secret.setTitle(secrettitle.getText().toString().trim());
                                         secret.setUrl(url.getText().toString().trim());
+                                        secret.setCreateTime(Date_U.getNowDate());
                                         secret.setCloud(false);
                                         SecretHelp.insert(secret);
                                         Long secretsid = SecretHelp.getlastid();
@@ -191,6 +194,7 @@ public class AddSubject extends Activity {
                         secret.setTitle(serverSecret.getTitle());
                         secret.setUrl(serverSecret.getUrl());
                         secret.setId(serverSecret.getId());
+                        secret.setCreateTime(Date_U.getNowDate());
                         SecretHelp.insert(secret);
                         Long lasdid=SecretHelp.getlastid();
                         for (int i = 0; i <serverSecret.getSecrets().size(); i++) {
@@ -218,6 +222,7 @@ public class AddSubject extends Activity {
                     harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                     secret.setTitle(secrettitle.getText().toString().trim());
                     secret.setUrl(url.getText().toString().trim());
+                    secret.setCreateTime(Date_U.getNowDate());
                     secret.setCloud(false);
                     SecretHelp.insert(secret);
                     Long secretid = SecretHelp.getlastid();

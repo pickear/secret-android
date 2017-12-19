@@ -130,6 +130,7 @@ public class EditSecret extends Activity {
                             secretList.add(secret);
                         }
                         subject.setSecrets(secretList);
+                        Log.e("backinfo","未加密前的数据："+GsonUtil.getGsonInstance().toJson(subject));
                         try {
                             Log.e("backinfo", "key:" + key);
                             subject.entryptAllSecret(key);
@@ -139,6 +140,7 @@ public class EditSecret extends Activity {
                             Log.e("backinfo", "加密出错");
                             e.printStackTrace();
                         }
+                        Log.e("backinfo","加密后的数据："+GsonUtil.getGsonInstance().toJson(subject));
                     } else {
                         updateDB(false);
                         UpdataView updataView = new UpdataView();
@@ -234,22 +236,24 @@ public class EditSecret extends Activity {
                         secret.setUpdateTime(Date_U.getNowDate());
                         SecretHelp.update(secret);
                         SecretListHelp.delete(subjectsBean.getSid());
-                        List<SecretList> secrets;
+                        List<SecretList> secrets=new ArrayList<SecretList>();
                         Type type = new TypeToken<ArrayList<SecretList>>() {
                         }.getType();
-                        secrets = GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
+                     //   secrets = GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
                         Log.e("backinfo", "编辑：" + GsonUtil.getGsonInstance().toJson(secrets));
-                        secret.setSecrets(secrets);
-                        for (int i = 0; i < secret.getSecrets().size(); i++) {
-                            if (secret.getSecrets().size() <= serverSecret.getSecrets().size()) {
-                                secret.getSecrets().get(i).setSubjectId(serverSecret.getSecrets().get(i).getSubjectId());
-                                secret.getSecrets().get(i).setValue(serverSecret.getSecrets().get(i).getValue());
-                                secret.getSecrets().get(i).setId(serverSecret.getSecrets().get(i).getId());
-                                secret.getSecrets().get(i).setName(serverSecret.getSecrets().get(i).getName());
-                                secret.getSecrets().get(i).setSecretId(subjectsBean.getSid());
-                            }
+                      //  secret.setSecrets(secrets);
+                        for (int i = 0; i < serverSecret.getSecrets().size(); i++) {
+                            SecretList secretList=new SecretList();
+                            secretList.setSubjectId(serverSecret.getSecrets().get(i).getSubjectId());
+                            secretList.setValue(serverSecret.getSecrets().get(i).getValue());
+                            secretList.setId(serverSecret.getSecrets().get(i).getId());
+                            secretList.setName(serverSecret.getSecrets().get(i).getName());
+                            secretList.setSecretId(subjectsBean.getSid());
+                            secrets.add(secretList);
 
                         }
+                        secret.setSecrets(secrets);
+                        Log.e("backinfo","插入数据库数据:"+GsonUtil.getGsonInstance().toJson(secret));
                         SecretListHelp.insertList(secrets);
                         UpdataView updataView = new UpdataView();
                         updataView.setView("db");
