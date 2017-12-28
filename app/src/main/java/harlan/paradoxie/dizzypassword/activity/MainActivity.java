@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dou361.update.UpdateHelper;
 import com.dou361.update.listener.ForceListener;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private LayoutInflater layoutInflater;
     private TabFragmentHost mTabHost;
     String TAG="backinfo";
+
     boolean isExit = false;
     private List<Tab> mTabs = new ArrayList<Tab>(2);
     /*private DrawerLayout mDrawerLayout;
@@ -61,15 +63,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         layoutInflater = LayoutInflater.from(this);
 
 
         mTabHost = (TabFragmentHost) findViewById(R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initView();
-
+        Toast.makeText(this,"测试热修复",Toast.LENGTH_LONG).show();
         initSocketHttps();
         connectSocket();
         updateapp();

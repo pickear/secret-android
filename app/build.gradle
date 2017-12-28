@@ -68,4 +68,6 @@ dependencies {
     compile 'com.github.androidHarlan:YdPageState-master:v1.0.2'
     compile 'com.github.androidHarlan:jjdxm_update-master:v1.0.0'
     compile 'com.alibaba:fastjson:1.2.14'
+   // compile 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
+    compile 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
 }

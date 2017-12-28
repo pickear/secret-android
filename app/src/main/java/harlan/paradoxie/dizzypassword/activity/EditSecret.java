@@ -134,7 +134,6 @@ public class EditSecret extends Activity {
                         try {
                             Log.e("backinfo", "key:" + key);
                             subject.entryptAllSecret(key);
-
                             Sava(subject);
                         } catch (Exception e) {
                             Log.e("backinfo", "加密出错");

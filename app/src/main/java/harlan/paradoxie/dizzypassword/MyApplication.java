@@ -2,6 +2,7 @@ package harlan.paradoxie.dizzypassword;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
@@ -12,6 +13,9 @@ import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.DBCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
+import com.taobao.sophix.PatchStatus;
+import com.taobao.sophix.SophixManager;
+import com.taobao.sophix.listener.PatchLoadStatusListener;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -53,6 +57,7 @@ public class MyApplication extends Application {
         initOkGo();
         setDatabase();
         DaoManager.getInstance().init(this);
+        initsophix();
 
     }
 
@@ -88,7 +93,43 @@ public class MyApplication extends Application {
             mHelper = null;
         }
     }
+    public static String appId;
+   private void initsophix(){
 
+       String appVersion;
+       try {
+           appVersion = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
+       } catch (Exception e) {
+           appVersion = "1.0";
+       }
+       SophixManager.getInstance().setContext(this)
+               .setAppVersion(appVersion)
+               .setAesKey(null)
+               .setSecretMetaData("24745591-1", "22545c830f99e8092519a93d1514b7bf", "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJAN3YxzyrKpevGFEXepQ7OlwXlY+Ii8ClC4ygNBEi3ih2NRv/BBhuM2ptJQYIvOi1Eko1iKqcMuEM8CVZRDNWE3S6nZtIYLbj9HeQlsCnlYcJm6Rtx/S1KFE8bhF593HJnltMBZsP/oVQu4/XcRnx9YqFmu0yk+qgmoIQeh1BerFc0qfSTCbmLFeaQimwYdM4XKFBkcSgY8u7WNcN4C781xKovOOkZCsFGuVj7Lhr9UqAVyshsNo8b3U4+2TGGg6gCi/VfjsWAWqb7eayctWJqPb77DiJ2okJPpjJF6Rcxmidg1mtxqKbIYW9bM1fg/FX1IuqJh4P8dgN3z9YnmCRAgMBAAECggEAKXzTTYY6IH5HFq3nNvhnFh6CmZ+WI7HszmQm334/tzmxkkx9/dIDlONp6SNGLpGHWrBuvsP5qwnZZ8k9fEJWckLLyiTzwymrNjvkXeSv2SdE2xfUBZDLEoVC1z1EwC7xvpK/914E1nVLYRGFrAs9NrLep5sFsHXVbNbXV71MwpHJl1Nk41EKv+cyhCTyPXuVhc98Jj+AHAkEFXTPL1iwKwGRp9VqSHOQgF1qBcpwQfCU4hpwRw9nLbJAyI9xT/iIax+571pvbA9nssffVXWiBjxDBfEqZ7nNuGtzMYj2z8b0pD5+QhUMxSS1FqU5q5vUeK7u835/sr9VA2wslWnnrQKBgQD0nDlet3kZ0yQPosvLaKT3x52TXBLH5EtIUZMlmxtMQFZUDBEvfIG54G/iUOIlMgzJArNRWuhBYU74aSk1X/75xYdFlYwJ2Z+OZP+LNoIeT/kgwvxDz//2EN72I3qo17sCZONTdJyQPslZUCYJI4dD3SgDanrkVv8++CGxn8f2qwKBgQDSXNhDqOpdlTNFYukQ7Nf+5gtEN3LK7sGDKIBlbFZCOCVJMWbe8rBd9FqSrJwgkhowBi27Wror8KfP29WOZSS+rNLL/K3gffEvRfwTbhGeCduRXnZWLGdPzP52UxjD3agD/v7eEn6YFPgCumjE3KuyEXsDGjn5VaWiUzSmMzK1swKBgCWp5F+EKp5iV1wc+fow+623S7kD5VRn/3t8LAcPUe20vlYkoYTJTAQ93ZxgTeHiSfutccTmFXrzq8AuGQ1B4bW9x21ccHqXyqyXOo3J79ERCVAVFdivLz9JK7uEjP9wcDgXJrWT8AN513DsGV8w3EQDyoR0IcYE6zpb5HxAGP8PAoGADDDhP5qManv5Cq5ev2JaaiU+xedIucX4ZPd16WrL3O6QCpvYUFdULT25+gIS0jhlWB8ji1YIr/80WnFtAOGPrZUqajPsh7QExC6UGzQnxTbhCJ2m0fukyRUiMg1CxCcWU5T1hD0iJQIiFVZkN/Rp5tnofReKAI8cGDomNPOGns0CgYEAuN5uzO5MTDLTVle+HT3OpLwOVVuv+6SQPUmLc2Pj1zwPx+nvygHGeHEP0Pz5Ds2Rflhi32SMzsnMdXkFRNKMwu1BPuBwxt9wwgbNaCNSZHwsraN45kig6ytqTldr2u9PQUsO17A+Q39kWMTJAEM9bgkMnD3oeIbZPVhTIqZ5QeM=")
+               .setEnableDebug(true)
+               .setPatchLoadStatusStub(new PatchLoadStatusListener() {
+                   @Override
+                   public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
+                       // 补丁加载回调通知
+                       if (code == PatchStatus.CODE_LOAD_SUCCESS) {
+                           // 表明补丁加载成功
+                       } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
+                           restartApp();
+                           // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
+                           // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
+                       } else {
+                           // 其它错误信息, 查看PatchStatus类说明
+                       }
+                   }
+               }).initialize();
+// queryAndLoadNewPatch不可放在attachBaseContext 中，否则无网络权限，建议放在后面任意时刻，如onCreate中
+       SophixManager.getInstance().queryAndLoadNewPatch();
+   }
+    public void restartApp(){
+        final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
     private void initOkGo() {
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//
        // HttpHeaders headers = new HttpHeaders();
