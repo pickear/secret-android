@@ -65,6 +65,8 @@ public class EditSecret extends Activity {
     Button editok;
     Dialog dialog;
     harlan.paradoxie.dizzypassword.dbdomain.Secret subjectsBean;
+    @Bind(R.id.account)
+    EditText account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class EditSecret extends Activity {
             Log.e("backinfo", "key:" + key);
             subjectsBean = GsonUtil.getGsonInstance().fromJson(json, harlan.paradoxie.dizzypassword.dbdomain.Secret.class);
             secrettitle.setText(subjectsBean.getTitle());
+            account.setText(subjectsBean.getAccount());
             url.setText(subjectsBean.getUrl());
           /*  if(location.equals("0")){
                 adapter = new LSwipeAdapter(EditSecret.this, subjectsBean.getSecretLists(), key);
@@ -103,6 +106,8 @@ public class EditSecret extends Activity {
                 String eorre = isEmptyEorre();
                 if (StringUtils.isEmpty(secrettitle.getText().toString().trim())) {
                     Toast.makeText(EditSecret.this, "请输入标题", Toast.LENGTH_LONG).show();
+                }else if(StringUtils.isEmpty(account.getText().toString().trim())){
+                    Toast.makeText(EditSecret.this, "请输入账号名称", Toast.LENGTH_LONG).show();
                 } else if (!StringUtils.isEmpty(eorre)) {
                     Toast.makeText(EditSecret.this, eorre, Toast.LENGTH_LONG).show();
                 } else {
@@ -113,7 +118,7 @@ public class EditSecret extends Activity {
                         subject.setUrl(url.getText().toString().trim());
                         //   Log.e("backinfo","时间格式："+Date_U.getNowDate());
                         subject.setUpdateTime(Date_U.getNowDate());
-
+                        subject.setAccount(account.getText().toString());
                         List<SecretList> secrets = new ArrayList<SecretList>();
                         List<Secret> secretList = new ArrayList<>();
                         Type type = new TypeToken<ArrayList<SecretList>>() {
@@ -130,7 +135,7 @@ public class EditSecret extends Activity {
                             secretList.add(secret);
                         }
                         subject.setSecrets(secretList);
-                        Log.e("backinfo","未加密前的数据："+GsonUtil.getGsonInstance().toJson(subject));
+                        Log.e("backinfo", "未加密前的数据：" + GsonUtil.getGsonInstance().toJson(subject));
                         try {
                             Log.e("backinfo", "key:" + key);
                             subject.entryptAllSecret(key);
@@ -139,7 +144,7 @@ public class EditSecret extends Activity {
                             Log.e("backinfo", "加密出错");
                             e.printStackTrace();
                         }
-                        Log.e("backinfo","加密后的数据："+GsonUtil.getGsonInstance().toJson(subject));
+                        Log.e("backinfo", "加密后的数据：" + GsonUtil.getGsonInstance().toJson(subject));
                     } else {
                         updateDB(false);
                         UpdataView updataView = new UpdataView();
@@ -167,6 +172,7 @@ public class EditSecret extends Activity {
         }
         secret.setSid(subjectsBean.getSid());
         secret.setTitle(secrettitle.getText().toString().trim());
+        secret.setAccount(account.getText().toString().trim());
         secret.setCloud(setCloud);
         secret.setUpdateTime(Date_U.getNowDate());
         SecretHelp.update(secret);
@@ -232,17 +238,18 @@ public class EditSecret extends Activity {
                         secret.setSid(subjectsBean.getSid());
                         secret.setTitle(serverSecret.getTitle());
                         secret.setCloud(true);
+                        secret.setAccount(serverSecret.getAccount());
                         secret.setUpdateTime(Date_U.getNowDate());
                         SecretHelp.update(secret);
                         SecretListHelp.delete(subjectsBean.getSid());
-                        List<SecretList> secrets=new ArrayList<SecretList>();
+                        List<SecretList> secrets = new ArrayList<SecretList>();
                         Type type = new TypeToken<ArrayList<SecretList>>() {
                         }.getType();
-                     //   secrets = GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
+                        //   secrets = GsonUtil.getGsonInstance().fromJson(GsonUtil.getGsonInstance().toJson(adapter.getData()), type);
                         Log.e("backinfo", "编辑：" + GsonUtil.getGsonInstance().toJson(secrets));
-                      //  secret.setSecrets(secrets);
+                        //  secret.setSecrets(secrets);
                         for (int i = 0; i < serverSecret.getSecrets().size(); i++) {
-                            SecretList secretList=new SecretList();
+                            SecretList secretList = new SecretList();
                             secretList.setSubjectId(serverSecret.getSecrets().get(i).getSubjectId());
                             secretList.setValue(serverSecret.getSecrets().get(i).getValue());
                             secretList.setId(serverSecret.getSecrets().get(i).getId());
@@ -252,7 +259,7 @@ public class EditSecret extends Activity {
 
                         }
                         secret.setSecrets(secrets);
-                        Log.e("backinfo","插入数据库数据:"+GsonUtil.getGsonInstance().toJson(secret));
+                        Log.e("backinfo", "插入数据库数据:" + GsonUtil.getGsonInstance().toJson(secret));
                         SecretListHelp.insertList(secrets);
                         UpdataView updataView = new UpdataView();
                         updataView.setView("db");

@@ -31,7 +31,7 @@ public class Secret {
     private Long createTime;
     private Long updateTime;
     private boolean deleted;
-
+    private String account;
     @Property(nameInDb = "secrets")
     @ToMany(referencedJoinProperty = "secretId")
     private List<SecretList> secrets;
@@ -190,9 +190,17 @@ public class Secret {
         this.sid = sid;
     }
 
-    @Generated(hash = 1308480743)
-    public Secret(Long sid, Long id, String title, String url, boolean cloud,
-            Long createTime, Long updateTime, boolean deleted) {
+    public String getAccount() {
+        return this.account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    @Generated(hash = 171294047)
+    public Secret(Long sid, Long id, String title, String url, boolean cloud, Long createTime,
+            Long updateTime, boolean deleted, String account) {
         this.sid = sid;
         this.id = id;
         this.title = title;
@@ -201,6 +209,7 @@ public class Secret {
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.deleted = deleted;
+        this.account = account;
     }
 
     @Generated(hash = 974314130)

@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import harlan.paradoxie.dizzypassword.R;
+import harlan.paradoxie.dizzypassword.help.StringReplaceUtil;
 
 
 public class SwipeAdapter<T> extends BaseAdapter {
@@ -79,8 +80,8 @@ public class SwipeAdapter<T> extends BaseAdapter {
 
 
         item.item_left_txt.setText("标题:" + getFieldValueByName("title", data.get(position)));
-
-        item.url.setText("链接:"+getFieldValueByName("url",data.get(position)));
+        String account=(String)getFieldValueByName("account",data.get(position));
+        item.url.setText("账号名称:"+ StringReplaceUtil.userNameReplaceWithStar(account));
       //  item.createTime.setText("创建时间："+ Date_U.toLongDateString((Long) getFieldValueByName("createTime", data.get(position))));
        // item.updateTime.setText("更新时间："+Date_U.toLongDateString((Long) getFieldValueByName("updateTime", data.get(position))));
         return convertView;

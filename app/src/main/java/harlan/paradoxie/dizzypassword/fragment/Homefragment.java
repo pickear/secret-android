@@ -132,6 +132,7 @@ public class Homefragment extends BaseFragment {
                                 Secret secret = (Secret) adapter.getsecret(position);
                                 subjectsBean.setTitle(secret.getTitle());
                                 subjectsBean.setUrl(secret.getUrl());
+                                subjectsBean.setAccount(secret.getAccount());
                                 List<SecretList.SubjectsBean.SecretsBean> secretsBeans = new ArrayList<SecretList.SubjectsBean.SecretsBean>();
                                 for (int i = 0; i < secret.getSecrets().size(); i++) {
                                     SecretList.SubjectsBean.SecretsBean bean = new SecretList.SubjectsBean.SecretsBean();
@@ -371,6 +372,7 @@ public class Homefragment extends BaseFragment {
             }
             subject.setDeleted(secrets.get(i).getDeleted());
             subject.setUpdateTime(secrets.get(i).getUpdateTime());
+            subject.setAccount(secrets.get(i).getAccount());
             List<com.weasel.secret.common.domain.Secret> secretList = new ArrayList<com.weasel.secret.common.domain.Secret>();
             for (int j = 0; j < secrets.get(i).getSecrets().size(); j++) {
                 com.weasel.secret.common.domain.Secret secret = new com.weasel.secret.common.domain.Secret();
@@ -421,6 +423,7 @@ public class Homefragment extends BaseFragment {
                                     secret.setCreateTime(subjects1.get(i).getCreateTime());
                                     secret.setUrl(subjects1.get(i).getUrl());
                                     secret.setTitle(subjects1.get(i).getTitle());
+                                    secret.setAccount(subjects1.get(i).getAccount());
                                     secret.setUpdateTime(subjects1.get(i).getUpdateTime());
                                     SecretHelp.insert(secret);
                                     Long lasdid=SecretHelp.getlastid();

@@ -18,6 +18,16 @@ public class ServerSecret {
     private int userId;
     private String title;
     private String url;
+    private String account;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     private List<SecretsBean> secrets;
 
     public Long getId() {

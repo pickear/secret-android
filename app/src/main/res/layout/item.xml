@@ -28,6 +28,9 @@
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+
+            android:text="sssssssssssssss"
+
             android:singleLine="true"
             android:textColor="@color/textcolor" />
     </LinearLayout>

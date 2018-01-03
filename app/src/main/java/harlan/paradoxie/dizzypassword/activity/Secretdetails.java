@@ -32,22 +32,26 @@ public class Secretdetails extends Activity {
     String key;
     String json;
     DetailsAdapter adapter;
+    @Bind(R.id.account)
+    TextView account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_secretdetails);
         ButterKnife.bind(this);
-        Intent intent=getIntent();
-        Bundle bundle=intent.getExtras();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
         title.setText("密码详情");
-        if(bundle!=null){
-            key=bundle.getString("key");
-            json=bundle.getString("json");
-            Log.e("backinfo","json:"+json);
-            SecretList.SubjectsBean subjectsBean= GsonUtil.getGsonInstance().fromJson(json,SecretList.SubjectsBean.class);
-            secrettitle.setText("标题："+subjectsBean.getTitle());
-            url.setText("链接："+subjectsBean.getUrl());
-            adapter=new DetailsAdapter(Secretdetails.this,subjectsBean.getSecrets(),key);
+        if (bundle != null) {
+            key = bundle.getString("key");
+            json = bundle.getString("json");
+            Log.e("backinfo", "json:" + json);
+            SecretList.SubjectsBean subjectsBean = GsonUtil.getGsonInstance().fromJson(json, SecretList.SubjectsBean.class);
+            secrettitle.setText("标题：" + subjectsBean.getTitle());
+            url.setText("链接：" + subjectsBean.getUrl());
+            account.setText("账号名称："+subjectsBean.getAccount());
+            adapter = new DetailsAdapter(Secretdetails.this, subjectsBean.getSecrets(), key);
             details.setAdapter(adapter);
         }
     }

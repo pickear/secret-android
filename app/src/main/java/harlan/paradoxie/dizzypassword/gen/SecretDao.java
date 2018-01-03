@@ -32,6 +32,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         public final static Property CreateTime = new Property(5, Long.class, "createTime", false, "CREATE_TIME");
         public final static Property UpdateTime = new Property(6, Long.class, "updateTime", false, "UPDATE_TIME");
         public final static Property Deleted = new Property(7, boolean.class, "deleted", false, "DELETED");
+        public final static Property Account = new Property(8, String.class, "account", false, "ACCOUNT");
     };
 
     private DaoSession daoSession;
@@ -57,7 +58,8 @@ public class SecretDao extends AbstractDao<Secret, Long> {
                 "\"CLOUD\" INTEGER NOT NULL ," + // 4: cloud
                 "\"CREATE_TIME\" INTEGER," + // 5: createTime
                 "\"UPDATE_TIME\" INTEGER," + // 6: updateTime
-                "\"DELETED\" INTEGER NOT NULL );"); // 7: deleted
+                "\"DELETED\" INTEGER NOT NULL ," + // 7: deleted
+                "\"ACCOUNT\" TEXT);"); // 8: account
     }
 
     /** Drops the underlying database table. */
@@ -101,6 +103,11 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             stmt.bindLong(7, updateTime);
         }
         stmt.bindLong(8, entity.getDeleted() ? 1L: 0L);
+ 
+        String account = entity.getAccount();
+        if (account != null) {
+            stmt.bindString(9, account);
+        }
     }
 
     @Override
@@ -138,6 +145,11 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             stmt.bindLong(7, updateTime);
         }
         stmt.bindLong(8, entity.getDeleted() ? 1L: 0L);
+ 
+        String account = entity.getAccount();
+        if (account != null) {
+            stmt.bindString(9, account);
+        }
     }
 
     @Override
@@ -161,7 +173,8 @@ public class SecretDao extends AbstractDao<Secret, Long> {
             cursor.getShort(offset + 4) != 0, // cloud
             cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // createTime
             cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // updateTime
-            cursor.getShort(offset + 7) != 0 // deleted
+            cursor.getShort(offset + 7) != 0, // deleted
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // account
         );
         return entity;
     }
@@ -176,6 +189,7 @@ public class SecretDao extends AbstractDao<Secret, Long> {
         entity.setCreateTime(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
         entity.setUpdateTime(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
         entity.setDeleted(cursor.getShort(offset + 7) != 0);
+        entity.setAccount(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

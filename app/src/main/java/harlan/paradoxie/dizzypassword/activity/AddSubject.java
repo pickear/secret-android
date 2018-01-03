@@ -60,6 +60,8 @@ public class AddSubject extends Activity {
     @Bind(R.id.ok)
     Button ok;
     MaterialDialog dialog;
+    @Bind(R.id.account)
+    EditText account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,8 @@ public class AddSubject extends Activity {
                 String eorre = isEmptyEorre();
                 if (StringUtils.isEmpty(secrettitle.getText().toString().trim())) {
                     Toast.makeText(AddSubject.this, "请输入标题", Toast.LENGTH_LONG).show();
+                }else if(StringUtils.isEmpty(account.getText().toString().trim())){
+                    Toast.makeText(AddSubject.this, "请输入账号名称", Toast.LENGTH_LONG).show();
                 } else if (!StringUtils.isEmpty(eorre)) {
                     Toast.makeText(AddSubject.this, eorre, Toast.LENGTH_LONG).show();
                 } else {
@@ -110,6 +114,7 @@ public class AddSubject extends Activity {
                                 subject.setCreateTime(Date_U.getNowDate());
                                 subject.setTitle(secrettitle.getText().toString().trim());
                                 subject.setUrl(url.getText().toString().trim());
+                                subject.setAccount(account.getText().toString().trim());
                                 subject.setSecrets(adapter.getData());
                                 try {
                                     subject.entryptAllSecret(custed.getText().toString().trim());
@@ -119,6 +124,7 @@ public class AddSubject extends Activity {
                                         secret.setTitle(secrettitle.getText().toString().trim());
                                         secret.setUrl(url.getText().toString().trim());
                                         secret.setCreateTime(Date_U.getNowDate());
+                                        secret.setAccount(account.getText().toString().trim());
                                         secret.setCloud(false);
                                         SecretHelp.insert(secret);
                                         Long secretsid = SecretHelp.getlastid();
@@ -176,28 +182,29 @@ public class AddSubject extends Activity {
     }
 
     private void Sava(Subject subject) {
-        Log.e("backinfo","上传数据："+GsonUtil.getGsonInstance().toJson(subject));
+        Log.e("backinfo", "上传数据：" + GsonUtil.getGsonInstance().toJson(subject));
         OkGo.<String>post(AllApi.save).upJson(GsonUtil.getGsonInstance().toJson(subject)).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 try {
                     ServerSecret serverSecret = GsonUtil.fromjson(response.body(), ServerSecret.class);
-                    if("false".equals(response.headers().get("logined"))){
+                    if ("false".equals(response.headers().get("logined"))) {
                         Intent intent = new Intent(AddSubject.this, Login.class);
                         SPUtils.getInstance().remove("username");
                         EventBus.getDefault().post(false);
                         startActivity(intent);
-                    }else{
+                    } else {
                         dialog.dismiss();
-                        harlan.paradoxie.dizzypassword.dbdomain.Secret secret=new harlan.paradoxie.dizzypassword.dbdomain.Secret();
+                        harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
                         secret.setCloud(true);
                         secret.setTitle(serverSecret.getTitle());
                         secret.setUrl(serverSecret.getUrl());
                         secret.setId(serverSecret.getId());
+                        secret.setAccount(serverSecret.getAccount());
                         secret.setCreateTime(Date_U.getNowDate());
                         SecretHelp.insert(secret);
-                        Long lasdid=SecretHelp.getlastid();
-                        for (int i = 0; i <serverSecret.getSecrets().size(); i++) {
+                        Long lasdid = SecretHelp.getlastid();
+                        for (int i = 0; i < serverSecret.getSecrets().size(); i++) {
                             SecretList secretList = new SecretList();
                             secretList.setId(serverSecret.getSecrets().get(i).getId());
                             secretList.setSecretId(lasdid);
@@ -219,24 +226,25 @@ public class AddSubject extends Activity {
 
             @Override
             public void onError(Response<String> response) {
-                    harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
-                    secret.setTitle(secrettitle.getText().toString().trim());
-                    secret.setUrl(url.getText().toString().trim());
-                    secret.setCreateTime(Date_U.getNowDate());
-                    secret.setCloud(false);
-                    SecretHelp.insert(secret);
-                    Long secretid = SecretHelp.getlastid();
-                    for (int i = 0; i < adapter.getData().size(); i++) {
-                        SecretList secretList = new SecretList();
-                        secretList.setSecretId(secretid);
-                        secretList.setName(adapter.getData().get(i).getName());
-                        secretList.setValue(adapter.getData().get(i).getValue());
-                        SecretListHelp.insert(secretList);
-                    }
-                    UpdataView updataView = new UpdataView();
-                    updataView.setView("db");
-                    EventBus.getDefault().post(updataView);
-                    finish();
+                harlan.paradoxie.dizzypassword.dbdomain.Secret secret = new harlan.paradoxie.dizzypassword.dbdomain.Secret();
+                secret.setTitle(secrettitle.getText().toString().trim());
+                secret.setUrl(url.getText().toString().trim());
+                secret.setAccount(account.getText().toString().trim());
+                secret.setCreateTime(Date_U.getNowDate());
+                secret.setCloud(false);
+                SecretHelp.insert(secret);
+                Long secretid = SecretHelp.getlastid();
+                for (int i = 0; i < adapter.getData().size(); i++) {
+                    SecretList secretList = new SecretList();
+                    secretList.setSecretId(secretid);
+                    secretList.setName(adapter.getData().get(i).getName());
+                    secretList.setValue(adapter.getData().get(i).getValue());
+                    SecretListHelp.insert(secretList);
+                }
+                UpdataView updataView = new UpdataView();
+                updataView.setView("db");
+                EventBus.getDefault().post(updataView);
+                finish();
 
                 super.onError(response);
             }
