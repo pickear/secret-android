@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.weasel.secret.common.helper.EntryptionHelper;
 
@@ -78,7 +79,7 @@ public class DetailsAdapter<T> extends BaseAdapter {
             }
 
         } catch (Exception e) {
-         //   Toast.makeText(mContext,"秘钥出错",Toast.LENGTH_LONG).show();
+
             e.printStackTrace();
         }
         return convertView;

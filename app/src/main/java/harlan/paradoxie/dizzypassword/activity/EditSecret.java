@@ -36,6 +36,7 @@ import harlan.paradoxie.dizzypassword.api.AllApi;
 import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
 import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
 import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
+import harlan.paradoxie.dizzypassword.domian.EditSecretDatail;
 import harlan.paradoxie.dizzypassword.domian.ServerSecret;
 import harlan.paradoxie.dizzypassword.domian.UpdataView;
 import harlan.paradoxie.dizzypassword.help.Date_U;
@@ -106,8 +107,8 @@ public class EditSecret extends Activity {
                 String eorre = isEmptyEorre();
                 if (StringUtils.isEmpty(secrettitle.getText().toString().trim())) {
                     Toast.makeText(EditSecret.this, "请输入标题", Toast.LENGTH_LONG).show();
-                }else if(StringUtils.isEmpty(account.getText().toString().trim())){
-                    Toast.makeText(EditSecret.this, "请输入账号名称", Toast.LENGTH_LONG).show();
+                } else if (StringUtils.isEmpty(account.getText().toString().trim())) {
+                    Toast.makeText(EditSecret.this, "请输入账号", Toast.LENGTH_LONG).show();
                 } else if (!StringUtils.isEmpty(eorre)) {
                     Toast.makeText(EditSecret.this, eorre, Toast.LENGTH_LONG).show();
                 } else {
@@ -132,13 +133,16 @@ public class EditSecret extends Activity {
                           /*  if(secrets.get(i).getSubjectId()!=null){
                                 secret.setSubjectId(secrets.get(i).getSubjectId());
                             }*/
+
                             secretList.add(secret);
                         }
+                        subject.setVersion(subjectsBean.getVersion());
                         subject.setSecrets(secretList);
                         Log.e("backinfo", "未加密前的数据：" + GsonUtil.getGsonInstance().toJson(subject));
                         try {
                             Log.e("backinfo", "key:" + key);
                             subject.entryptAllSecret(key);
+
                             Sava(subject);
                         } catch (Exception e) {
                             Log.e("backinfo", "加密出错");
@@ -223,8 +227,33 @@ public class EditSecret extends Activity {
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "修改数据：" + response.body());
                 try {
-                    ServerSecret serverSecret = GsonUtil.fromjson(response.body(), ServerSecret.class);
-                    if ("false".equals(response.headers().get("logined"))) {
+                    EditSecretDatail editSecretDatail = GsonUtil.fromjson(response.body(), EditSecretDatail.class);
+                    if ("0000".equals(editSecretDatail.getCode())) {
+                        editSecretDatail.getBody().setSid(subjectsBean.getSid());
+                        SecretHelp.update(editSecretDatail.getBody());
+                        List<SecretList> secretLists = new ArrayList<>();
+                        for (int i = 0; i < editSecretDatail.getBody().getSecrets().size(); i++) {
+                            SecretList secretList = new SecretList();
+                            secretList.setSid(SecretListHelp.Getsid(editSecretDatail.getBody().getSecrets().get(i).getId()));
+                            secretList.setId(editSecretDatail.getBody().getSecrets().get(i).getId());
+                            secretList.setName(editSecretDatail.getBody().getSecrets().get(i).getName());
+                            secretList.setSecretId(subjectsBean.getSecrets().get(i).getSecretId());
+                            secretList.setValue(editSecretDatail.getBody().getSecrets().get(i).getValue());
+                            secretList.setSubjectId(editSecretDatail.getBody().getSecrets().get(i).getSubjectId());
+                            secretLists.add(secretList);
+                           // editSecretDatail.getBody().getSecrets().get(i).setSid(SecretListHelp.Getsid(editSecretDatail.getBody().getSecrets().get(i).getId()));
+                        }
+                        SecretListHelp.updateList(secretLists);
+                        UpdataView updataView = new UpdataView();
+                        updataView.setView("db");
+                        EventBus.getDefault().post(updataView);
+                        finish();
+                    }
+                    Toast.makeText(EditSecret.this, editSecretDatail.getMessage(), Toast.LENGTH_LONG).show();
+
+
+
+                   /* if ("false".equals(response.headers().get("logined"))) {
                         Intent intent = new Intent(EditSecret.this, Login.class);
                         SPUtils.getInstance().remove("username");
                         EventBus.getDefault().post(false);
@@ -265,8 +294,11 @@ public class EditSecret extends Activity {
                         updataView.setView("db");
                         EventBus.getDefault().post(updataView);
                         finish();
-                    }
+                    }*/
                 } catch (Exception e) {
+                    Toast.makeText(EditSecret.this, "解析出错", Toast.LENGTH_LONG).show();
+
+                    Log.e("backinfo", e.getMessage());
                     e.printStackTrace();
                 }
 

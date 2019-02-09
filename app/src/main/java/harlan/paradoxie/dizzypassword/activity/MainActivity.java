@@ -18,7 +18,7 @@ import com.dou361.update.listener.ForceListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.weasel.secret.common.domain.UpdateInfo;
+
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -33,6 +33,7 @@ import javax.net.ssl.X509TrustManager;
 import harlan.paradoxie.dizzypassword.MyApplication;
 import harlan.paradoxie.dizzypassword.R;
 import harlan.paradoxie.dizzypassword.api.AllApi;
+import harlan.paradoxie.dizzypassword.appupdate.bean.UpdateInfo;
 import harlan.paradoxie.dizzypassword.fragment.Homefragment;
 import harlan.paradoxie.dizzypassword.fragment.Myfragment;
 import harlan.paradoxie.dizzypassword.help.GsonUtil;

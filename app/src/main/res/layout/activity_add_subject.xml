@@ -42,7 +42,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/padd"
-                android:hint="请输入账号名称"
+                android:hint="请输入账号"
                 android:padding="10dp"
                 android:textColor="@color/textcolor"
                 android:textColorHint="@color/textcolor"

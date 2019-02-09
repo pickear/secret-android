@@ -89,6 +89,9 @@ public class Register extends Activity {
                 finish();
                 break;
             case R.id.next:
+                if(!rePassword.getText().toString().trim().equals(password.getText().toString().trim())){
+                    Toast.makeText(Register.this, "密码不一致", Toast.LENGTH_LONG).show();
+                }
                 if (StringUtils.isEmpty(returnError())) {
                     Toast.makeText(Register.this, returnError(), Toast.LENGTH_LONG).show();
                 } else {

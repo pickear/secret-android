@@ -31,20 +31,20 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 greendao {
-    schemaVersion 1
+    schemaVersion 2
     daoPackage 'harlan.paradoxie.dizzypassword.gen'
     targetGenDir 'src/main/java'
 }
 dependencies {
     /*compile('io.socket:socket.io-client:0.7.0') {
-        // excluding org.json which is provided by Android
-        exclude group: 'org.json', module: 'json'
-    }*/
+            // excluding org.json which is provided by Android
+            exclude group: 'org.json', module: 'json'
+        }*/
     //  compile 'com.android.support.constraint:constraint-layout:1.0.2'
     // compile 'com.afollestad.material-dialogs:commons:0.9.6.0'
     compile 'org.greenrobot:greendao:3.0.1'
@@ -57,8 +57,8 @@ dependencies {
     compile 'com.lzy.net:okgo:3.0.4'
     compile 'com.lzy.net:okrx2:2.0.2'
     compile 'com.lzy.net:okserver:2.0.5'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.weasel.secret.common:secret-common:1.0-SNAPSHOT'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.weasel.secret.common:secret-common:2.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.dou361.dialogui:jjdxm-dialogui:1.0.3'
     compile 'org.greenrobot:eventbus:3.0.0'
@@ -68,6 +68,6 @@ dependencies {
     compile 'com.github.androidHarlan:YdPageState-master:v1.0.2'
     compile 'com.github.androidHarlan:jjdxm_update-master:v1.0.0'
     compile 'com.alibaba:fastjson:1.2.14'
-   // compile 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
+    // compile 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
     compile 'com.aliyun.ams:alicloud-android-hotfix:3.1.9'
 }

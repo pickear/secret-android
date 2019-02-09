@@ -19,6 +19,15 @@ public class ServerSecret {
     private String title;
     private String url;
     private String account;
+    private int version;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String getAccount() {
         return account;

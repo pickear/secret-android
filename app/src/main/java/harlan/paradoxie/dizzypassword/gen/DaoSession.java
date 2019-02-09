@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import harlan.paradoxie.dizzypassword.dbdomain.ApiUrl;
 import harlan.paradoxie.dizzypassword.dbdomain.Secret;
 import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
 
+import harlan.paradoxie.dizzypassword.gen.ApiUrlDao;
 import harlan.paradoxie.dizzypassword.gen.SecretDao;
 import harlan.paradoxie.dizzypassword.gen.SecretListDao;
 
@@ -23,9 +25,11 @@ import harlan.paradoxie.dizzypassword.gen.SecretListDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig apiUrlDaoConfig;
     private final DaoConfig secretDaoConfig;
     private final DaoConfig secretListDaoConfig;
 
+    private final ApiUrlDao apiUrlDao;
     private final SecretDao secretDao;
     private final SecretListDao secretListDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        apiUrlDaoConfig = daoConfigMap.get(ApiUrlDao.class).clone();
+        apiUrlDaoConfig.initIdentityScope(type);
+
         secretDaoConfig = daoConfigMap.get(SecretDao.class).clone();
         secretDaoConfig.initIdentityScope(type);
 
         secretListDaoConfig = daoConfigMap.get(SecretListDao.class).clone();
         secretListDaoConfig.initIdentityScope(type);
 
+        apiUrlDao = new ApiUrlDao(apiUrlDaoConfig, this);
         secretDao = new SecretDao(secretDaoConfig, this);
         secretListDao = new SecretListDao(secretListDaoConfig, this);
 
+        registerDao(ApiUrl.class, apiUrlDao);
         registerDao(Secret.class, secretDao);
         registerDao(SecretList.class, secretListDao);
     }
     
     public void clear() {
+        apiUrlDaoConfig.getIdentityScope().clear();
         secretDaoConfig.getIdentityScope().clear();
         secretListDaoConfig.getIdentityScope().clear();
+    }
+
+    public ApiUrlDao getApiUrlDao() {
+        return apiUrlDao;
     }
 
     public SecretDao getSecretDao() {

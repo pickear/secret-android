@@ -22,8 +22,12 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.gson.reflect.TypeToken;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.Callback;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+import com.weasel.secret.common.domain.Subject;
 import com.yd.commonlibrary.pagestate.YdPageStateManager;
 import com.yd.commonlibrary.pagestate.listener.OnErrorRetryListener;
 
@@ -49,9 +53,13 @@ import harlan.paradoxie.dizzypassword.api.AllApi;
 import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretHelp;
 import harlan.paradoxie.dizzypassword.db.help.dbutlis.SecretListHelp;
 import harlan.paradoxie.dizzypassword.dbdomain.Secret;
+import harlan.paradoxie.dizzypassword.dbdomain.SecretMain;
+import harlan.paradoxie.dizzypassword.dbdomain.ServerDatail;
 import harlan.paradoxie.dizzypassword.domian.LoginBean;
 import harlan.paradoxie.dizzypassword.domian.SecretList;
+import harlan.paradoxie.dizzypassword.domian.ServerSecret;
 import harlan.paradoxie.dizzypassword.domian.UpdataView;
+import harlan.paradoxie.dizzypassword.help.Date_U;
 import harlan.paradoxie.dizzypassword.help.GsonUtil;
 import harlan.paradoxie.dizzypassword.password.PassValitationPopwindow;
 import harlan.paradoxie.dizzypassword.util.ACache;
@@ -62,9 +70,9 @@ public class Homefragment extends BaseFragment {
 
     View view;
 
-
+    SecretMain secrets;
     SwipeAdapter adapter;
-
+    List<Secret> dbSecretCound;
     ImageButton add;
 
     @Bind(R.id.listView)
@@ -91,7 +99,7 @@ public class Homefragment extends BaseFragment {
         ydPageStateManager = new YdPageStateManager(view, R.id.listView);
         ButterKnife.bind(this, view);
         //   footerview = inflater.inflate(R.layout.footer, null);
-
+        ServceData();
         rootView = View.inflate(getActivity(), R.layout.key, null);
         add = (ImageButton) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +138,7 @@ public class Homefragment extends BaseFragment {
                             if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
                                 SecretList.SubjectsBean subjectsBean = new SecretList.SubjectsBean();
                                 Secret secret = (Secret) adapter.getsecret(position);
+
                                 subjectsBean.setTitle(secret.getTitle());
                                 subjectsBean.setUrl(secret.getUrl());
                                 subjectsBean.setAccount(secret.getAccount());
@@ -157,7 +166,7 @@ public class Homefragment extends BaseFragment {
 
             }
         });
-        initdata();
+
         listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
@@ -205,9 +214,8 @@ public class Homefragment extends BaseFragment {
                         break;
                     case 1:
                         isdelete = true;
-
-                        if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
-                            Secret secret = (Secret) adapter.getsecret(position);
+                        Secret secret = (Secret) adapter.getsecret(position);
+                        if (secret.getId()==-1) {
                             SecretHelp.delete(secret.getSid());
                             adapter.delete(position);
                             if (adapter.getCount() == 0) {
@@ -219,11 +227,11 @@ public class Homefragment extends BaseFragment {
                         } else {
 
                             Log.e("backinfo", GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)));
-                            SecretList.SubjectsBean secret = null;
+                            SecretList.SubjectsBean secrets = null;
                             try {
-                                secret = GsonUtil.fromjson(GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)), SecretList.SubjectsBean.class);
+                                secrets = GsonUtil.fromjson(GsonUtil.getGsonInstance().toJson(adapter.getsecret(position)), SecretList.SubjectsBean.class);
                                 //  id = secret.getId();
-                                Delete(secret, position);
+                                Delete(secrets, position);
                             } catch (Exception e) {
                                 Log.e("backinfo", "解析出错" + e.getLocalizedMessage());
                                 e.printStackTrace();
@@ -239,27 +247,127 @@ public class Homefragment extends BaseFragment {
 
         return view;
     }
-    private void getdb(){
-        Log.e("backinfo","secret:"+GsonUtil.getGsonInstance().toJson(SecretHelp.querySecretAll()));
-        Log.e("backinfo","secretlist:"+GsonUtil.getGsonInstance().toJson(SecretListHelp.querySecretAll()));
-    }
-    private void initdata() {
+
+    private void ServceData() {
         if (StringUtils.isEmpty(SPUtils.getInstance().getString("username", ""))) {
             List<Secret> secrets = SecretHelp.queryall();
             Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
             if (secrets.size() <= 0) {
                 ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
                         getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
-            } else {
-                ydPageStateManager.showContent();
-                adapter = new SwipeAdapter(getActivity(), secrets);
-                listView.setAdapter(adapter);
-                listView.setMenuCreator(creator);
             }
         } else {
-            cound();
+            OkGo.<String>get(AllApi.list)
+                    .tag(this)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            //注意这里已经是在主线程了
+                            String data = response.body();//这个就是返回来的结果
+                            Log.e("backinfo", "服务端数据：" + data);
+                            dbSecretCound=getNeedCound();
+                            Log.e("backinfo", "需要同步数据：" + GsonUtil.getGsonInstance().toJson(dbSecretCound));
+                            if(dbSecretCound!=null&&dbSecretCound.size()>0){
+                                Sava(dbSecretCound);
+                            }
+                            Log.e("backinfo", "本地数据库数据：" + GsonUtil.getGsonInstance().toJson(SecretHelp.queryall()));
+                            try {
+                                secrets = GsonUtil.getGsonInstance().fromJson(data, SecretMain.class);
+                                if("0000".equals(secrets.getCode())){
+
+                                    if(null == secrets.getBody() || secrets.getBody().isEmpty()){
+                                        ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
+                                                getString(R.string.ydPageState_empty_title), "本地数据库没有数据，请添加");
+                                        return;
+                                    }
+
+                                    for(Secret secret : secrets.getBody()){
+                                        Secret dbSecret=SecretHelp.query(secret.getId());
+                                        if (dbSecret!=null) {//数据库含有就更新
+                                            if(secret.getVersion() > dbSecret.getVersion()){
+                                                secret.setSid(dbSecret.getSid());
+                                                SecretHelp.update(secret);
+                                            }
+                                        } else {
+                                            secret.setUsername(SPUtils.getInstance().getString("username",""));//用来区分账号
+                                            SecretHelp.insert(secret);
+                                           for(harlan.paradoxie.dizzypassword.dbdomain.SecretList secretList:secret.getSecrets()){
+                                               secretList.setSid(SecretHelp.getlastid());
+                                               secretList.setSecretId(SecretHelp.getlastid());
+                                           }
+
+                                            SecretListHelp.insertList(secret.getSecrets());
+                                        }
+                                    }
+                                    ydPageStateManager.showContent();
+                                    adapter = new SwipeAdapter(getActivity(), SecretHelp.queryall());
+                                    listView.setAdapter(adapter);
+                                    listView.setMenuCreator(creator);
+                                    return;
+                                }
+                                Toast.makeText(getActivity(), secrets.getMessage(), Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                Log.e("backinfo",e.getMessage());
+                                Toast.makeText(getActivity(), "解析出错", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<String> response) {
+                            super.onError(response);
+                        }
+                    });
         }
+
+
     }
+
+    private void getdb() {
+        Log.e("backinfo", "secret:" + GsonUtil.getGsonInstance().toJson(SecretHelp.querySecretAll()));
+        Log.e("backinfo", "secretlist:" + GsonUtil.getGsonInstance().toJson(SecretListHelp.querySecretAll()));
+    }
+    private List<Secret> getNeedCound(){
+        return SecretHelp.queryallCound();
+    }
+
+    private void Sava(List<Secret> data) {
+
+        Log.e("backinfo", "上传数据：" + GsonUtil.getGsonInstance().toJson(data));
+        OkGo.<String>post(AllApi.saves).upJson(GsonUtil.getGsonInstance().toJson(data)).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("backinfo","同步数据："+response.body());
+                try {
+                    SecretMain cound = GsonUtil.getGsonInstance().fromJson(response.body(), SecretMain.class);
+                   if("0000".equals(cound.getCode())){
+                       for(int i=0;i<cound.getBody().size();i++){
+                           if(i<dbSecretCound.size()){
+                               cound.getBody().get(i).setSid(dbSecretCound.get(i).getSid());
+                               SecretHelp.update(cound.getBody().get(i));
+                           }
+
+                       }
+                   }else{
+                       Toast.makeText(getActivity(),cound.getMessage(),Toast.LENGTH_LONG).show();
+                   }
+
+                }catch (Exception e){
+                    Toast.makeText(getActivity(),"解析出错",Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+
+
+            @Override
+            public void onError(Response<String> response) {
+
+
+                super.onError(response);
+            }
+        });
+    }
+
 
 
     private void init() {
@@ -325,11 +433,12 @@ public class Homefragment extends BaseFragment {
         String tag = event.getView();
         if (tag.equals("HOME")) {
             Log.i("hemiy", "收到了tag的消息");
-            initdata();
+           // initdata();
+            ServceData();
         } else if (tag.equals("db")) {
-           List<Secret> secrets=SecretHelp.queryall();
+            List<Secret> secrets = SecretHelp.queryall();
             getdb();
-            Log.e("backinfo","数据库所有数据："+GsonUtil.getGsonInstance().toJson(secrets));
+            Log.e("backinfo", "数据库所有数据：" + GsonUtil.getGsonInstance().toJson(secrets));
             if (secrets.size() <= 0) {
                 Log.e("backinfo", "进去空");
                 ydPageStateManager.showEmpty(getResources().getDrawable(R.mipmap.monkey_nodata),
@@ -337,10 +446,11 @@ public class Homefragment extends BaseFragment {
             } else {
                 Log.e("backinfo", "进去不为空");
                 ydPageStateManager.showContent();
-                adapter = new SwipeAdapter(getActivity(),secrets);
+                adapter = new SwipeAdapter(getActivity(), secrets);
                 listView.setAdapter(adapter);
                 listView.setMenuCreator(creator);
             }
+            ServceData();
         }
     }
 
@@ -361,13 +471,13 @@ public class Homefragment extends BaseFragment {
     }
 
     private void cound() {
-        List<Secret> secrets = SecretHelp.querycloud();
+        List<Secret> secrets = SecretHelp.querycloud();//
         List<com.weasel.secret.common.domain.Subject> subjects = new ArrayList<com.weasel.secret.common.domain.Subject>();
         for (int i = 0; i < secrets.size(); i++) {
             com.weasel.secret.common.domain.Subject subject = new com.weasel.secret.common.domain.Subject();
             subject.setTitle(secrets.get(i).getTitle());
             subject.setUrl(secrets.get(i).getUrl());
-            if(secrets.get(i).getId()!=null){
+            if (secrets.get(i).getId() != null) {
                 subject.setId(secrets.get(i).getId());
             }
             subject.setDeleted(secrets.get(i).getDeleted());
@@ -381,9 +491,10 @@ public class Homefragment extends BaseFragment {
                /* if(secrets.get(i).getSecrets().get(j).getSubjectId()!=null){
                     secret.setSubjectId(secrets.get(i).getSecrets().get(j).getSubjectId());
                 }*/
-                if(secrets.get(i).getSecrets().get(j).getId()!=null){
+                if (secrets.get(i).getSecrets().get(j).getId() != null) {
                     secret.setId(secrets.get(i).getSecrets().get(j).getId());
                 }
+
                 secretList.add(secret);
             }
             subject.setSecrets(secretList);
@@ -426,7 +537,7 @@ public class Homefragment extends BaseFragment {
                                     secret.setAccount(subjects1.get(i).getAccount());
                                     secret.setUpdateTime(subjects1.get(i).getUpdateTime());
                                     SecretHelp.insert(secret);
-                                    Long lasdid=SecretHelp.getlastid();
+                                    Long lasdid = SecretHelp.getlastid();
                                     List<harlan.paradoxie.dizzypassword.dbdomain.SecretList> secretLists = new ArrayList<harlan.paradoxie.dizzypassword.dbdomain.SecretList>();
                                     for (int j = 0; j < subjects1.get(i).getSecrets().size(); j++) {
                                         harlan.paradoxie.dizzypassword.dbdomain.SecretList list = new harlan.paradoxie.dizzypassword.dbdomain.SecretList();
@@ -503,10 +614,7 @@ public class Homefragment extends BaseFragment {
             public void onSuccess(Response<String> response) {
                 Log.e("backinfo", "删除：" + response.body());
                 LoginBean loginBean = GsonUtil.getGsonInstance().fromJson(response.body(), LoginBean.class);
-                if ("false".equals(response.headers().get("logined"))) {
-                    Intent intent = new Intent(getActivity(), Login.class);
-                    startActivity(intent);
-                } else if (loginBean.getCode().equals("0000")) {
+                if (loginBean.getCode() != null && loginBean.getCode().equals("0000")) {
                     if (mposition != -1) {
                         adapter.delete(mposition);
                         SecretHelp.delete(secret.getSid());
@@ -534,7 +642,7 @@ public class Homefragment extends BaseFragment {
                 Secret secret1 = new Secret();
                 secret1.setTitle(secret.getTitle());
                 secret1.setSid(secret.getSid());
-                if(secret.getId()!=null){
+                if (secret.getId() != null) {
                     secret1.setId(secret.getId());
                 }
                 secret1.setCloud(false);

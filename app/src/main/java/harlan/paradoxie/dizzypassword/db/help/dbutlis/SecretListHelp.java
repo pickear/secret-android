@@ -1,9 +1,12 @@
 package harlan.paradoxie.dizzypassword.db.help.dbutlis;
 
+import android.util.Log;
+
 import java.util.List;
 
 import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
 import harlan.paradoxie.dizzypassword.gen.SecretListDao;
+import harlan.paradoxie.dizzypassword.help.GsonUtil;
 
 /**
  * Created by a1 on 2017/11/28.
@@ -24,6 +27,7 @@ public class SecretListHelp {
      * @param
      */
     public static void insertList(List<SecretList> secrets) {
+        Log.e("backinfo","需要插入的数据："+ GsonUtil.getGsonInstance().toJson(secrets));
         DaoManager.getInstance().getDaoSession().getSecretListDao().insertInTx(secrets);
     }
 
@@ -61,6 +65,19 @@ public class SecretListHelp {
      */
     public static void update(SecretList secret) {
         DaoManager.getInstance().getDaoSession().getSecretListDao().update(secret);
+    }
+    public static void updateList(List<SecretList> secrets) {
+        Log.e("backinfo","修改要改的值："+GsonUtil.getGsonInstance().toJson(secrets));
+        if(secrets==null||secrets.size()<=0){
+            return;
+        }
+        for(SecretList secretList:secrets){
+            DaoManager.getInstance().getDaoSession().getSecretListDao().update(secretList);
+        }
+
+    }
+    public static Long Getsid(Long id){
+        return DaoManager.getInstance().getDaoSession().getSecretListDao().queryBuilder().where(SecretListDao.Properties.Id.eq(id)).unique().getSid();
     }
     public static SecretListDao customerDao() {
         return DaoManager.getInstance().getDaoSession().getSecretListDao();

@@ -9,6 +9,8 @@ import harlan.paradoxie.dizzypassword.dbdomain.SecretList;
 import harlan.paradoxie.dizzypassword.gen.SecretDao;
 import harlan.paradoxie.dizzypassword.gen.SecretListDao;
 import harlan.paradoxie.dizzypassword.help.GsonUtil;
+import harlan.paradoxie.dizzypassword.util.SPUtils;
+import harlan.paradoxie.dizzypassword.util.StringUtils;
 
 /**
  * Created by a1 on 2017/11/28.
@@ -81,8 +83,8 @@ public class SecretHelp {
      */
     public static void update(Secret secret) {
         DaoManager.getInstance().getDaoSession().getSecretDao().update(secret);
-
     }
+
     public static SecretDao customerDao() {
         return DaoManager.getInstance().getDaoSession().getSecretDao();
     }
@@ -105,15 +107,26 @@ public class SecretHelp {
      *
      * @return
      */
-    public static List<Secret> query(Long id) {
-        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretListDao.Properties.Id.eq(id)).list();
+    public static Secret query(Long id) {
+        Secret secret=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Id.eq(id)).unique();
+        return secret;
+    }
+    public static List<Secret> queryall() {
+        List<Secret> secrets = null;
+        if(StringUtils.isEmpty(SPUtils.getInstance().getString("username",""))){
+            secrets =DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().list();
+        }else{
+            secrets =DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Username.eq(SPUtils.getInstance().getString("username",""))).list();
+
+        }
+
         for(int i=0;i<secrets.size();i++){
             secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }
         return secrets;
     }
-    public static List<Secret> queryall() {
-        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Deleted.eq(false)).list();
+    public static List<Secret> queryallCound() {
+        List<Secret> secrets=DaoManager.getInstance().getDaoSession().getSecretDao().queryBuilder().where(SecretDao.Properties.Id.eq(-1)).list();
         for(int i=0;i<secrets.size();i++){
             secrets.get(i).setSecrets(SecretListHelp.query(secrets.get(i).getSid()));
         }
